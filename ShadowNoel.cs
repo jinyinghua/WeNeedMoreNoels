@@ -26,7 +26,7 @@ namespace WeNeedMoreNoels
             this.AbsorbCon = new AbsorbManagerContainer(5, this);
         }
 
-        protected override void createAnimator(ref PrAnimator anm)
+        public override void createAnimator(ref PrAnimator anm)
         {
             M2PxlAnimatorRT m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, "noel", "stand", false);
             if (Anm == null)
@@ -62,7 +62,7 @@ namespace WeNeedMoreNoels
             return false;
         }
 
-        protected override void refineMoveKey(bool ignore_keypushdown = false) { }
+        public override void refineMoveKey(bool ignore_keypushdown = false) { }
 
         public override void deactivateFromMap()
         {
