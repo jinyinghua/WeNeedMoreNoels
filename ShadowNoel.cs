@@ -74,6 +74,19 @@ namespace WeNeedMoreNoels
             this.destruct();
             base.deactivateFromMap();
         }
+        
+        /*
+         * I spent 2 minutes to write this,
+         * but I spent 2 hours to know how to write this.
+         */
+        public override bool runUi() {
+            var tg = this.Mp.TalkTarget_;
+            bool rt = base.runUi();
+            if (tg != this.Mp.TalkTarget_) {
+                this.Mp.setTalkTarget(tg);
+            }
+            return rt;
+        }
 
         private PrAnimator AnmN;
 
