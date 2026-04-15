@@ -57,11 +57,6 @@ namespace WeNeedMoreNoels
             this.UP = null;
         }
 
-        public override bool isDamagingOrKo()
-        {
-            return false;
-        }
-
         public override void refineMoveKey(bool ignore_keypushdown = false) { }
 
         public override void deactivateFromMap()
@@ -75,17 +70,38 @@ namespace WeNeedMoreNoels
             base.deactivateFromMap();
         }
         
-        /*
-         * I spent 2 minutes to write this,
-         * but I spent 2 hours to know how to write this.
-         */
         public override bool runUi() {
             var tg = this.Mp.TalkTarget_;
-            bool rt = base.runUi();
+            bool rt = true;
+            rt = base.runUi();
             if (tg != this.Mp.TalkTarget_) {
                 this.Mp.setTalkTarget(tg);
             }
             return rt;
+        }
+
+        public override void runPre()
+        {
+            try
+            {
+                base.runPre();
+            }
+            catch
+            {
+
+            }
+        }
+
+        public override void runPost()
+        {
+            try
+            {
+                base.runPost();
+            }
+            catch
+            {
+
+            }
         }
 
         private PrAnimator AnmN;
