@@ -20,14 +20,15 @@
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Unity.Mono" Version="6.0.0-be.*" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="LiteNetLib" Version="0.9.5.2" />
 	<PackageReference Include="UnityEngine.Modules" Version="2022.3.62" IncludeAssets="compile" />
-    <PackageReference Include="Krafs.Publicizer" Version="2.3.0" PrivateAssets="all"/>
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.0" PrivateAssets="all" />
   </ItemGroup>
   
   <ItemGroup>
-    <Publicize Include="Assembly-CSharp"/>
-    <Publicize Include="unsafeAssem"/>
-    <Publicize Include="ttr"/>
+    <Publicize Include="Assembly-CSharp" />
+    <Publicize Include="unsafeAssem" />
+    <Publicize Include="ttr" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
@@ -38,11 +39,20 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\WeNeedMoreNoels\AliceInCradle_ver029-BeplnEx\AliceInCradle_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Fusion.Common">
+      <HintPath>..\..\WeNeedMoreNoels\AliceInCradle_ver029-BeplnEx\AliceInCradle_Data\Managed\Fusion.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Fusion.Runtime">
+      <HintPath>..\..\WeNeedMoreNoels\AliceInCradle_ver029-BeplnEx\AliceInCradle_Data\Managed\Fusion.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib">
       <HintPath>..\..\WeNeedMoreNoels\AliceInCradle_ver029-BeplnEx\AliceInCradle_Data\Managed\mscorlib.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>..\..\WeNeedMoreNoels\AliceInCradle_ver029-BeplnEx\AliceInCradle_Data\Managed\netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\WeNeedMoreNoels\AliceInCradle_ver029-BeplnEx\AliceInCradle_Data\Managed\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="pixelliner">
       <HintPath>..\..\WeNeedMoreNoels\AliceInCradle_ver029-BeplnEx\AliceInCradle_Data\Managed\pixelliner.dll</HintPath>

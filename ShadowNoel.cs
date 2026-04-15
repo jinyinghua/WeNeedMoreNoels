@@ -10,8 +10,6 @@ namespace WeNeedMoreNoels
         public override void Awake()
         {
             base.Awake();
-
-            DB.shadowNoels.Add(this);
         }
 
         public override void newGame()

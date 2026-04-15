@@ -10,11 +10,11 @@ namespace WeNeedMoreNoels
     {
         static void Prefix()
         {
-            foreach (ShadowNoel noel in DB.shadowNoels)
-            {
-                Object.DestroyImmediate(noel.gameObject);
-            }
-            DB.shadowNoels.Clear();
+            //foreach (ShadowNoel noel in DB.shadowNoels)
+            //{
+            //    Object.DestroyImmediate(noel.gameObject);
+            //}
+            //DB.shadowNoels.Clear();
         }
     }
 }
