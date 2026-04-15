@@ -6,7 +6,14 @@ using XX;
 namespace WeNeedMoreNoels
 {
     public class ShadowNoel : PRMain
-    {        
+    {
+        public override void Awake()
+        {
+            base.Awake();
+
+            DB.shadowNoels.Add(this);
+        }
+
         public override void newGame()
         {
             this.hp = (this.maxhp = 150);
@@ -58,17 +65,6 @@ namespace WeNeedMoreNoels
         }
 
         public override void refineMoveKey(bool ignore_keypushdown = false) { }
-
-        public override void deactivateFromMap()
-        {
-            if (delete)
-                return;
-            delete = true;
-            this.Mp.destructPxlAnimByMover(this);
-            this.Mp.removeMover(this);
-            this.destruct();
-            base.deactivateFromMap();
-        }
         
         public override bool runUi() {
             var tg = this.Mp.TalkTarget_;
@@ -105,7 +101,5 @@ namespace WeNeedMoreNoels
         }
 
         private PrAnimator AnmN;
-
-        private bool delete;
     }
 }

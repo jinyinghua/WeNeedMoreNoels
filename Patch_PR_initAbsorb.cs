@@ -37,8 +37,8 @@ brfalse.s IL_0157*/
         [HarmonyFinalizer]
         static Exception Finalizer(Exception __exception)
         {
-            Plugin.Logger.LogInfo(__exception.ToString());
-            Plugin.Logger.LogInfo(__exception.StackTrace);
+            //Plugin.Logger.LogInfo(__exception.ToString());
+            //Plugin.Logger.LogInfo(__exception.StackTrace);
             return null;
         }
     }
