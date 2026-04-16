@@ -35,7 +35,8 @@ namespace WeNeedMoreNoels
             noel.getPosition(out float x, out float y);
             float dx = pos.X - x;
             float dy = pos.Y - y;
-            noel.walkBy(FOCTYPE.WALK, dx, dy, true);
+            noel.setTo(pos.X, pos.Y);
+            noel.Phy.killSpeedForce(true, true, true, true, true);
         }
 
         public static void SetPoseShadowNoel(ShadowNoel noel, string pose, AIM aim)

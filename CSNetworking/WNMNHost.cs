@@ -1,4 +1,5 @@
-﻿using LiteNetLib;
+﻿using Fusion;
+using LiteNetLib;
 using LiteNetLib.Utils;
 using Newtonsoft.Json;
 using System.Linq;
@@ -36,11 +37,13 @@ namespace WeNeedMoreNoels.CSNetworking
         private void HostSendLocation()
         {
             System.Numerics.Vector2 position = NetworkConnectionTools.GetSendLocation();
+            bool crouch = NetworkConnectionTools.GetSendCrouch();
             string pose = NetworkConnectionTools.GetSendPose();
             AIM aim = NetworkConnectionTools.GetSendAIM();
             ShadowNoelLocation location = new()
             {
                 Position = position,
+                IsCrouch = crouch,
                 Pose = pose,
                 AIM = aim
             };
@@ -48,7 +51,7 @@ namespace WeNeedMoreNoels.CSNetworking
             string json = JsonConvert.SerializeObject(message);
             NetDataWriter writer = new();
             writer.Put(json);
-            host.SendToAll(writer, DeliveryMethod.ReliableOrdered);
+            host.SendToAll(writer, DeliveryMethod.Unreliable);
         }
 
         public void StartHost(int port = 4721)
@@ -115,7 +118,7 @@ namespace WeNeedMoreNoels.CSNetworking
                 return;
             }
             ShadowNoelLocation location = JsonConvert.DeserializeObject<ShadowNoelLocation>(message.Content);
-            NetworkConnectionTools.UpdateShadowLocation(message.PeerID, location.Position);
+            NetworkConnectionTools.UpdateShadowLocation(message.PeerID, location.Position, location.IsCrouch);
             NetworkConnectionTools.UpdateShadowPose(message.PeerID, location.Pose, location.AIM);
         }
 

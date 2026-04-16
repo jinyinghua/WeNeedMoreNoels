@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Numerics;
 using WeNeedMoreNoels.HostMessages;
 
 namespace WeNeedMoreNoels.CSNetworking
@@ -17,12 +16,12 @@ namespace WeNeedMoreNoels.CSNetworking
             Content = id.ToString()
         };
 
-        public static WNMNHostMessage UpdateLocation(ShadowNoelLocation hostLocation, Dictionary<int, ShadowNoelLocation> peerPositions) => new()
+        public static WNMNHostMessage UpdateLocation(ShadowNoelLocation hostLocation, Dictionary<int, ShadowNoelLocation> peerLocations) => new()
         {
             Type = WNMNHostMessageType.UpdateLocation,
-            Content = JsonConvert.SerializeObject(new UpdateLocationContent()
+            Content = JsonConvert.SerializeObject(new HostUpdateContent<ShadowNoelLocation>()
             {
-                HostLocation = hostLocation
+                HostContent = hostLocation
             })
         };
 

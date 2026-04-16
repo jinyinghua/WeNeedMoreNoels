@@ -28,6 +28,12 @@ namespace WeNeedMoreNoels.CSNetworking
             return new(x, y);
         }
 
+        public static bool GetSendCrouch()
+        {
+            PRNoel noel = DB.MainPR;
+            return noel.is_crouch;
+        }
+
         public static string GetSendPose()
         {
             PRNoel noel = DB.MainPR;
@@ -42,9 +48,13 @@ namespace WeNeedMoreNoels.CSNetworking
             return (AIM)animator.pose_aim;
         }
 
-        public static void UpdateShadowLocation(int id, Vector2 pos)
+        public static void UpdateShadowLocation(int id, Vector2 pos, bool isCrouch)
         {
             ShadowNoel noel = DB.noelDics[id];
+            if (isCrouch)
+            {
+                pos.Y -= 0.5f;
+            }
             ShadowNoelExtensions.MoveShadowNoel(noel, pos);
         }
 

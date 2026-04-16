@@ -15,6 +15,8 @@ namespace WeNeedMoreNoels
 
         public static Dictionary<int, ShadowNoel> noelDics = [];
 
+        public static float MovementEpslion = 0.001f;
+
         public static NetWorkType networkType;
 
         public const string CONNECTION_ACCESS_KEY = "6db535fbb5ac7e0b031d412a807658f7";

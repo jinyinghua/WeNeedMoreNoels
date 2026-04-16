@@ -96,6 +96,7 @@ namespace WeNeedMoreNoels
             {
 
             }
+            Phy.killSpeedForce(true, true, true, true, true);
         }
 
         private PrAnimator AnmN;
