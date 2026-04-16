@@ -17,12 +17,12 @@ namespace WeNeedMoreNoels.CSNetworking
             Content = id.ToString()
         };
 
-        public static WNMNHostMessage UpdateLocation(Vector2 hostPosition, Dictionary<int, Vector2> peerPositions) => new()
+        public static WNMNHostMessage UpdateLocation(ShadowNoelLocation hostLocation, Dictionary<int, ShadowNoelLocation> peerPositions) => new()
         {
             Type = WNMNHostMessageType.UpdateLocation,
             Content = JsonConvert.SerializeObject(new UpdateLocationContent()
             {
-                HostPosition = hostPosition
+                HostLocation = hostLocation
             })
         };
 

@@ -38,6 +38,17 @@ namespace WeNeedMoreNoels
             noel.walkBy(FOCTYPE.WALK, dx, dy, true);
         }
 
+        public static void SetPoseShadowNoel(ShadowNoel noel, string pose, AIM aim)
+        {
+            ShadowNoelAnimator Anm = (ShadowNoelAnimator)noel.Anm;
+            if (Anm.pose_title == pose)
+            {
+                return;
+            }
+            Anm.setPose(pose);
+            Anm.setAim(aim);
+        }
+
         public static void WalkDummy(ShadowNoel noel, float t, AIM aim, float speed)
         {
             noel.StartCoroutine(WalkCoroutine(noel, aim, speed, t));

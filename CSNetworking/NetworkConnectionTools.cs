@@ -2,6 +2,7 @@
 using nel;
 using System.Collections.Generic;
 using System.Numerics;
+using XX;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -27,10 +28,30 @@ namespace WeNeedMoreNoels.CSNetworking
             return new(x, y);
         }
 
+        public static string GetSendPose()
+        {
+            PRNoel noel = DB.MainPR;
+            PrNoelAnimator animator = (PrNoelAnimator)noel.Anm;
+            return animator.pose_title;
+        }
+
+        public static AIM GetSendAIM()
+        {
+            PRNoel noel = DB.MainPR;
+            PrNoelAnimator animator = (PrNoelAnimator)noel.Anm;
+            return (AIM)animator.pose_aim;
+        }
+
         public static void UpdateShadowLocation(int id, Vector2 pos)
         {
             ShadowNoel noel = DB.noelDics[id];
             ShadowNoelExtensions.MoveShadowNoel(noel, pos);
+        }
+
+        public static void UpdateShadowPose(int id, string pose, AIM aim)
+        {
+            ShadowNoel noel = DB.noelDics[id];
+            ShadowNoelExtensions.SetPoseShadowNoel(noel, pose, aim);
         }
     }
 }

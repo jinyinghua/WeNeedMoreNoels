@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using System.Numerics;
 using UnityEngine;
+using XX;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -35,7 +36,15 @@ namespace WeNeedMoreNoels.CSNetworking
         private void HostSendLocation()
         {
             System.Numerics.Vector2 position = NetworkConnectionTools.GetSendLocation();
-            WNMNHostMessage message = WNMNHostMessage.UpdateLocation(position, null);
+            string pose = NetworkConnectionTools.GetSendPose();
+            AIM aim = NetworkConnectionTools.GetSendAIM();
+            ShadowNoelLocation location = new()
+            {
+                Position = position,
+                Pose = pose,
+                AIM = aim
+            };
+            WNMNHostMessage message = WNMNHostMessage.UpdateLocation(location, null);
             string json = JsonConvert.SerializeObject(message);
             NetDataWriter writer = new();
             writer.Put(json);
@@ -105,7 +114,9 @@ namespace WeNeedMoreNoels.CSNetworking
             {
                 return;
             }
-            NetworkConnectionTools.UpdateShadowLocation(message.PeerID, JsonConvert.DeserializeObject<System.Numerics.Vector2>(message.Content));
+            ShadowNoelLocation location = JsonConvert.DeserializeObject<ShadowNoelLocation>(message.Content);
+            NetworkConnectionTools.UpdateShadowLocation(message.PeerID, location.Position);
+            NetworkConnectionTools.UpdateShadowPose(message.PeerID, location.Pose, location.AIM);
         }
 
         private void OnDestroy()

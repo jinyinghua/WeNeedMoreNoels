@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 using WeNeedMoreNoels.HostMessages;
+using XX;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -28,6 +29,10 @@ namespace WeNeedMoreNoels.CSNetworking
         {
             client.PollEvents();
             if (hostPeer is null)
+            {
+                return;
+            }
+            if (peerID == 0)
             {
                 return;
             }
@@ -76,7 +81,15 @@ namespace WeNeedMoreNoels.CSNetworking
         private void SendLocation(int id, NetPeer peer)
         {
             NetDataWriter writer = new();
-            System.Numerics.Vector2 location = NetworkConnectionTools.GetSendLocation();
+            System.Numerics.Vector2 position = NetworkConnectionTools.GetSendLocation();
+            string pose = NetworkConnectionTools.GetSendPose();
+            AIM aim = NetworkConnectionTools.GetSendAIM();
+            ShadowNoelLocation location = new()
+            {
+                Position = position,
+                Pose = pose,
+                AIM = aim
+            };
             WNMNClientMessage message = WNMNClientMessage.ReportLocation(id, location);
             writer.Put(JsonConvert.SerializeObject(message));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
@@ -93,7 +106,7 @@ namespace WeNeedMoreNoels.CSNetworking
                 return;
             }
             UpdateLocationContent content = JsonConvert.DeserializeObject<UpdateLocationContent>(message.Content);
-            Plugin.Logger.LogInfo($"Host location: " + content.HostPosition);
+            Plugin.Logger.LogInfo($"Host location: " + content.HostLocation);
         }
 
         private void UpdateLocation(WNMNHostMessage message)
@@ -104,15 +117,17 @@ namespace WeNeedMoreNoels.CSNetworking
             }
             UpdateLocationContent content = JsonConvert.DeserializeObject<UpdateLocationContent>(message.Content);
             //host
-            NetworkConnectionTools.UpdateShadowLocation(0, content.HostPosition);
+            NetworkConnectionTools.UpdateShadowLocation(0, content.HostLocation.Position);
+            NetworkConnectionTools.UpdateShadowPose(0, content.HostLocation.Pose, content.HostLocation.AIM);
             //peers
-            if (content.PeerPositions is null)
+            if (content.PeerLocations is null)
             {
                 return;
             }
-            foreach (KeyValuePair<int, System.Numerics.Vector2> pair in content.PeerPositions)
+            foreach (KeyValuePair<int, ShadowNoelLocation> pair in content.PeerLocations)
             {
-                NetworkConnectionTools.UpdateShadowLocation(pair.Key, pair.Value);
+                NetworkConnectionTools.UpdateShadowLocation(pair.Key, pair.Value.Position);
+                NetworkConnectionTools.UpdateShadowPose(pair.Key, pair.Value.Pose, pair.Value.AIM);
             }
         }
 

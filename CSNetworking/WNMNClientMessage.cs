@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Numerics;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -11,11 +10,11 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public string Content;
 
-        public static WNMNClientMessage ReportLocation(int peerID, Vector2 position) => new()
+        public static WNMNClientMessage ReportLocation(int peerID, ShadowNoelLocation location) => new()
         {
             PeerID = peerID,
             Type = WNMNClientMessageType.ReportLocation,
-            Content = JsonConvert.SerializeObject(position)
+            Content = JsonConvert.SerializeObject(location)
         };
 
         public override string ToString()
