@@ -15,8 +15,7 @@ namespace WeNeedMoreNoels.Patch
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var match = new CodeMatcher(instructions);
-            // match.MatchStartForward(new CodeMatch(OpCodes.Cgt_Un));
-            match.MatchForward(false, new CodeMatch(OpCodes.Cgt_Un));
+            match.MatchStartForward(new CodeMatch(OpCodes.Cgt_Un));
             match.Advance(2);
             match.InsertAndAdvance([new CodeInstruction(OpCodes.Ldarg_0), new CodeInstruction(OpCodes.Ldc_I4_1), new CodeInstruction(OpCodes.Stfld, AccessTools.Field(typeof(nel.PrNoelAnimator), "is_noel"))]);
             return match.Instructions();

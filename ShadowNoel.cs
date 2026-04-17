@@ -46,7 +46,7 @@ namespace WeNeedMoreNoels
                     float num4;
                     return M2PxlAnimator.getRodPosS(rCLENB, F, out num3, out num4, "rod", "ROD", 0.5f, 0f, ALIGN.LEFT, ALIGNY.MIDDLE, 2, "rodeff");
                 });
-                container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTR.Anoel_pxls, 56f, CaneManager.DefaultCane);
+                container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTRExtension.Anoel_inverse_pxls, 56f, CaneManager.DefaultCane);
                 this.AnmN = new ShadowNoelAnimator(this, m2PxlAnimatorRT, container, false);
                 this.AnmN.initS(m2PxlAnimatorRT);
                 Anm = this.AnmN;

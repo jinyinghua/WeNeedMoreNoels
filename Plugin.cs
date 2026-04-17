@@ -2,6 +2,7 @@
 using BepInEx.Logging;
 using BepInEx.Unity.Mono;
 using HarmonyLib;
+using UnityEngine;
 
 namespace WeNeedMoreNoels
 {
@@ -27,6 +28,7 @@ namespace WeNeedMoreNoels
     \_/\_/  \___|      _|  _| \___| \___| \__,_|      _|  _|  _| \___/  _|   \___|      _| \_| \___/  \___| _| ____/      _) _) 
             """;
             Logger.LogInfo(logo);
+            MTRExtension.Load();
         }
 
         private void OnDestroy()

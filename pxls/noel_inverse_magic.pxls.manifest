@@ -1,0 +1,20 @@
+ManifestFileVersion: 0
+CRC: 1774628315
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 264c4edc820bc6aaaa44704aca24a6b5
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 264c4edc820bc6aaaa44704aca24a6b5
+HashAppended: 0
+ClassTypes:
+- Class: 49
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Pxl/noel_inverse_magic.pxls.bytes
+Dependencies: []

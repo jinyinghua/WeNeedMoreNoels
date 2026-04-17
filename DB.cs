@@ -9,6 +9,8 @@ namespace WeNeedMoreNoels
 
         public static bool ShowLocationDebug = false;
 
+        public static bool PreloadResource;
+
         public static PRNoel MainPR;
 
         public static bool ShadowAppear;
@@ -24,5 +26,9 @@ namespace WeNeedMoreNoels
         public static NetWorkType networkType;
 
         public const string CONNECTION_ACCESS_KEY = "6db535fbb5ac7e0b031d412a807658f7";
+
+        public static string Plugin_local_path;
+
+        public static string Game_streaming_asset;
     }
 }
