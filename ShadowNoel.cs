@@ -7,6 +7,8 @@ namespace WeNeedMoreNoels
 {
     public class ShadowNoel : PRMain
     {
+        public int ID;
+
         public override void Awake()
         {
             base.Awake();
@@ -91,12 +93,12 @@ namespace WeNeedMoreNoels
             try
             {
                 base.runPost();
+                Phy.killSpeedForce(true, true, true, true, true);
             }
             catch
             {
 
             }
-            Phy.killSpeedForce(true, true, true, true, true);
         }
 
         private PrAnimator AnmN;

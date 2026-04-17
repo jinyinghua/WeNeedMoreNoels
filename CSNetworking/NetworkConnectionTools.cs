@@ -8,6 +8,14 @@ namespace WeNeedMoreNoels.CSNetworking
 {
     public static class NetworkConnectionTools
     {
+        public static bool IsHost;
+
+        public static bool Inited;
+
+        public static WNMNClient client;
+
+        public static WNMNHost host;
+
         public static int Unique_ID
         {
             get
@@ -48,8 +56,18 @@ namespace WeNeedMoreNoels.CSNetworking
             return (AIM)animator.pose_aim;
         }
 
+        public static string GetSendMpKey()
+        {
+            PRNoel noel = DB.MainPR;
+            return noel.Mp.key;
+        }
+
         public static void UpdateShadowLocation(int id, Vector2 pos, bool isCrouch)
         {
+            if (!DB.noelEnables[id])
+            {
+                return;
+            }
             ShadowNoel noel = DB.noelDics[id];
             if (isCrouch)
             {
@@ -60,8 +78,44 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public static void UpdateShadowPose(int id, string pose, AIM aim)
         {
+            if (!DB.noelEnables[id])
+            {
+                return;
+            }
             ShadowNoel noel = DB.noelDics[id];
             ShadowNoelExtensions.SetPoseShadowNoel(noel, pose, aim);
+        }
+
+        public static void NotifyChangeMapBefore()
+        {
+            if (!Inited)
+            {
+                return;
+            }
+            if (IsHost)
+            {
+                host.HostSendNotifyChangeMapBefore();
+            }
+            else
+            {
+                client.SendNotifyChangeMapBefore();
+            }
+        }
+
+        public static void NotifyChangeMapAfter(string key)
+        {
+            if (!Inited)
+            {
+                return;
+            }
+            if (IsHost)
+            {
+                host.HostSendNotifyChangeMapAfter(key);
+            }
+            else
+            {
+                client.SendNotifyChangeMapAfter(key);
+            }
         }
     }
 }

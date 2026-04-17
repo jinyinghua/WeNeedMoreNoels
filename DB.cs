@@ -15,6 +15,10 @@ namespace WeNeedMoreNoels
 
         public static Dictionary<int, ShadowNoel> noelDics = [];
 
+        public static Dictionary<int, string> noelMpKeys = [];
+
+        public static Dictionary<int, bool> noelEnables = [];
+
         public static float MovementEpslion = 0.001f;
 
         public static NetWorkType networkType;

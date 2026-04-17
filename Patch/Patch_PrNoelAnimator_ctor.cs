@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace WeNeedMoreNoels
+namespace WeNeedMoreNoels.Patch
 {//PR _Pr, M2PxlAnimatorRT _Anm, PrPoseContainer _PCon, bool execute_initS = true
     [HarmonyPatch(typeof(PrNoelAnimator), MethodType.Constructor, [typeof(PR), typeof(M2PxlAnimatorRT), typeof(PrPoseContainer), typeof(bool)])]
     public class Patch_PrNoelAnimator_ctor

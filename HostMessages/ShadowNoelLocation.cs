@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using XX;
 
-namespace WeNeedMoreNoels
+namespace WeNeedMoreNoels.HostMessages
 {
     public class ShadowNoelLocation
     {

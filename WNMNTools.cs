@@ -21,11 +21,14 @@ namespace WeNeedMoreNoels
             {
                 case NetWorkType.Host:
                     gameObject.AddComponent<WNMNHost>();
+                    NetworkConnectionTools.IsHost = true;
                     break;
                 case NetWorkType.Client:
                     gameObject.AddComponent<WNMNClient>();
+                    NetworkConnectionTools.IsHost = false;
                     break;
             }
+            NetworkConnectionTools.Inited = true;
         }
 
         public static void RunHost(int port = 4721)

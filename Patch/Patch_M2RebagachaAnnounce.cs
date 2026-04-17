@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using nel;
 
-namespace WeNeedMoreNoels
+namespace WeNeedMoreNoels.Patch
 {
     [HarmonyPatch(typeof(M2RebagachaAnnounce), nameof(M2RebagachaAnnounce.initG))]
     public static class Patch_M2RebagachaAnnounce_initG

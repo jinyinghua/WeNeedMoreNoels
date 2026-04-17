@@ -9,7 +9,7 @@ using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WeNeedMoreNoels
+namespace WeNeedMoreNoels.Patch
 {
     [HarmonyPatch(typeof(PR), nameof(PR.initAbsorb))]
     public class Patch_PR_initAbsorb

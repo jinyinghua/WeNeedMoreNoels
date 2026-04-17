@@ -2,7 +2,6 @@
 using LiteNetLib.Utils;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
 using WeNeedMoreNoels.HostMessages;
 using XX;
@@ -23,6 +22,7 @@ namespace WeNeedMoreNoels.CSNetworking
             client = new(listener);
             listener.PeerConnectedEvent += Listener_PeerConnectedEvent;
             listener.NetworkReceiveEvent += Listener_NetworkReceiveEvent;
+            NetworkConnectionTools.client = this;
         }
 
         private void Update()
@@ -67,6 +67,8 @@ namespace WeNeedMoreNoels.CSNetworking
             InitClient(message);
             DebugLocation(message);
             UpdateLocation(message);
+            UpdateChangeMapBefore(message);
+            UpdateChangeMapAfter(message);
         }
 
         private void InitClient(WNMNHostMessage message)
@@ -131,6 +133,51 @@ namespace WeNeedMoreNoels.CSNetworking
                 NetworkConnectionTools.UpdateShadowLocation(pair.Key, pair.Value.Position, pair.Value.IsCrouch);
                 NetworkConnectionTools.UpdateShadowPose(pair.Key, pair.Value.Pose, pair.Value.AIM);
             }
+        }
+
+        public void SendNotifyChangeMapBefore()
+        {
+            NetDataWriter writer = new();
+            WNMNClientMessage message = WNMNClientMessage.NotifyChangeMapBefore(peerID);
+            writer.Put(JsonConvert.SerializeObject(message));
+            hostPeer.Send(writer, DeliveryMethod.Unreliable);
+        }
+
+        public void SendNotifyChangeMapAfter(string key)
+        {
+            NetDataWriter writer = new();
+            WNMNClientMessage message = WNMNClientMessage.NotifyChangeMapAfter(peerID, key);
+            writer.Put(JsonConvert.SerializeObject(message));
+            hostPeer.Send(writer, DeliveryMethod.Unreliable);
+        }
+
+        private void UpdateChangeMapBefore(WNMNHostMessage message)
+        {
+            if (message.Type != WNMNHostMessageType.NotifyChangeMapBefore)
+            {
+                return;
+            }
+            ShadowNoelExtensions.DisableAllShadowNoels();
+        }
+
+        private void UpdateChangeMapAfter(WNMNHostMessage message)
+        {
+            if (message.Type != WNMNHostMessageType.NotifyChangeMapAfter)
+            {
+                return;
+            }
+            HostUpdateContent<string> content = JsonConvert.DeserializeObject<HostUpdateContent<string>>(message.Content);
+            //host
+            ShadowNoelExtensions.UpdateShadowNoelMpKey(0, content.HostContent);
+            //peers
+            if (content.PeerContents is not null)
+            {
+                foreach (KeyValuePair<int, string> pair in content.PeerContents)
+                {
+                    ShadowNoelExtensions.UpdateShadowNoelMpKey(pair.Key, pair.Value);
+                }
+            }
+            ShadowNoelExtensions.DetectShadowNoelInCurrentMap();
         }
 
         private void OnDestroy()

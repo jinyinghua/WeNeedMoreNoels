@@ -25,6 +25,20 @@ namespace WeNeedMoreNoels.CSNetworking
             })
         };
 
+        public static WNMNHostMessage NotifyChangeMapBefore() => new()
+        {
+            Type = WNMNHostMessageType.NotifyChangeMapBefore
+        };
+
+        public static WNMNHostMessage NotifyChangeMapAfter(string hostMpKey, Dictionary<int, string> peerMpKeys) => new()
+        {
+            Type = WNMNHostMessageType.NotifyChangeMapAfter,
+            Content = JsonConvert.SerializeObject(new HostUpdateContent<string>()
+            {
+                HostContent = hostMpKey
+            })
+        };
+
         public override string ToString()
         {
             return $"Host message, type:{Type}, content:{Content}";
@@ -34,6 +48,8 @@ namespace WeNeedMoreNoels.CSNetworking
     public enum WNMNHostMessageType
     {
         Init,
-        UpdateLocation
+        UpdateLocation,
+        NotifyChangeMapBefore,
+        NotifyChangeMapAfter
     }
 }

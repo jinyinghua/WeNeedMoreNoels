@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using nel;
 
-namespace WeNeedMoreNoels
+namespace WeNeedMoreNoels.Patch
 {
     [HarmonyPatch(typeof(PRNoel), nameof(PRNoel.newGame))]
     public class Patch_PRNoel_newGame
