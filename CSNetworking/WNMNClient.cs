@@ -1,10 +1,13 @@
 ﻿using LiteNetLib;
 using LiteNetLib.Utils;
+using nel;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
 using WeNeedMoreNoels.HostMessages;
 using XX;
+using static m2d.M2MoverPr;
+using static UnityEngine.InputSystem.InputRemoting;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -44,6 +47,7 @@ namespace WeNeedMoreNoels.CSNetworking
             hostPeer = peer;
             //host
             ShadowNoelExtensions.GenerateShadowNoel(0);
+            NetworkConnectionTools.Connected = true;
         }
 
         public void ConnectHost(string ip = "localhost", int port = 4721)
@@ -69,6 +73,7 @@ namespace WeNeedMoreNoels.CSNetworking
             UpdateLocation(message);
             UpdateChangeMapBefore(message);
             UpdateChangeMapAfter(message);
+            UpdateNotifyStateChange(message);
         }
 
         private void InitClient(WNMNHostMessage message)
@@ -178,6 +183,33 @@ namespace WeNeedMoreNoels.CSNetworking
                 }
             }
             ShadowNoelExtensions.DetectShadowNoelInCurrentMap();
+        }
+
+        public void SendNotifyStateChange(PR.STATE STATE)
+        {
+            NetDataWriter writer = new();
+            WNMNClientMessage message = WNMNClientMessage.NotifyStateChange(peerID, STATE);
+            writer.Put(JsonConvert.SerializeObject(message));
+            hostPeer.Send(writer, DeliveryMethod.Unreliable);
+        }
+
+        private void UpdateNotifyStateChange(WNMNHostMessage message)
+        {
+            if (message.Type != WNMNHostMessageType.NotifyStateChange)
+            {
+                return;
+            }
+            HostUpdateContent<PR.STATE> content = JsonConvert.DeserializeObject<HostUpdateContent<PR.STATE>>(message.Content);
+            //host
+            ShadowNoelExtensions.UpdateShadowNoelState(0, content.HostContent);
+            //peers
+            if (content.PeerContents is not null)
+            {
+                foreach (KeyValuePair<int, PR.STATE> pair in content.PeerContents)
+                {
+                    ShadowNoelExtensions.UpdateShadowNoelState(pair.Key, pair.Value);
+                }
+            }
         }
 
         private void OnDestroy()

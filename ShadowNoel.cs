@@ -1,6 +1,7 @@
 ﻿using m2d;
 using nel;
 using PixelLiner;
+using System;
 using XX;
 
 namespace WeNeedMoreNoels
@@ -76,18 +77,6 @@ namespace WeNeedMoreNoels
             return rt;
         }
 
-        public override void runPre()
-        {
-            try
-            {
-                base.runPre();
-            }
-            catch
-            {
-
-            }
-        }
-
         public override void runPost()
         {
             try
@@ -95,9 +84,9 @@ namespace WeNeedMoreNoels
                 base.runPost();
                 Phy.killSpeedForce(true, true, true, true, true);
             }
-            catch
+            catch (Exception e)
             {
-
+                Plugin.Logger.LogError(e);
             }
         }
 

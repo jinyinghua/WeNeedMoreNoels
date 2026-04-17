@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using nel;
+using Newtonsoft.Json;
 using WeNeedMoreNoels.HostMessages;
 
 namespace WeNeedMoreNoels.CSNetworking
@@ -31,6 +32,13 @@ namespace WeNeedMoreNoels.CSNetworking
             Content = mpKey
         };
 
+        public static WNMNClientMessage NotifyStateChange(int peerID, PR.STATE STATE) => new()
+        {
+            PeerID = peerID,
+            Type = WNMNClientMessageType.NotifyStateChange,
+            Content = ((int)STATE).ToString()
+        };
+
         public override string ToString()
         {
             return $"Client#{PeerID} message, type:{Type}, content:{Content}";
@@ -41,6 +49,7 @@ namespace WeNeedMoreNoels.CSNetworking
     {
         ReportLocation,
         NotifyChangeMapBefore,
-        NotifyChangeMapAfter
+        NotifyChangeMapAfter,
+        NotifyStateChange
     }
 }

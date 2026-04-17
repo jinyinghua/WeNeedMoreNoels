@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using nel;
+using System.Numerics;
 using XX;
 
 namespace WeNeedMoreNoels.HostMessages
@@ -12,7 +13,7 @@ namespace WeNeedMoreNoels.HostMessages
         public string Pose;
 
         public AIM AIM;
-
+            
         public override string ToString()
         {
             return $"Location: x:{Position.X} y:{Position.Y} pose:{Pose} aim:{AIM}";

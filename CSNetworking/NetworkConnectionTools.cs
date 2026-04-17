@@ -12,6 +12,8 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public static bool Inited;
 
+        public static bool Connected;
+
         public static WNMNClient client;
 
         public static WNMNHost host;
@@ -88,7 +90,7 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public static void NotifyChangeMapBefore()
         {
-            if (!Inited)
+            if (!Inited | !Connected)
             {
                 return;
             }
@@ -104,7 +106,7 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public static void NotifyChangeMapAfter(string key)
         {
-            if (!Inited)
+            if (!Inited | !Connected)
             {
                 return;
             }
@@ -115,6 +117,22 @@ namespace WeNeedMoreNoels.CSNetworking
             else
             {
                 client.SendNotifyChangeMapAfter(key);
+            }
+        }
+
+        public static void NotifyStateChange(PR.STATE STATE)
+        {
+            if (!Inited | !Connected)
+            {
+                return;
+            }
+            if (IsHost)
+            {
+                host.HostSendNotifyStateChange(STATE);
+            }
+            else
+            {
+                client.SendNotifyStateChange(STATE);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using m2d;
+using nel;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -84,11 +85,17 @@ namespace WeNeedMoreNoels
             }
             Anm.setPose(pose);
             Anm.setAim(aim);
+            noel.Skill.setAim(aim);
         }
 
         public static void UpdateShadowNoelMpKey(int id, string key)
         {
             DB.noelMpKeys[id] = key;
+        }
+
+        public static void UpdateShadowNoelState(int id, PR.STATE STATE)
+        {
+            DB.noelDics[id].changeState(STATE);
         }
 
         public static void DisableAllShadowNoels()

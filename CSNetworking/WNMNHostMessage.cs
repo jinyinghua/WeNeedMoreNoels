@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using nel;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using WeNeedMoreNoels.HostMessages;
 
@@ -39,6 +40,15 @@ namespace WeNeedMoreNoels.CSNetworking
             })
         };
 
+        public static WNMNHostMessage NotifyStateChange(PR.STATE STATE, Dictionary<int, PR.STATE> peerSTATEs) => new()
+        {
+            Type = WNMNHostMessageType.NotifyStateChange,
+            Content = JsonConvert.SerializeObject(new HostUpdateContent<PR.STATE>()
+            {
+                HostContent = STATE
+            })
+        };
+
         public override string ToString()
         {
             return $"Host message, type:{Type}, content:{Content}";
@@ -50,6 +60,7 @@ namespace WeNeedMoreNoels.CSNetworking
         Init,
         UpdateLocation,
         NotifyChangeMapBefore,
-        NotifyChangeMapAfter
+        NotifyChangeMapAfter,
+        NotifyStateChange
     }
 }
