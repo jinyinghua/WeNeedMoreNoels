@@ -11,10 +11,14 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public string Content;
 
-        public static WNMNHostMessage Init(int id) => new()
+        public static WNMNHostMessage Init(int id, WNMNTools.NetworkConfig config) => new()
         {
             Type = WNMNHostMessageType.Init,
-            Content = id.ToString()
+            Content = JsonConvert.SerializeObject(new HostInitContent()
+            {
+                ClientID = id,
+                HostConfig = config
+            })
         };
 
         public static WNMNHostMessage UpdateLocation(ShadowNoelLocation hostLocation, Dictionary<int, ShadowNoelLocation> peerLocations) => new()

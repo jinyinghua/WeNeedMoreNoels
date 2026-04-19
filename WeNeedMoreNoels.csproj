@@ -65,6 +65,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="en\en_wnmn_localization.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="pxls\noel_inverse.px.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -77,13 +80,13 @@
     <None Update="pxls\noel_inverse.pxl.manifest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="pxls\noel_inverse.pxls.dat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="pxls\noel_inverse.pxls.bytes.texture_0.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="pxls\noel_inverse.pxls.bytes.texture_0.manifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="pxls\noel_inverse.pxls.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="pxls\noel_inverse.pxls.manifest">
@@ -98,13 +101,13 @@
     <None Update="pxls\noel_inverse_magic.pxl.manifest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="pxls\noel_inverse_magic.pxls.dat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="pxls\noel_inverse_magic.pxls.bytes.texture_0.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="pxls\noel_inverse_magic.pxls.bytes.texture_0.manifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="pxls\noel_inverse_magic.pxls.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="pxls\noel_inverse_magic.pxls.manifest">
@@ -122,17 +125,33 @@
     <None Update="pxls\noel_inverse_r18.pxl.manifest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="pxls\noel_inverse_r18.pxls.dat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="pxls\noel_inverse_r18.pxls.bytes.texture_0.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="pxls\noel_inverse_r18.pxls.bytes.texture_0.manifest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="pxls\noel_inverse_r18.pxls.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="pxls\noel_inverse_r18.pxls.manifest">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="resources\multiplayer.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="resources\multiplayer.manifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="zh-cn\zh-cn_wnmn_localization.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="zh-tc\zh-tc_wnmn_localization.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="pxls\" />
   </ItemGroup>
 </Project>

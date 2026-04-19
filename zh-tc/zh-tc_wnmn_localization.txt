@@ -1,0 +1,34 @@
+﻿&&btn_multiplayer 多人遊戲
+
+&&multiplayer_host_title 主機設置
+&&multiplayer_client_title 客戶端設置
+
+&&multiplayer_host_port 主機端口
+&&multiplayer_host_closed 主機已關閉
+
+&&multiplayer_nickname 暱稱： 
+&&multiplayer_select_noel 選擇人物：
+
+&&multiplayer_con ：
+
+&&multiplayer_noel 普通諾艾兒
+&&multiplayer_noel_inverse 反轉諾艾兒
+
+// ========================================================
+// MARK : 多人選項選擇
+// ========================================================
+
+/* ___ Title_multiplayer_top ___ */ 
+<key la/><key ra/>選擇 <key submit/>確定 <key cancel/>退回主菜單
+選擇多人模式
+
+&&Title_multiplayer_host 主機
+&&Title_multiplayer_client 客戶端
+
+/* ___ Title_multiplayer_desc_host ___ */ 
+作爲主機啓動，讓其他玩家連接
+（需要強勁的電腦）
+
+/* ___ Title_multiplayer_desc_client ___ */ 
+連接到一個已有的主機
+享受多重「可憐即可愛」吧！

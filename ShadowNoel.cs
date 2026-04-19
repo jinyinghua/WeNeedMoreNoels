@@ -1,13 +1,13 @@
 ﻿using m2d;
 using nel;
-using PixelLiner;
 using System;
-using XX;
 
 namespace WeNeedMoreNoels
 {
     public class ShadowNoel : PRMain
     {
+        public WNMNTools.NetworkConfig InitConfig;
+
         public int ID;
 
         public override void Awake()
@@ -34,25 +34,36 @@ namespace WeNeedMoreNoels
             this.AbsorbCon = new AbsorbManagerContainer(5, this);
         }
 
-        public override void createAnimator(ref PrAnimator anm)
+        public override void createAnimator(ref PrAnimator Anm)
         {
-            M2PxlAnimatorRT m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, "noel", "stand", false);
-            if (Anm == null)
+            if (InitConfig is not null)
             {
-                this.SfPose = new AnimationShuffler(this);
-                PrPoseContainer container = new PrPoseContainer("shadow_noel", delegate (PxlFrame F, float rCLENB)
+                M2PxlAnimatorRT m2PxlAnimatorRT;
+                if (Anm == null)
                 {
-                    float num3;
-                    float num4;
-                    return M2PxlAnimator.getRodPosS(rCLENB, F, out num3, out num4, "rod", "ROD", 0.5f, 0f, ALIGN.LEFT, ALIGNY.MIDDLE, 2, "rodeff");
-                });
-                container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTRExtension.Anoel_inverse_pxls, 56f, CaneManager.DefaultCane);
-                this.AnmN = new ShadowNoelAnimator(this, m2PxlAnimatorRT, container, false);
-                this.AnmN.initS(m2PxlAnimatorRT);
-                Anm = this.AnmN;
-                return;
+                    SfPose = new AnimationShuffler(this);
+                    PrPoseContainer container;
+                    switch (InitConfig.NoelType)
+                    {
+                        case NoelType.Normal:
+                            m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, "noel", "stand", false, M2Mover.DRAW_ORDER.PR1);
+                            container = MTR.PConNoelAnim;
+                            container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTR.Anoel_pxls, 56f, CaneManager.DefaultCane);
+                            break;
+                        case NoelType.Inverse:
+                            m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, "noel_inverse", "stand", false, M2Mover.DRAW_ORDER.PR1);
+                            container = MTRExtension.PConNoelIAnim;
+                            container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTRExtension.Anoel_inverse_pxls, 56f, CaneManager.DefaultCane);
+                            break;
+                        default:
+                            return;
+                    }
+                    AnmN = new ShadowNoelAnimator(this, m2PxlAnimatorRT, container, false);
+                    Anm = AnmN;
+                    AnmN.initS(m2PxlAnimatorRT);
+                    return;
+                }
             }
-            Anm.initS(m2PxlAnimatorRT);
         }
 
         public override void appear(Map2d Mp)

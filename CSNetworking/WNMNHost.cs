@@ -3,17 +3,18 @@ using LiteNetLib.Utils;
 using nel;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Text;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using WeNeedMoreNoels.HostMessages;
 using XX;
-using static m2d.M2MoverPr;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
     public class WNMNHost : MonoBehaviour
     {
         NetManager host;
+
+        NetManager transferHost;
 
         public int maxPlayerCount = 2;
 
@@ -24,12 +25,18 @@ namespace WeNeedMoreNoels.CSNetworking
             listener.ConnectionRequestEvent += Listener_ConnectionRequestEvent;
             listener.PeerConnectedEvent += Listener_PeerConnectedEvent;
             listener.NetworkReceiveEvent += Listener_NetworkReceiveEvent;
+            listener.PeerDisconnectedEvent += Listener_PeerDisconnectedEvent;
+            EventBasedNetListener transferListener = new();
+            transferHost = new(transferListener);
+            transferListener.ConnectionRequestEvent += TransferListener_ConnectionRequestEvent;
+            transferListener.PeerConnectedEvent += TransferListener_PeerConnectedEvent;
             NetworkConnectionTools.host = this;
         }
 
         private void Update()
         {
             host.PollEvents();
+            transferHost.PollEvents();
             if (host is null || host.Count() == 0)
             {
                 return;
@@ -66,6 +73,16 @@ namespace WeNeedMoreNoels.CSNetworking
             }
             host.Start(port);
             Plugin.Logger.LogInfo($"WNMNHost started, port:{port}");
+            transferHost.Start(port + 1);
+            Plugin.Logger.LogInfo($"WNMN Sync transfer host started, port:{port + 1}");
+        }
+
+        private void TransferListener_ConnectionRequestEvent(ConnectionRequest request)
+        {
+            if (host.ConnectedPeersCount < maxPlayerCount /* max connections */)
+                request.AcceptIfKey(DB.TRANSFER_ACCESS_KEY);
+            else
+                request.Reject();
         }
 
         private void Listener_ConnectionRequestEvent(ConnectionRequest request)
@@ -76,16 +93,24 @@ namespace WeNeedMoreNoels.CSNetworking
                 request.Reject();
         }
 
+        private void TransferListener_PeerConnectedEvent(NetPeer peer)
+        {
+            Plugin.Logger.LogInfo($"WNMNTransfer host got connection: {peer.EndPoint}");
+            NetDataWriter writer = new();
+            writer.Put(DB.SyncSaveContentBuffer);
+            peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            Plugin.Logger.LogInfo("WNMNTransfer host transfered map data");
+        }
+
         private void Listener_PeerConnectedEvent(NetPeer peer)
         {
-            Plugin.Logger.LogInfo($"We got connection: {peer.EndPoint}");
+            Plugin.Logger.LogInfo($"WNMNMain host got connection: {peer.EndPoint}");
             NetDataWriter writer = new();
             int id = NetworkConnectionTools.Unique_ID;
-            WNMNHostMessage message = WNMNHostMessage.Init(id);
+            WNMNHostMessage message = WNMNHostMessage.Init(id, DB.InitConfig);
             writer.Put(JsonConvert.SerializeObject(message));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
             NetworkConnectionTools.NetPeerDic.Add(id, peer);
-            ShadowNoelExtensions.GenerateShadowNoel(id);
             NetworkConnectionTools.Connected = true;
         }
 
@@ -98,11 +123,31 @@ namespace WeNeedMoreNoels.CSNetworking
                 Plugin.Logger.LogInfo($"Message from client: {message}");
             }
             reader.Recycle();
+            InitHost(message);
             DebugLocationClient(message);
             UpdateLocation(message);
             UpdateChangeMapBefore(message);
             UpdateChangeMapAfter(message);
             UpdateNotifyStateChange(message);
+        }
+
+        private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
+        {
+            NetDataReader reader = disconnectInfo.AdditionalData;
+            int id = reader.GetInt();
+            NetworkConnectionTools.DisconnectClient(id);
+        }
+
+        private void InitHost(WNMNClientMessage message)
+        {
+            if (message.Type != WNMNClientMessageType.Init)
+            {
+                return;
+            }
+            WNMNTools.NetworkConfig content = JsonConvert.DeserializeObject<WNMNTools.NetworkConfig>(message.Content);
+            int id = message.PeerID;
+            DB.noelConfigs.Add(id, content);
+            ShadowNoelExtensions.GenerateShadowNoel(id);
         }
 
         private void DebugLocationClient(WNMNClientMessage message)

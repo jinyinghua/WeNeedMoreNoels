@@ -8,24 +8,47 @@ namespace WeNeedMoreNoels
         static WNMNHost host;
         static WNMNClient client;
 
-        public static void InitNetworking(NetWorkType type)
+        public static void InitNetworking(NetworkConfig config)
+        {
+            InitNetworking(config.Type, out host, out client);
+            switch (config.Type)
+            {
+                case NetWorkType.Host:
+                    RunHost(config.port);
+                    break;
+                case NetWorkType.Client:
+                    ConnectHost(config.ip, config.port);
+                    break;
+            }
+            DB.Nickname = config.nickName;
+        }
+
+        public static void InitNetworking(NetWorkType type, out WNMNHost host, out WNMNClient client)
         {
             DB.networkType = type;
             if (GameObject.Find("NetworkSource") != null)
             {
                 Plugin.Logger.LogWarning("NetworkSource created");
+                host = null;
+                client = null;
                 return;
             }
             GameObject gameObject = new("NetworkSource");
             switch (DB.networkType)
             {
                 case NetWorkType.Host:
-                    gameObject.AddComponent<WNMNHost>();
+                    host = gameObject.AddComponent<WNMNHost>();
                     NetworkConnectionTools.IsHost = true;
+                    client = null;
                     break;
                 case NetWorkType.Client:
-                    gameObject.AddComponent<WNMNClient>();
+                    client = gameObject.AddComponent<WNMNClient>();
                     NetworkConnectionTools.IsHost = false;
+                    host = null;
+                    break;
+                default:
+                    host = null;
+                    client = null;
                     break;
             }
             NetworkConnectionTools.Inited = true;
@@ -50,11 +73,30 @@ namespace WeNeedMoreNoels
             }
             client.ConnectHost(ip, port);
         }
+
+        public class NetworkConfig
+        {
+            public NetWorkType Type;
+
+            public int port;
+
+            public string ip;
+
+            public NoelType NoelType;
+
+            public string nickName;
+        }
     }
 
     public enum NetWorkType
     {
         Host,
         Client
+    }
+
+    public enum NoelType
+    {
+        Normal,
+        Inverse
     }
 }

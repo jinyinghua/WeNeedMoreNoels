@@ -2,6 +2,7 @@
 using nel;
 using System.Collections.Generic;
 using System.Numerics;
+using UnityEngine;
 using XX;
 
 namespace WeNeedMoreNoels.CSNetworking
@@ -31,7 +32,7 @@ namespace WeNeedMoreNoels.CSNetworking
 
         static int _uniqueID = 0;
 
-        public static Vector2 GetSendLocation()
+        public static System.Numerics.Vector2 GetSendLocation()
         {
             PRNoel noel = DB.MainPR;
             noel.getPosition(out float x, out float y);
@@ -64,9 +65,9 @@ namespace WeNeedMoreNoels.CSNetworking
             return noel.Mp.key;
         }
 
-        public static void UpdateShadowLocation(int id, Vector2 pos, bool isCrouch)
+        public static void UpdateShadowLocation(int id, System.Numerics.Vector2 pos, bool isCrouch)
         {
-            if (!DB.noelEnables[id])
+            if (!DB.noelEnables.ContainsKey(id) || !DB.noelEnables[id])
             {
                 return;
             }
@@ -80,7 +81,7 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public static void UpdateShadowPose(int id, string pose, AIM aim)
         {
-            if (!DB.noelEnables[id])
+            if (!DB.noelEnables.ContainsKey(id) || !DB.noelEnables[id])
             {
                 return;
             }
@@ -133,6 +134,32 @@ namespace WeNeedMoreNoels.CSNetworking
             else
             {
                 client.SendNotifyStateChange(STATE);
+            }
+        }
+
+        public static void DisconnectClient(int id)
+        {
+            if (DB.noelDics.ContainsKey(id))
+            {
+                ShadowNoel noel = DB.noelDics[id];
+                Object.DestroyImmediate(noel);
+                DB.noelDics.Remove(id);
+            }
+            if (DB.noelConfigs.ContainsKey(id))
+            {
+                DB.noelConfigs.Remove(id);
+            }
+            if (DB.noelNicknames.ContainsKey(id))
+            {
+                DB.noelNicknames.Remove(id);
+            }
+            if (DB.noelEnables.ContainsKey(id))
+            {
+                DB.noelEnables.Remove(id);
+            }
+            if (DB.noelMpKeys.ContainsKey(id))
+            {
+            DB.noelMpKeys.Remove(id);
             }
         }
     }

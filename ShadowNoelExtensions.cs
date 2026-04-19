@@ -1,6 +1,5 @@
 ﻿using m2d;
 using nel;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using XX;
@@ -18,6 +17,7 @@ namespace WeNeedMoreNoels
             Map2d map = M2DBase.Instance.curMap;
             map.Pr.getPosition(out float x, out float y);
             ShadowNoel noel = map.createMover<ShadowNoel>("ShadowNoel", x, y);
+            noel.InitConfig = DB.noelConfigs[id];
             noel.newGame();
             noel.gameObject.AddComponent<Rigidbody2D>();
             noel.gameObject.name = "ShadowNoel";
@@ -69,6 +69,10 @@ namespace WeNeedMoreNoels
 
         public static void MoveShadowNoel(ShadowNoel noel, System.Numerics.Vector2 pos)
         {
+            if (noel.Phy is null)
+            {
+                return;
+            }
             noel.getPosition(out float x, out float y);
             float dx = pos.X - x;
             float dy = pos.Y - y;

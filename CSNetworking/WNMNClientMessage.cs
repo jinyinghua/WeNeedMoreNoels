@@ -12,6 +12,13 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public string Content;
 
+        public static WNMNClientMessage Init(int peerID, WNMNTools.NetworkConfig config) => new()
+        {
+            PeerID = peerID,
+            Type = WNMNClientMessageType.Init,
+            Content = JsonConvert.SerializeObject(config)
+        };
+
         public static WNMNClientMessage ReportLocation(int peerID, ShadowNoelLocation location) => new()
         {
             PeerID = peerID,
@@ -47,6 +54,7 @@ namespace WeNeedMoreNoels.CSNetworking
 
     public enum WNMNClientMessageType
     {
+        Init,
         ReportLocation,
         NotifyChangeMapBefore,
         NotifyChangeMapAfter,

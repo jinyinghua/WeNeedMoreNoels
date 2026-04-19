@@ -14,6 +14,11 @@ namespace WeNeedMoreNoels.Patch
             NetworkConnectionTools.NotifyChangeMapAfter(Mp.key);
             ShadowNoelExtensions.DisableAllShadowNoels();
             ShadowNoelExtensions.DetectShadowNoelInCurrentMap();
+
+            if (DB.InitConfig is not null)
+            {
+                WNMNTools.InitNetworking(DB.InitConfig);
+            }
         }
     }
 }

@@ -1,13 +1,14 @@
 ﻿using LiteNetLib;
 using LiteNetLib.Utils;
+using m2d;
 using nel;
+using nel.gm;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using WeNeedMoreNoels.HostMessages;
 using XX;
-using static m2d.M2MoverPr;
-using static UnityEngine.InputSystem.InputRemoting;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -25,6 +26,7 @@ namespace WeNeedMoreNoels.CSNetworking
             client = new(listener);
             listener.PeerConnectedEvent += Listener_PeerConnectedEvent;
             listener.NetworkReceiveEvent += Listener_NetworkReceiveEvent;
+            listener.PeerDisconnectedEvent += Listener_PeerDisconnectedEvent;
             NetworkConnectionTools.client = this;
         }
 
@@ -46,7 +48,6 @@ namespace WeNeedMoreNoels.CSNetworking
         {
             hostPeer = peer;
             //host
-            ShadowNoelExtensions.GenerateShadowNoel(0);
             NetworkConnectionTools.Connected = true;
         }
 
@@ -68,7 +69,7 @@ namespace WeNeedMoreNoels.CSNetworking
                 Plugin.Logger.LogInfo($"Message from host: {message}");
             }
             reader.Recycle();
-            InitClient(message);
+            InitClient(peer, message);
             DebugLocation(message);
             UpdateLocation(message);
             UpdateChangeMapBefore(message);
@@ -76,13 +77,26 @@ namespace WeNeedMoreNoels.CSNetworking
             UpdateNotifyStateChange(message);
         }
 
-        private void InitClient(WNMNHostMessage message)
+        private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
+        {
+            DB.WNMNHostClosed = true;
+            ((NelM2DBase)DB.MainPR.M2D).quitGame("SceneTitle");
+        }
+
+        private void InitClient(NetPeer hostPeer, WNMNHostMessage message)
         {
             if (message.Type != WNMNHostMessageType.Init)
             {
                 return;
             }
-            peerID = int.Parse(message.Content);
+            HostInitContent content = JsonConvert.DeserializeObject<HostInitContent>(message.Content);
+            peerID = content.ClientID;
+            DB.noelConfigs.Add(0, content.HostConfig);
+            ShadowNoelExtensions.GenerateShadowNoel(0);
+            WNMNClientMessage initMessage = WNMNClientMessage.Init(peerID, DB.InitConfig);
+            NetDataWriter writer = new();
+            writer.Put(JsonConvert.SerializeObject(initMessage));
+            hostPeer.Send(writer, DeliveryMethod.ReliableOrdered);
         }
 
         private void SendLocation(int id, NetPeer peer)
@@ -187,6 +201,10 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public void SendNotifyStateChange(PR.STATE STATE)
         {
+            if (hostPeer is null)
+            {
+                return;
+            }
             NetDataWriter writer = new();
             WNMNClientMessage message = WNMNClientMessage.NotifyStateChange(peerID, STATE);
             writer.Put(JsonConvert.SerializeObject(message));
@@ -214,8 +232,11 @@ namespace WeNeedMoreNoels.CSNetworking
 
         private void OnDestroy()
         {
-            client.DisconnectAll();
+            NetDataWriter writer = new();
+            writer.Put(peerID);
+            client.DisconnectPeer(hostPeer, writer);
             client.Stop();
+            NetworkConnectionTools.DisconnectClient(0);
         }
     }
 }
