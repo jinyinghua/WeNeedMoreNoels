@@ -12,9 +12,27 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public string Content;
 
-        public static WNMNHostMessage Init(int id, WNMNTools.NetworkConfig config) => new()
+        public static WNMNHostMessage Init(int id, WNMNTools.NetworkConfig config, Dictionary<int, WNMNTools.NetworkConfig> peerConfigs) => new()
         {
             Type = WNMNHostMessageType.Init,
+            Content = JsonConvert.SerializeObject(new HostUpdateContent<HostInitContent>()
+            {
+                HostContent = new()
+                {
+                    ClientID = id,
+                    HostConfig = config
+                },
+                PeerContents = [.. peerConfigs.Select(x => new KeyValuePair<int, HostInitContent>(x.Key, new()
+                {
+                    ClientID = x.Key,
+                    HostConfig = x.Value
+                }))]
+            })
+        };
+
+        public static WNMNHostMessage InitClient(int id, WNMNTools.NetworkConfig config) => new()
+        {
+            Type = WNMNHostMessageType.InitOtherClient,
             Content = JsonConvert.SerializeObject(new HostInitContent()
             {
                 ClientID = id,
@@ -22,12 +40,19 @@ namespace WeNeedMoreNoels.CSNetworking
             })
         };
 
+        public static WNMNHostMessage DisconnectOtherClient(int id) => new()
+        {
+            Type = WNMNHostMessageType.DisconnectOtherClient,
+            Content = id.ToString()
+        };
+
         public static WNMNHostMessage UpdateInfo(ShadowNoelInfo hostInfo, Dictionary<int, ShadowNoelInfo> peerInfos) => new()
         {
             Type = WNMNHostMessageType.UpdateInfo,
             Content = JsonConvert.SerializeObject(new HostUpdateContent<ShadowNoelInfo>()
             {
-                HostContent = hostInfo
+                HostContent = hostInfo,
+                PeerContents = [.. peerInfos]
             })
         };
 
@@ -73,6 +98,8 @@ namespace WeNeedMoreNoels.CSNetworking
     public enum WNMNHostMessageType
     {
         Init,
+        InitOtherClient,
+        DisconnectOtherClient,
         UpdateInfo,
         NotifyChangeMapBefore,
         NotifyChangeMapAfter,

@@ -141,8 +141,17 @@ namespace WeNeedMoreNoels.CSNetworking
             }
             if (DB.noelMpKeys.ContainsKey(id))
             {
-            DB.noelMpKeys.Remove(id);
+                DB.noelMpKeys.Remove(id);
             }
+        }
+
+        public static void ClearDics()
+        {
+            DB.noelDics.Clear();
+            DB.noelConfigs.Clear();
+            DB.noelNicknames.Clear();
+            DB.noelEnables.Clear();
+            DB.noelMpKeys.Clear();
         }
     }
 }

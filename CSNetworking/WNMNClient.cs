@@ -66,6 +66,8 @@ namespace WeNeedMoreNoels.CSNetworking
             }
             reader.Recycle();
             InitClient(peer, message);
+            InitOtherClient(message);
+            DisconnectOtherClient(message);
             DebugLocation(message);
             UpdateLocation(message);
             UpdateChangeMapBefore(message);
@@ -86,16 +88,56 @@ namespace WeNeedMoreNoels.CSNetworking
             {
                 return;
             }
-            HostInitContent content = JsonConvert.DeserializeObject<HostInitContent>(message.Content);
-            peerID = content.ClientID;
-            WNMNTools.LocalID = content.ClientID;
-            DB.noelConfigs.Add(0, content.HostConfig);
+            HostUpdateContent<HostInitContent> content = JsonConvert.DeserializeObject<HostUpdateContent<HostInitContent>>(message.Content);
+            if (content.HostContent.ClientID == peerID)
+            {
+                return;
+            }
+            peerID = content.HostContent.ClientID;
+            WNMNTools.LocalID = content.HostContent.ClientID;
+            DB.noelConfigs.Add(0, content.HostContent.HostConfig);
             ShadowNoel noel = ShadowNoelExtensions.GenerateShadowNoel(0);
             noel.OnNoelDamage += SendNotifyNoelDamage;
             WNMNClientMessage initMessage = WNMNClientMessage.Init(peerID, DB.InitConfig);
             NetDataWriter writer = new();
             writer.Put(JsonConvert.SerializeObject(initMessage));
             hostPeer.Send(writer, DeliveryMethod.ReliableOrdered);
+            ShadowNoelExtensions.CheckDBDics(content.HostContent.ClientID, content.HostContent.HostConfig);
+            if (content.PeerContents is not null)
+            {
+                foreach (var pair in content.PeerContents)
+                {
+                    DB.noelConfigs.Add(pair.Key, pair.Value.HostConfig);
+                    ShadowNoelExtensions.GenerateShadowNoel(pair.Key);
+                    ShadowNoelExtensions.CheckDBDics(pair.Key, pair.Value.HostConfig);
+                }
+            }
+        }
+
+        private void InitOtherClient(WNMNHostMessage message)
+        {
+            if (message.Type != WNMNHostMessageType.InitOtherClient)
+            {
+                return;
+            }
+            HostInitContent content = JsonConvert.DeserializeObject<HostInitContent>(message.Content);
+            if (content.ClientID == peerID)
+            {
+                return;
+            }
+            DB.noelConfigs.Add(content.ClientID, content.HostConfig);
+            ShadowNoelExtensions.GenerateShadowNoel(content.ClientID);
+            ShadowNoelExtensions.CheckDBDics(content.ClientID, content.HostConfig);
+        }
+
+        private void DisconnectOtherClient(WNMNHostMessage message)
+        {
+            if (message.Type != WNMNHostMessageType.DisconnectOtherClient)
+            {
+                return;
+            }
+            int id = int.Parse(message.Content);
+            NetworkConnectionTools.DisconnectClient(id);
         }
 
         private void SendInfo(int id, NetPeer peer)
@@ -251,7 +293,7 @@ namespace WeNeedMoreNoels.CSNetworking
             writer.Put(peerID);
             client.DisconnectPeer(hostPeer, writer);
             client.Stop();
-            NetworkConnectionTools.DisconnectClient(0);
+            NetworkConnectionTools.ClearDics();
         }
     }
 }

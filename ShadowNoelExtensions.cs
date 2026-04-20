@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using WeNeedMoreNoels.HostMessages;
 using XX;
-using static nel.UiHkdsChat;
 
 namespace WeNeedMoreNoels
 {
@@ -100,6 +99,17 @@ namespace WeNeedMoreNoels
             noel.mp = mp;
         }
 
+        public static void SetCane(ShadowNoel noel, ushort key, byte grade)
+        {
+            NelItem item = NelItem.GetByUId(key, true);
+            if (item == null)
+                return;
+            CaneManager.CaneItem cane = CaneManager.Get(item, true);
+            if (cane == null)
+                return;
+            noel.getSkillManager().switchCane(cane, (int)grade, false);
+        }
+
         public static void UpdateShadowNoelMpKey(int id, string key)
         {
             DB.noelMpKeys[id] = key;
@@ -108,6 +118,18 @@ namespace WeNeedMoreNoels
         public static void UpdateShadowNoelState(int id, PR.STATE STATE)
         {
             DB.noelDics[id].changeState(STATE);
+        }
+
+        public static void CheckDBDics(int id, WNMNTools.NetworkConfig config)
+        {
+            if (!DB.noelNicknames.ContainsKey(id))
+            {
+                DB.noelNicknames.Add(id, config.nickName);
+            }
+            if (!DB.noelInfos.ContainsKey(id))
+            {
+                DB.noelInfos.Add(id, new());
+            }
         }
 
         public static void DamageNoel(int id, ShadowNoelDamage dmg)

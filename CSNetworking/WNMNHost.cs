@@ -40,13 +40,13 @@ namespace WeNeedMoreNoels.CSNetworking
             {
                 return;
             }
-            HostSendLocation();
+            HostSendInfos();
         }
 
-        private void HostSendLocation()
+        private void HostSendInfos()
         {
             ShadowNoelInfo location = NetworkConnectionTools.GetSendInfo();
-            WNMNHostMessage message = WNMNHostMessage.UpdateInfo(location, null);
+            WNMNHostMessage message = WNMNHostMessage.UpdateInfo(location, DB.noelInfos);
             string json = JsonConvert.SerializeObject(message);
             NetDataWriter writer = new();
             writer.Put(json);
@@ -96,7 +96,7 @@ namespace WeNeedMoreNoels.CSNetworking
             Plugin.Logger.LogInfo($"WNMNMain host got connection: {peer.EndPoint}");
             NetDataWriter writer = new();
             int id = NetworkConnectionTools.Unique_ID;
-            WNMNHostMessage message = WNMNHostMessage.Init(id, DB.InitConfig);
+            WNMNHostMessage message = WNMNHostMessage.Init(id, DB.InitConfig, DB.noelConfigs);
             writer.Put(JsonConvert.SerializeObject(message));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
             NetworkConnectionTools.NetPeerDic.Add(id, peer);
@@ -114,7 +114,7 @@ namespace WeNeedMoreNoels.CSNetworking
             reader.Recycle();
             InitHost(message);
             DebugLocationClient(message);
-            UpdateLocation(message);
+            UpdateInfo(message);
             UpdateChangeMapBefore(message);
             UpdateChangeMapAfter(message);
             UpdateNotifyStateChange(message);
@@ -126,6 +126,10 @@ namespace WeNeedMoreNoels.CSNetworking
             NetDataReader reader = disconnectInfo.AdditionalData;
             int id = reader.GetInt();
             NetworkConnectionTools.DisconnectClient(id);
+            WNMNHostMessage message = WNMNHostMessage.DisconnectOtherClient(id);
+            NetDataWriter writer = new();
+            writer.Put(JsonConvert.SerializeObject(message));
+            host.SendToAll(writer, DeliveryMethod.ReliableOrdered);
         }
 
         private void InitHost(WNMNClientMessage message)
@@ -139,6 +143,11 @@ namespace WeNeedMoreNoels.CSNetworking
             DB.noelConfigs.Add(id, content);
             ShadowNoel noel = ShadowNoelExtensions.GenerateShadowNoel(id);
             noel.OnNoelDamage += HostSendNotifyNoelDamage;
+            NetDataWriter writer = new();
+            WNMNHostMessage message1 = WNMNHostMessage.InitClient(id, content);
+            writer.Put(JsonConvert.SerializeObject(message1));
+            host.SendToAll(writer, DeliveryMethod.ReliableOrdered);
+            ShadowNoelExtensions.CheckDBDics(id, content);
         }
 
         private void DebugLocationClient(WNMNClientMessage message)
@@ -154,14 +163,22 @@ namespace WeNeedMoreNoels.CSNetworking
             Plugin.Logger.LogInfo($"Client#{message.PeerID} location: " + message.Content);
         }
 
-        private void UpdateLocation(WNMNClientMessage message)
+        private void UpdateInfo(WNMNClientMessage message)
         {
             if (message.Type != WNMNClientMessageType.ReportInfo)
             {
                 return;
             }
-            ShadowNoelInfo location = JsonConvert.DeserializeObject<ShadowNoelInfo>(message.Content);
-            NetworkConnectionTools.UpdateShadowInfo(message.PeerID, location);
+            ShadowNoelInfo info = JsonConvert.DeserializeObject<ShadowNoelInfo>(message.Content);
+            NetworkConnectionTools.UpdateShadowInfo(message.PeerID, info);
+            if (!DB.noelInfos.ContainsKey(message.PeerID))
+            {
+                DB.noelInfos.Add(message.PeerID, info);
+            }
+            else
+            {
+                DB.noelInfos[message.PeerID] = info;
+            }
         }
 
         public void HostSendNotifyChangeMapBefore()
@@ -175,7 +192,7 @@ namespace WeNeedMoreNoels.CSNetworking
         public void HostSendNotifyChangeMapAfter(string key)
         {
             NetDataWriter writer = new();
-            WNMNHostMessage message = WNMNHostMessage.NotifyChangeMapAfter(key, null);
+            WNMNHostMessage message = WNMNHostMessage.NotifyChangeMapAfter(key, DB.noelMpKeys);
             writer.Put(JsonConvert.SerializeObject(message));
             host.SendToAll(writer, DeliveryMethod.Unreliable);
         }
@@ -247,6 +264,7 @@ namespace WeNeedMoreNoels.CSNetworking
         {
             host.DisconnectAll();
             host.Stop();
+            NetworkConnectionTools.ClearDics();
         }
     }
 }

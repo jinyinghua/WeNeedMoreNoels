@@ -1,5 +1,6 @@
 ﻿using nel;
 using System.Collections.Generic;
+using WeNeedMoreNoels.HostMessages;
 
 namespace WeNeedMoreNoels
 {
@@ -40,6 +41,8 @@ namespace WeNeedMoreNoels
         public static Dictionary<int, bool> noelEnables = [];
 
         public static Dictionary<int, WNMNTools.NetworkConfig> noelConfigs = [];
+
+        public static Dictionary<int, ShadowNoelInfo> noelInfos = [];
 
         public static float MovementEpslion = 0.001f;
 
