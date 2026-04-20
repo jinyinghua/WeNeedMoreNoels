@@ -2,11 +2,10 @@
 using LiteNetLib.Utils;
 using nel;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 using WeNeedMoreNoels.HostMessages;
-using XX;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -46,18 +45,8 @@ namespace WeNeedMoreNoels.CSNetworking
 
         private void HostSendLocation()
         {
-            System.Numerics.Vector2 position = NetworkConnectionTools.GetSendLocation();
-            bool crouch = NetworkConnectionTools.GetSendCrouch();
-            string pose = NetworkConnectionTools.GetSendPose();
-            AIM aim = NetworkConnectionTools.GetSendAIM();
-            ShadowNoelLocation location = new()
-            {
-                Position = position,
-                IsCrouch = crouch,
-                Pose = pose,
-                AIM = aim
-            };
-            WNMNHostMessage message = WNMNHostMessage.UpdateLocation(location, null);
+            ShadowNoelInfo location = NetworkConnectionTools.GetSendInfo();
+            WNMNHostMessage message = WNMNHostMessage.UpdateInfo(location, null);
             string json = JsonConvert.SerializeObject(message);
             NetDataWriter writer = new();
             writer.Put(json);
@@ -129,6 +118,7 @@ namespace WeNeedMoreNoels.CSNetworking
             UpdateChangeMapBefore(message);
             UpdateChangeMapAfter(message);
             UpdateNotifyStateChange(message);
+            UpdateNotifyNoelDamage(message);
         }
 
         private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
@@ -147,7 +137,8 @@ namespace WeNeedMoreNoels.CSNetworking
             WNMNTools.NetworkConfig content = JsonConvert.DeserializeObject<WNMNTools.NetworkConfig>(message.Content);
             int id = message.PeerID;
             DB.noelConfigs.Add(id, content);
-            ShadowNoelExtensions.GenerateShadowNoel(id);
+            ShadowNoel noel = ShadowNoelExtensions.GenerateShadowNoel(id);
+            noel.OnNoelDamage += HostSendNotifyNoelDamage;
         }
 
         private void DebugLocationClient(WNMNClientMessage message)
@@ -156,7 +147,7 @@ namespace WeNeedMoreNoels.CSNetworking
             {
                 return;
             }
-            if (message.Type != WNMNClientMessageType.ReportLocation)
+            if (message.Type != WNMNClientMessageType.ReportInfo)
             {
                 return;
             }
@@ -165,13 +156,12 @@ namespace WeNeedMoreNoels.CSNetworking
 
         private void UpdateLocation(WNMNClientMessage message)
         {
-            if (message.Type != WNMNClientMessageType.ReportLocation)
+            if (message.Type != WNMNClientMessageType.ReportInfo)
             {
                 return;
             }
-            ShadowNoelLocation location = JsonConvert.DeserializeObject<ShadowNoelLocation>(message.Content);
-            NetworkConnectionTools.UpdateShadowLocation(message.PeerID, location.Position, location.IsCrouch);
-            NetworkConnectionTools.UpdateShadowPose(message.PeerID, location.Pose, location.AIM);
+            ShadowNoelInfo location = JsonConvert.DeserializeObject<ShadowNoelInfo>(message.Content);
+            NetworkConnectionTools.UpdateShadowInfo(message.PeerID, location);
         }
 
         public void HostSendNotifyChangeMapBefore()
@@ -186,6 +176,24 @@ namespace WeNeedMoreNoels.CSNetworking
         {
             NetDataWriter writer = new();
             WNMNHostMessage message = WNMNHostMessage.NotifyChangeMapAfter(key, null);
+            writer.Put(JsonConvert.SerializeObject(message));
+            host.SendToAll(writer, DeliveryMethod.Unreliable);
+        }
+
+        private void HostSendNotifyNoelDamage(int id, ShadowNoelDamage Atk)
+        {
+            NetDataWriter writer = new();
+            WNMNHostMessage message;
+            if (id == 0)
+            {
+                message = WNMNHostMessage.NotifyNoelDamage(Atk, null);
+            }
+            else
+            {
+                Dictionary<int, ShadowNoelDamage> noelDmgs = [];
+                noelDmgs.Add(id, Atk);
+                message = WNMNHostMessage.NotifyNoelDamage(null, noelDmgs);
+            }
             writer.Put(JsonConvert.SerializeObject(message));
             host.SendToAll(writer, DeliveryMethod.Unreliable);
         }
@@ -224,6 +232,15 @@ namespace WeNeedMoreNoels.CSNetworking
                 return;
             }
             ShadowNoelExtensions.UpdateShadowNoelState(message.PeerID, (PR.STATE)int.Parse(message.Content));
+        }
+
+        private void UpdateNotifyNoelDamage(WNMNClientMessage message)
+        {
+            if (message.Type != WNMNClientMessageType.NotifyNoelDamage)
+            {
+                return;
+            }
+            ShadowNoelExtensions.DamageNoel(message.PeerID, JsonConvert.DeserializeObject<ShadowNoelDamage>(message.Content));
         }
 
         private void OnDestroy()

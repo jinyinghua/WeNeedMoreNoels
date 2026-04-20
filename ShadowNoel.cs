@@ -1,6 +1,7 @@
 ﻿using m2d;
 using nel;
 using System;
+using WeNeedMoreNoels.HostMessages;
 
 namespace WeNeedMoreNoels
 {
@@ -9,6 +10,8 @@ namespace WeNeedMoreNoels
         public WNMNTools.NetworkConfig InitConfig;
 
         public int ID;
+
+        public Action<int, ShadowNoelDamage> OnNoelDamage;
 
         public override void Awake()
         {
@@ -74,10 +77,31 @@ namespace WeNeedMoreNoels
 
             this.UP?.destruct();
             this.UP = null;
+
+            this.gameObject.tag = "MoverEn";
+            this.gameObject.layer = 23; //23 is EmenyLayer
         }
 
         public override void refineMoveKey(bool ignore_keypushdown = false) { }
-        
+
+        public override HITTYPE getHitType(M2Ray Ray)
+        {
+            if (Ray != null && Ray.Caster is PR && Ray.Caster != this)
+            {
+                return HITTYPE.EN;
+            }
+            return HITTYPE.PR;
+        }
+
+        public override bool cannotHitTo(M2Mover Mv)
+        {
+            if (Mv is PR && Mv != this)
+            {
+                return false;
+            }
+            return base.cannotHitTo(Mv);
+        }
+
         public override bool runUi() {
             var tg = this.Mp.TalkTarget_;
             bool rt = true;
@@ -88,6 +112,15 @@ namespace WeNeedMoreNoels
             return rt;
         }
 
+        public override void runPre()
+        {
+            try
+            {
+                base.runPre();
+            }
+            catch { }
+        }
+
         public override void runPost()
         {
             try
@@ -95,10 +128,7 @@ namespace WeNeedMoreNoels
                 base.runPost();
                 Phy.killSpeedForce(true, true, true, true, true);
             }
-            catch (Exception e)
-            {
-                Plugin.Logger.LogError(e);
-            }
+            catch { }
         }
 
         private PrAnimator AnmN;

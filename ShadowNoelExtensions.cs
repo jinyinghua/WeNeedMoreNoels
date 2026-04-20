@@ -2,7 +2,9 @@
 using nel;
 using System.Collections.Generic;
 using UnityEngine;
+using WeNeedMoreNoels.HostMessages;
 using XX;
+using static nel.UiHkdsChat;
 
 namespace WeNeedMoreNoels
 {
@@ -92,6 +94,12 @@ namespace WeNeedMoreNoels
             noel.Skill.setAim(aim);
         }
 
+        public static void SetHPMP(ShadowNoel noel, int hp, int mp)
+        {
+            noel.hp = hp;
+            noel.mp = mp;
+        }
+
         public static void UpdateShadowNoelMpKey(int id, string key)
         {
             DB.noelMpKeys[id] = key;
@@ -100,6 +108,37 @@ namespace WeNeedMoreNoels
         public static void UpdateShadowNoelState(int id, PR.STATE STATE)
         {
             DB.noelDics[id].changeState(STATE);
+        }
+
+        public static void DamageNoel(int id, ShadowNoelDamage dmg)
+        {
+            var Atk = new NelAttackInfo
+            {
+                attr = MGATTR.NORMAL,
+                ndmg = NDMG.DEFAULT,
+                hpdmg0 = dmg.hp,
+                mpdmg0 = dmg.mp,
+                fix_damage = true,
+                parryable = false,
+                shield_break_ratio = 1f,
+                ignore_nodamage_time = true,
+                nodamage_time = 0
+            };
+            if (WNMNTools.Type == NetWorkType.Host && id == 0)
+            {
+                DB.MainPR.DMG.applyDamage(Atk, true);
+            }
+            else
+            {
+                if (id == WNMNTools.LocalID)
+                {
+                    DB.MainPR.DMG.applyDamage(Atk, true);
+                }
+                else
+                {
+                    DB.noelDics[id].DMG.applyDamage(Atk, true);
+                }
+            }
         }
 
         public static void DisableAllShadowNoels()

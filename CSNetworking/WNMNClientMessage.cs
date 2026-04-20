@@ -19,11 +19,11 @@ namespace WeNeedMoreNoels.CSNetworking
             Content = JsonConvert.SerializeObject(config)
         };
 
-        public static WNMNClientMessage ReportLocation(int peerID, ShadowNoelLocation location) => new()
+        public static WNMNClientMessage ReportInfo(int peerID, ShadowNoelInfo info) => new()
         {
             PeerID = peerID,
-            Type = WNMNClientMessageType.ReportLocation,
-            Content = JsonConvert.SerializeObject(location)
+            Type = WNMNClientMessageType.ReportInfo,
+            Content = JsonConvert.SerializeObject(info)
         };
 
         public static WNMNClientMessage NotifyChangeMapBefore(int peerID) => new()
@@ -46,6 +46,13 @@ namespace WeNeedMoreNoels.CSNetworking
             Content = ((int)STATE).ToString()
         };
 
+        public static WNMNClientMessage NotifyNoelDamage(int peerID, ShadowNoelDamage Atk) => new()
+        {
+            PeerID = peerID,
+            Type = WNMNClientMessageType.NotifyNoelDamage,
+            Content = JsonConvert.SerializeObject(Atk)
+        };
+
         public override string ToString()
         {
             return $"Client#{PeerID} message, type:{Type}, content:{Content}";
@@ -55,9 +62,10 @@ namespace WeNeedMoreNoels.CSNetworking
     public enum WNMNClientMessageType
     {
         Init,
-        ReportLocation,
+        ReportInfo,
         NotifyChangeMapBefore,
         NotifyChangeMapAfter,
-        NotifyStateChange
+        NotifyStateChange,
+        NotifyNoelDamage
     }
 }

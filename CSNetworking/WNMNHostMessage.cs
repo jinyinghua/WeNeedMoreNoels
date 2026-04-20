@@ -1,6 +1,7 @@
 ﻿using nel;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using WeNeedMoreNoels.HostMessages;
 
 namespace WeNeedMoreNoels.CSNetworking
@@ -21,12 +22,12 @@ namespace WeNeedMoreNoels.CSNetworking
             })
         };
 
-        public static WNMNHostMessage UpdateLocation(ShadowNoelLocation hostLocation, Dictionary<int, ShadowNoelLocation> peerLocations) => new()
+        public static WNMNHostMessage UpdateInfo(ShadowNoelInfo hostInfo, Dictionary<int, ShadowNoelInfo> peerInfos) => new()
         {
-            Type = WNMNHostMessageType.UpdateLocation,
-            Content = JsonConvert.SerializeObject(new HostUpdateContent<ShadowNoelLocation>()
+            Type = WNMNHostMessageType.UpdateInfo,
+            Content = JsonConvert.SerializeObject(new HostUpdateContent<ShadowNoelInfo>()
             {
-                HostContent = hostLocation
+                HostContent = hostInfo
             })
         };
 
@@ -53,6 +54,16 @@ namespace WeNeedMoreNoels.CSNetworking
             })
         };
 
+        public static WNMNHostMessage NotifyNoelDamage(ShadowNoelDamage val, Dictionary<int, ShadowNoelDamage> peerVals) => new()
+        {
+            Type = WNMNHostMessageType.NotifyNoelDamage,
+            Content = JsonConvert.SerializeObject(new HostUpdateContent<ShadowNoelDamage>()
+            {
+                HostContent = val,
+                PeerContents = [.. peerVals]
+            })
+        };
+
         public override string ToString()
         {
             return $"Host message, type:{Type}, content:{Content}";
@@ -62,9 +73,10 @@ namespace WeNeedMoreNoels.CSNetworking
     public enum WNMNHostMessageType
     {
         Init,
-        UpdateLocation,
+        UpdateInfo,
         NotifyChangeMapBefore,
         NotifyChangeMapAfter,
-        NotifyStateChange
+        NotifyStateChange,
+        NotifyNoelDamage
     }
 }

@@ -1,8 +1,8 @@
 ﻿using LiteNetLib;
 using nel;
 using System.Collections.Generic;
-using System.Numerics;
 using UnityEngine;
+using WeNeedMoreNoels.HostMessages;
 using XX;
 
 namespace WeNeedMoreNoels.CSNetworking
@@ -32,31 +32,20 @@ namespace WeNeedMoreNoels.CSNetworking
 
         static int _uniqueID = 0;
 
-        public static System.Numerics.Vector2 GetSendLocation()
+        public static ShadowNoelInfo GetSendInfo()
         {
             PRNoel noel = DB.MainPR;
             noel.getPosition(out float x, out float y);
-            return new(x, y);
-        }
-
-        public static bool GetSendCrouch()
-        {
-            PRNoel noel = DB.MainPR;
-            return noel.is_crouch;
-        }
-
-        public static string GetSendPose()
-        {
-            PRNoel noel = DB.MainPR;
             PrNoelAnimator animator = (PrNoelAnimator)noel.Anm;
-            return animator.pose_title;
-        }
-
-        public static AIM GetSendAIM()
-        {
-            PRNoel noel = DB.MainPR;
-            PrNoelAnimator animator = (PrNoelAnimator)noel.Anm;
-            return (AIM)animator.pose_aim;
+            return new()
+            {
+                Position = new(x, y),
+                IsCrouch = noel.is_crouch,
+                Pose = animator.pose_title,
+                AIM = (AIM)animator.pose_aim,
+                HP = noel.hp,
+                MP = noel.mp
+            };
         }
 
         public static string GetSendMpKey()
@@ -65,28 +54,21 @@ namespace WeNeedMoreNoels.CSNetworking
             return noel.Mp.key;
         }
 
-        public static void UpdateShadowLocation(int id, System.Numerics.Vector2 pos, bool isCrouch)
+        public static void UpdateShadowInfo(int id, ShadowNoelInfo info)
         {
             if (!DB.noelEnables.ContainsKey(id) || !DB.noelEnables[id])
             {
                 return;
             }
             ShadowNoel noel = DB.noelDics[id];
-            if (isCrouch)
+            System.Numerics.Vector2 pos = info.Position;
+            if (info.IsCrouch)
             {
                 pos.Y -= 0.5f;
             }
             ShadowNoelExtensions.MoveShadowNoel(noel, pos);
-        }
-
-        public static void UpdateShadowPose(int id, string pose, AIM aim)
-        {
-            if (!DB.noelEnables.ContainsKey(id) || !DB.noelEnables[id])
-            {
-                return;
-            }
-            ShadowNoel noel = DB.noelDics[id];
-            ShadowNoelExtensions.SetPoseShadowNoel(noel, pose, aim);
+            ShadowNoelExtensions.SetPoseShadowNoel(noel, info.Pose, info.AIM);
+            ShadowNoelExtensions.SetHPMP(noel, info.HP, info.MP);
         }
 
         public static void NotifyChangeMapBefore()

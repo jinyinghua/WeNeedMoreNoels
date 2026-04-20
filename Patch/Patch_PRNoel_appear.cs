@@ -8,6 +8,8 @@ namespace WeNeedMoreNoels.Patch
     [HarmonyPatch(typeof(PRNoel), nameof(PRNoel.appear))]
     public class Patch_PRNoel_appear
     {
+        static bool Inited;
+
         [HarmonyPostfix]
         static void Postfix(Map2d Mp)
         {
@@ -15,9 +17,10 @@ namespace WeNeedMoreNoels.Patch
             ShadowNoelExtensions.DisableAllShadowNoels();
             ShadowNoelExtensions.DetectShadowNoelInCurrentMap();
 
-            if (DB.InitConfig is not null)
+            if (!Inited && DB.InitConfig is not null)
             {
                 WNMNTools.InitNetworking(DB.InitConfig);
+                Inited = true;
             }
         }
     }

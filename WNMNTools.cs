@@ -8,6 +8,9 @@ namespace WeNeedMoreNoels
         static WNMNHost host;
         static WNMNClient client;
 
+        public static NetWorkType Type;
+        public static int LocalID;
+
         public static void InitNetworking(NetworkConfig config)
         {
             InitNetworking(config.Type, out host, out client);
@@ -15,9 +18,11 @@ namespace WeNeedMoreNoels
             {
                 case NetWorkType.Host:
                     RunHost(config.port);
+                    Type = NetWorkType.Host;
                     break;
                 case NetWorkType.Client:
                     ConnectHost(config.ip, config.port);
+                    Type = NetWorkType.Client;
                     break;
             }
             DB.Nickname = config.nickName;
