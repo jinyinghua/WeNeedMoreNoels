@@ -16,6 +16,10 @@ namespace WeNeedMoreNoels.HostMessages
         public int HP;
 
         public int MP;
+
+        public ushort itemID;
+
+        public byte grade;
             
         public override string ToString()
         {

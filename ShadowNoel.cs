@@ -2,6 +2,7 @@
 using nel;
 using System;
 using WeNeedMoreNoels.HostMessages;
+using static UnityEngine.GraphicsBuffer;
 
 namespace WeNeedMoreNoels
 {
@@ -49,12 +50,12 @@ namespace WeNeedMoreNoels
                     switch (InitConfig.NoelType)
                     {
                         case NoelType.Normal:
-                            m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, "noel", "stand", false, M2Mover.DRAW_ORDER.PR1);
+                            m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, "noel_magic", "stand", false, M2Mover.DRAW_ORDER.PR1);
                             container = MTR.PConNoelAnim;
                             container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTR.Anoel_pxls, 56f, CaneManager.DefaultCane);
                             break;
                         case NoelType.Inverse:
-                            m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, "noel_inverse", "stand", false, M2Mover.DRAW_ORDER.PR1);
+                            m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, "noel_inverse_magic", "stand", false, M2Mover.DRAW_ORDER.PR1);
                             container = MTRExtension.PConNoelIAnim;
                             container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTRExtension.Anoel_inverse_pxls, 56f, CaneManager.DefaultCane);
                             break;

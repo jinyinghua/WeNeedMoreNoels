@@ -44,7 +44,9 @@ namespace WeNeedMoreNoels.CSNetworking
                 Pose = animator.pose_title,
                 AIM = (AIM)animator.pose_aim,
                 HP = noel.hp,
-                MP = noel.mp
+                MP = noel.mp,
+                itemID = DB.MainPR.getSkillManager().getCurrentCaneEquip().GetItem().id,
+                grade = DB.MainPR.getSkillManager().getCurrentCaneEquip().grade
             };
         }
 
@@ -69,6 +71,7 @@ namespace WeNeedMoreNoels.CSNetworking
             ShadowNoelExtensions.MoveShadowNoel(noel, pos);
             ShadowNoelExtensions.SetPoseShadowNoel(noel, info.Pose, info.AIM);
             ShadowNoelExtensions.SetHPMP(noel, info.HP, info.MP);
+            ShadowNoelExtensions.SetCane(noel, info.itemID, info.grade);
         }
 
         public static void NotifyChangeMapBefore()

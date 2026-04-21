@@ -107,7 +107,11 @@ namespace WeNeedMoreNoels
             CaneManager.CaneItem cane = CaneManager.Get(item, true);
             if (cane == null)
                 return;
-            noel.getSkillManager().switchCane(cane, (int)grade, false);
+            if (noel.getSkillManager().getCurrentCaneEquip().cane_key == cane.key)
+            {
+                return;
+            }
+            noel.getSkillManager().switchCane(cane, grade, false);
         }
 
         public static void UpdateShadowNoelMpKey(int id, string key)
