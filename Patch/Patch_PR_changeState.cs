@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using nel;
-using WeNeedMoreNoels.CSNetworking;
 
 namespace WeNeedMoreNoels.Patch
 {
@@ -11,7 +10,7 @@ namespace WeNeedMoreNoels.Patch
         {
             if (__instance is PRNoel)
             {
-                NetworkConnectionTools.NotifyStateChange(_state);
+                //TODO:改状态
             }
         }
     }

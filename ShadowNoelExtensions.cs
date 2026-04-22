@@ -9,63 +9,72 @@ namespace WeNeedMoreNoels
 {
     public static class ShadowNoelExtensions
     {
-        public static ShadowNoel GenerateShadowNoel(int id = -1)
+        public static ShadowNoel GenerateShadowNoel(WNMNTools.NetworkConfig config, int id = -1)
         {
-            if (DB.noelEnables.ContainsKey(id) && DB.noelEnables[id])
-            {
-                return null;
-            }
             Map2d map = M2DBase.Instance.curMap;
             map.Pr.getPosition(out float x, out float y);
-            ShadowNoel noel = map.createMover<ShadowNoel>("ShadowNoel", x, y);
-            noel.InitConfig = DB.noelConfigs[id];
+            ShadowNoel noel;
+            if (DB.noelIns.ContainsKey(id))
+            {
+                if (!DB.noelIns[id].Enabled)
+                {
+                    noel = map.createMover<ShadowNoel>("ShadowNoel", x, y);
+                    noel.InitConfig = config;
+                    noel.newGame();
+                    noel.gameObject.AddComponent<Rigidbody2D>();
+                    noel.gameObject.name = "ShadowNoel";
+                    map.assignMover(noel);
+                    noel.ID = id;
+                    DB.noelIns[id].Noel = noel;
+                    return noel;
+                }
+                return null;
+            }
+            noel = map.createMover<ShadowNoel>("ShadowNoel", x, y);
+            noel.InitConfig = config;
             noel.newGame();
             noel.gameObject.AddComponent<Rigidbody2D>();
             noel.gameObject.name = "ShadowNoel";
             map.assignMover(noel);
-            DB.noelDics.Add(id, noel);
-            if (!DB.noelEnables.ContainsKey(id))
-            {
-                DB.noelEnables.Add(id, true);
-            }
-            else
-            {
-                DB.noelEnables[id] = true;
-            }
-            if (!DB.noelMpKeys.ContainsKey(id))
-            {
-                DB.noelMpKeys.Add(id, noel.Mp.key);
-            }
             noel.ID = id;
+            DB.noelIns.Add(id, new()
+            {
+                Noel = noel,
+                Nickname = config.nickName,
+                MpKey = map.key,
+                NoelInitConfig = config,
+                NoelInfo = new()
+            });
             return noel;
         }
 
         public static void DisableShadowNoel(int id)
         {
-            if (!DB.noelEnables.ContainsKey(id))
+            if (!DB.noelIns.ContainsKey(id))
             {
                 Plugin.Logger.LogWarning("try to disable not existing noel");
             }
-            if (!DB.noelDics.ContainsKey(id))
-            {
-                return;
-            }
-            ShadowNoel noel = DB.noelDics[id];
+            ShadowNoel noel = DB.noelIns[id].Noel;
             noel.Mp.destructPxlAnimByMover(noel);
             noel.Mp.removeMover(noel);
             noel.destruct();
             Object.DestroyImmediate(noel.gameObject);
-            DB.noelDics.Remove(id);
-            DB.noelEnables[id] = false;
+            DB.noelIns[id].Enabled = false;
+            DB.noelIns[id].Noel = null;
         }
 
         public static void EnableShadowNoel(int id)
         {
-            if (!DB.noelEnables.ContainsKey(id))
+            if (!DB.noelIns.ContainsKey(id))
             {
                 Plugin.Logger.LogWarning("try to disable not existing noel");
             }
-            GenerateShadowNoel(id);
+            GenerateShadowNoel(DB.noelIns[id].NoelInitConfig, id);
+        }
+
+        public static void UpdateShadowInfo()
+        {
+
         }
 
         public static void MoveShadowNoel(ShadowNoel noel, System.Numerics.Vector2 pos)
@@ -114,28 +123,6 @@ namespace WeNeedMoreNoels
             noel.getSkillManager().switchCane(cane, grade, false);
         }
 
-        public static void UpdateShadowNoelMpKey(int id, string key)
-        {
-            DB.noelMpKeys[id] = key;
-        }
-
-        public static void UpdateShadowNoelState(int id, PR.STATE STATE)
-        {
-            DB.noelDics[id].changeState(STATE);
-        }
-
-        public static void CheckDBDics(int id, WNMNTools.NetworkConfig config)
-        {
-            if (!DB.noelNicknames.ContainsKey(id))
-            {
-                DB.noelNicknames.Add(id, config.nickName);
-            }
-            if (!DB.noelInfos.ContainsKey(id))
-            {
-                DB.noelInfos.Add(id, new());
-            }
-        }
-
         public static void DamageNoel(int id, ShadowNoelDamage dmg)
         {
             var Atk = new NelAttackInfo
@@ -148,7 +135,7 @@ namespace WeNeedMoreNoels
                 parryable = false,
                 shield_break_ratio = 1f,
                 ignore_nodamage_time = true,
-                nodamage_time = 0
+                nodamage_time = 0,
             };
             if (WNMNTools.Type == NetWorkType.Host && id == 0)
             {
@@ -162,57 +149,39 @@ namespace WeNeedMoreNoels
                 }
                 else
                 {
-                    DB.noelDics[id].DMG.applyDamage(Atk, true);
+                    DB.noelIns[id].Noel.DMG.applyDamage(Atk, true);
                 }
             }
         }
 
         public static void DisableAllShadowNoels()
         {
-            List<int> disabledNoels = [];
-            foreach (var pair in DB.noelMpKeys)
+            foreach (var pair in DB.noelIns)
             {
-                disabledNoels.Add(pair.Key);
-            }
-            foreach (int key in disabledNoels)
-            {
-                DisableShadowNoel(key);
+                DisableShadowNoel(pair.Key);
             }
         }
 
         public static void DetectShadowNoelInCurrentMap()
         {
-            foreach (var pair in DB.noelMpKeys)
+            foreach (var pair in DB.noelIns)
             {
-                if (DB.MainPR.Mp.key == pair.Value)
+                if (DB.MainPR.Mp.key == pair.Value.MpKey)
                 {
                     EnableShadowNoel(pair.Key);
                 }
             }
         }
 
-        //public static void WalkDummy(ShadowNoel noel, float t, AIM aim, float speed)
-        //{
-        //    noel.StartCoroutine(WalkCoroutine(noel, aim, speed, t));
-        //}
+        public static void DisableShadowNoelHit(ShadowNoel noel)
+        {
 
-        //static IEnumerator WalkCoroutine(ShadowNoel noel, AIM aim, float speed, float targetTime)
-        //{
-        //    float timer = 0;
-        //    ShadowNoelAnimator anm = (ShadowNoelAnimator)noel.Anm;
-        //    anm.setPose(WALK_STATE);
-        //    while (timer < targetTime)
-        //    {
-        //        noel.walkByAim((int)aim, speed);
-        //        timer += Time.deltaTime;
-        //        yield return null;
-        //    }
-        //    anm.setPose(STAND_STATE);
-        //    yield return null;
-        //}
+        }
 
-        const string WALK_STATE = "walk";
-
-        const string STAND_STATE = "stand";
+        public static void EnableShadowNoelHit(ShadowNoel noel)
+        {
+            noel.gameObject.tag = "MoverEn";
+            noel.gameObject.layer = 23; //23 is EmenyLayer
+        }
     }
 }

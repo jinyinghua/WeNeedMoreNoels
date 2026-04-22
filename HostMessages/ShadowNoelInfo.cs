@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using WeNeedMoreNoels.DataStruct;
 using XX;
 
 namespace WeNeedMoreNoels.HostMessages
@@ -24,6 +25,15 @@ namespace WeNeedMoreNoels.HostMessages
         public override string ToString()
         {
             return $"Location: x:{Position.X} y:{Position.Y} pose:{Pose} aim:{AIM}\nHP:{HP}, MP:{MP}";
+        }
+
+        public static implicit operator ShadowNoelInfo(UpdateNoelInfo info)
+        {
+            return new()
+            {
+                Position = new(info.PositionX, info.PositionY),
+
+            };
         }
     }
 }

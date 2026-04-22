@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using nel;
-using WeNeedMoreNoels.CSNetworking;
 
 namespace WeNeedMoreNoels.Patch
 {
@@ -10,7 +9,6 @@ namespace WeNeedMoreNoels.Patch
         [HarmonyPrefix]
         static void Prefix()
         {
-            NetworkConnectionTools.NotifyChangeMapBefore();
             ShadowNoelExtensions.DisableAllShadowNoels();
         }
     }

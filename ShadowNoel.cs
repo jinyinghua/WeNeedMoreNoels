@@ -85,24 +85,6 @@ namespace WeNeedMoreNoels
 
         public override void refineMoveKey(bool ignore_keypushdown = false) { }
 
-        public override HITTYPE getHitType(M2Ray Ray)
-        {
-            if (Ray != null && Ray.Caster is PR && Ray.Caster != this)
-            {
-                return HITTYPE.EN;
-            }
-            return HITTYPE.PR;
-        }
-
-        public override bool cannotHitTo(M2Mover Mv)
-        {
-            if (Mv is PR && Mv != this)
-            {
-                return false;
-            }
-            return base.cannotHitTo(Mv);
-        }
-
         public override bool runUi() {
             var tg = this.Mp.TalkTarget_;
             bool rt = true;

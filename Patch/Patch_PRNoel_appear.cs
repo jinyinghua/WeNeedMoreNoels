@@ -10,10 +10,11 @@ namespace WeNeedMoreNoels.Patch
     {
         static bool Inited;
 
+        static bool InitedParty;
+
         [HarmonyPostfix]
         static void Postfix(Map2d Mp)
         {
-            NetworkConnectionTools.NotifyChangeMapAfter(Mp.key);
             ShadowNoelExtensions.DisableAllShadowNoels();
             ShadowNoelExtensions.DetectShadowNoelInCurrentMap();
 
@@ -21,6 +22,13 @@ namespace WeNeedMoreNoels.Patch
             {
                 WNMNTools.InitNetworking(DB.InitConfig);
                 Inited = true;
+            }
+            if (!InitedParty)
+            {
+                InitedParty = true;
+                PartyManager.Party party = PartyManager.InitNewParty();
+                DB.partyInfos.Add(party.ID, party);
+                DB.LocalNoelParty = party.ID;
             }
         }
     }

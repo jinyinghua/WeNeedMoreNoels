@@ -187,6 +187,7 @@ namespace WeNeedMoreNoels.Patch
                         };
                         client.Start();
                         client.Connect(IpInput.text, PortCon.cnt_val + 1, DB.TRANSFER_ACCESS_KEY);
+                        Plugin.Logger.LogInfo($"Starting connect {IpInput.text}:{PortCon.cnt_val}");
                         return true;
                     });
                     stt.CancelBtn.addClickFn(b =>

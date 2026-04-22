@@ -1,5 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
+using UnityEngine;
 using WeNeedMoreNoels.CSNetworking;
+using WeNeedMoreNoels.Networking;
 
 namespace WeNeedMoreNoels
 {
@@ -8,17 +12,38 @@ namespace WeNeedMoreNoels
         static WNMNHost host;
         static WNMNClient client;
 
+        public static WNMNPeer peer;
+
         public static NetWorkType Type;
         public static int LocalID;
+        public static bool Inited;
+
+        static int _unique_id;
+        public static int Unique_ID
+        {
+            get
+            {
+                _unique_id++;
+                return _unique_id;
+            }
+        }
 
         public static void InitNetworking(NetworkConfig config)
         {
             InitNetworking(config.Type, out host, out client);
+            GameObject gameObject = new("NetworkPeer");
+            peer = gameObject.AddComponent<WNMNPeer>();
+            int port = peer.StartPeer();
             switch (config.Type)
             {
                 case NetWorkType.Host:
                     RunHost(config.port);
                     Type = NetWorkType.Host;
+                    DB.peerInfos.Add(0, new()
+                    {
+                        IP = GetLocalIP(),
+                        Port = port
+                    });
                     break;
                 case NetWorkType.Client:
                     ConnectHost(config.ip, config.port);
@@ -43,12 +68,12 @@ namespace WeNeedMoreNoels
             {
                 case NetWorkType.Host:
                     host = gameObject.AddComponent<WNMNHost>();
-                    NetworkConnectionTools.IsHost = true;
+                    Type = NetWorkType.Host;
                     client = null;
                     break;
                 case NetWorkType.Client:
                     client = gameObject.AddComponent<WNMNClient>();
-                    NetworkConnectionTools.IsHost = false;
+                    Type = NetWorkType.Client;
                     host = null;
                     break;
                 default:
@@ -56,10 +81,30 @@ namespace WeNeedMoreNoels
                     client = null;
                     break;
             }
-            NetworkConnectionTools.Inited = true;
+            Inited = true;
         }
 
-        public static void RunHost(int port = 4721)
+        public static string GetLocalIP()
+        {
+            using Socket socket = new(AddressFamily.InterNetwork, SocketType.Dgram, 0);
+            socket.Connect("8.8.8.8", 65530); // 不会真正发送数据
+            IPEndPoint endPoint = (IPEndPoint)socket.LocalEndPoint;
+            return endPoint.Address.ToString();
+        }
+
+        public static void ConnectOtherPeer(List<KeyValuePair<int, ConnectPeerInfo>> peerList)
+        {
+            int id = Type == NetWorkType.Host ? 0 : client.peerID;
+            foreach (var pair in peerList)
+            {
+                if (pair.Key != id)
+                {
+                    peer.ConnectPeer(pair.Value.IP, pair.Value.Port);
+                }
+            }
+        }
+
+        public static void RunHost(int port = 47210)
         {
             if (host == null)
             {

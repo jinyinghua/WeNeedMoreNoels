@@ -1,11 +1,7 @@
 ﻿using LiteNetLib;
 using LiteNetLib.Utils;
-using nel;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using WeNeedMoreNoels.HostMessages;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -15,7 +11,7 @@ namespace WeNeedMoreNoels.CSNetworking
 
         NetManager transferHost;
 
-        public int maxPlayerCount = 2;
+        public int maxPlayerCount = 5;
 
         private void Awake()
         {
@@ -29,31 +25,20 @@ namespace WeNeedMoreNoels.CSNetworking
             transferHost = new(transferListener);
             transferListener.ConnectionRequestEvent += TransferListener_ConnectionRequestEvent;
             transferListener.PeerConnectedEvent += TransferListener_PeerConnectedEvent;
-            NetworkConnectionTools.host = this;
         }
 
         private void Update()
         {
-            host.PollEvents();
-            transferHost.PollEvents();
-            if (host is null || host.Count() == 0)
-            {
-                return;
-            }
-            HostSendInfos();
+            host?.PollEvents();
+            transferHost?.PollEvents();
         }
 
-        private void HostSendInfos()
+        public int GetPort()
         {
-            ShadowNoelInfo location = NetworkConnectionTools.GetSendInfo();
-            WNMNHostMessage message = WNMNHostMessage.UpdateInfo(location, DB.noelInfos);
-            string json = JsonConvert.SerializeObject(message);
-            NetDataWriter writer = new();
-            writer.Put(json);
-            host.SendToAll(writer, DeliveryMethod.Unreliable);
+            return host.LocalPort;
         }
 
-        public void StartHost(int port = 4721)
+        public void StartHost(int port = 47210)
         {
             if (host is null)
             {
@@ -68,6 +53,7 @@ namespace WeNeedMoreNoels.CSNetworking
 
         private void TransferListener_ConnectionRequestEvent(ConnectionRequest request)
         {
+            Plugin.Logger.LogInfo($"Transfer host got request: {request.RemoteEndPoint}");
             if (host.ConnectedPeersCount < maxPlayerCount /* max connections */)
                 request.AcceptIfKey(DB.TRANSFER_ACCESS_KEY);
             else
@@ -76,6 +62,7 @@ namespace WeNeedMoreNoels.CSNetworking
 
         private void Listener_ConnectionRequestEvent(ConnectionRequest request)
         {
+            Plugin.Logger.LogInfo($"Host got request: {request.RemoteEndPoint}");
             if (host.ConnectedPeersCount < maxPlayerCount /* max connections */)
                 request.AcceptIfKey(DB.CONNECTION_ACCESS_KEY);
             else
@@ -95,176 +82,39 @@ namespace WeNeedMoreNoels.CSNetworking
         {
             Plugin.Logger.LogInfo($"WNMNMain host got connection: {peer.EndPoint}");
             NetDataWriter writer = new();
-            int id = NetworkConnectionTools.Unique_ID;
-            WNMNHostMessage message = WNMNHostMessage.Init(id, DB.InitConfig, DB.noelConfigs);
+            int id = WNMNTools.Unique_ID;
+            WNMNHostMessage message = new()
+            {
+                InitID = id,
+                PeerInfos = [..DB.peerInfos]
+            };
             writer.Put(JsonConvert.SerializeObject(message));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
-            NetworkConnectionTools.NetPeerDic.Add(id, peer);
-            NetworkConnectionTools.Connected = true;
         }
 
         private void Listener_NetworkReceiveEvent(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
         {
-            string json = reader.GetString();
-            WNMNClientMessage message = JsonConvert.DeserializeObject<WNMNClientMessage>(json);
-            if (DB.ShowReceiveDebug)
+            int id = reader.GetInt();
+            string ip = reader.GetString();
+            int port = reader.GetInt();
+            ConnectPeerInfo info = new()
             {
-                Plugin.Logger.LogInfo($"Message from client: {message}");
-            }
-            reader.Recycle();
-            InitHost(message);
-            DebugLocationClient(message);
-            UpdateInfo(message);
-            UpdateChangeMapBefore(message);
-            UpdateChangeMapAfter(message);
-            UpdateNotifyStateChange(message);
-            UpdateNotifyNoelDamage(message);
+                IP = ip,
+                Port = port
+            };
+            DB.peerInfos.Add(id, info);
         }
 
         private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
         {
-            NetDataReader reader = disconnectInfo.AdditionalData;
-            int id = reader.GetInt();
-            NetworkConnectionTools.DisconnectClient(id);
-            WNMNHostMessage message = WNMNHostMessage.DisconnectOtherClient(id);
-            NetDataWriter writer = new();
-            writer.Put(JsonConvert.SerializeObject(message));
-            host.SendToAll(writer, DeliveryMethod.ReliableOrdered);
-        }
-
-        private void InitHost(WNMNClientMessage message)
-        {
-            if (message.Type != WNMNClientMessageType.Init)
-            {
-                return;
-            }
-            WNMNTools.NetworkConfig content = JsonConvert.DeserializeObject<WNMNTools.NetworkConfig>(message.Content);
-            int id = message.PeerID;
-            DB.noelConfigs.Add(id, content);
-            ShadowNoel noel = ShadowNoelExtensions.GenerateShadowNoel(id);
-            noel.OnNoelDamage += HostSendNotifyNoelDamage;
-            NetDataWriter writer = new();
-            WNMNHostMessage message1 = WNMNHostMessage.InitClient(id, content);
-            writer.Put(JsonConvert.SerializeObject(message1));
-            host.SendToAll(writer, DeliveryMethod.ReliableOrdered);
-            ShadowNoelExtensions.CheckDBDics(id, content);
-        }
-
-        private void DebugLocationClient(WNMNClientMessage message)
-        {
-            if (!DB.ShowLocationDebug)
-            {
-                return;
-            }
-            if (message.Type != WNMNClientMessageType.ReportInfo)
-            {
-                return;
-            }
-            Plugin.Logger.LogInfo($"Client#{message.PeerID} location: " + message.Content);
-        }
-
-        private void UpdateInfo(WNMNClientMessage message)
-        {
-            if (message.Type != WNMNClientMessageType.ReportInfo)
-            {
-                return;
-            }
-            ShadowNoelInfo info = JsonConvert.DeserializeObject<ShadowNoelInfo>(message.Content);
-            NetworkConnectionTools.UpdateShadowInfo(message.PeerID, info);
-            if (!DB.noelInfos.ContainsKey(message.PeerID))
-            {
-                DB.noelInfos.Add(message.PeerID, info);
-            }
-            else
-            {
-                DB.noelInfos[message.PeerID] = info;
-            }
-        }
-
-        public void HostSendNotifyChangeMapBefore()
-        {
-            NetDataWriter writer = new();
-            WNMNHostMessage message = WNMNHostMessage.NotifyChangeMapBefore();
-            writer.Put(JsonConvert.SerializeObject(message));
-            host.SendToAll(writer, DeliveryMethod.Unreliable);
-        }
-
-        public void HostSendNotifyChangeMapAfter(string key)
-        {
-            NetDataWriter writer = new();
-            WNMNHostMessage message = WNMNHostMessage.NotifyChangeMapAfter(key, DB.noelMpKeys);
-            writer.Put(JsonConvert.SerializeObject(message));
-            host.SendToAll(writer, DeliveryMethod.Unreliable);
-        }
-
-        private void HostSendNotifyNoelDamage(int id, ShadowNoelDamage Atk)
-        {
-            NetDataWriter writer = new();
-            WNMNHostMessage message;
-            if (id == 0)
-            {
-                message = WNMNHostMessage.NotifyNoelDamage(Atk, null);
-            }
-            else
-            {
-                Dictionary<int, ShadowNoelDamage> noelDmgs = [];
-                noelDmgs.Add(id, Atk);
-                message = WNMNHostMessage.NotifyNoelDamage(null, noelDmgs);
-            }
-            writer.Put(JsonConvert.SerializeObject(message));
-            host.SendToAll(writer, DeliveryMethod.Unreliable);
-        }
-
-        private void UpdateChangeMapBefore(WNMNClientMessage message)
-        {
-            if (message.Type != WNMNClientMessageType.NotifyChangeMapBefore)
-            {
-                return;
-            }
-            ShadowNoelExtensions.DisableAllShadowNoels();
-        }
-
-        private void UpdateChangeMapAfter(WNMNClientMessage message)
-        {
-            if (message.Type != WNMNClientMessageType.NotifyChangeMapAfter)
-            {
-                return;
-            }
-            ShadowNoelExtensions.UpdateShadowNoelMpKey(message.PeerID, message.Content);
-            ShadowNoelExtensions.DetectShadowNoelInCurrentMap();
-        }
-
-        public void HostSendNotifyStateChange(PR.STATE STATE)
-        {
-            NetDataWriter writer = new();
-            WNMNHostMessage message = WNMNHostMessage.NotifyStateChange(STATE, null);
-            writer.Put(JsonConvert.SerializeObject(message));
-            host.SendToAll(writer, DeliveryMethod.Unreliable);
-        }
-
-        private void UpdateNotifyStateChange(WNMNClientMessage message)
-        {
-            if (message.Type != WNMNClientMessageType.NotifyStateChange)
-            {
-                return;
-            }
-            ShadowNoelExtensions.UpdateShadowNoelState(message.PeerID, (PR.STATE)int.Parse(message.Content));
-        }
-
-        private void UpdateNotifyNoelDamage(WNMNClientMessage message)
-        {
-            if (message.Type != WNMNClientMessageType.NotifyNoelDamage)
-            {
-                return;
-            }
-            ShadowNoelExtensions.DamageNoel(message.PeerID, JsonConvert.DeserializeObject<ShadowNoelDamage>(message.Content));
+            //TODO:断连
         }
 
         private void OnDestroy()
         {
             host.DisconnectAll();
             host.Stop();
-            NetworkConnectionTools.ClearDics();
+            DB.noelIns.Clear();
         }
     }
 }

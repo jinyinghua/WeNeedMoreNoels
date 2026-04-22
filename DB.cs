@@ -1,6 +1,6 @@
 ﻿using nel;
 using System.Collections.Generic;
-using WeNeedMoreNoels.HostMessages;
+using WeNeedMoreNoels.CSNetworking;
 
 namespace WeNeedMoreNoels
 {
@@ -32,17 +32,13 @@ namespace WeNeedMoreNoels
 
         public static byte[] SyncSaveContentBuffer;
 
-        public static Dictionary<int, string> noelNicknames = [];
+        public static int LocalNoelParty;
 
-        public static Dictionary<int, ShadowNoel> noelDics = [];
+        public static Dictionary<int, ShadowNoelInstance> noelIns = [];
 
-        public static Dictionary<int, string> noelMpKeys = [];
+        public static Dictionary<int, PartyManager.Party> partyInfos = [];
 
-        public static Dictionary<int, bool> noelEnables = [];
-
-        public static Dictionary<int, WNMNTools.NetworkConfig> noelConfigs = [];
-
-        public static Dictionary<int, ShadowNoelInfo> noelInfos = [];
+        public static Dictionary<int, ConnectPeerInfo> peerInfos = [];
 
         public static float MovementEpslion = 0.001f;
 
@@ -51,6 +47,8 @@ namespace WeNeedMoreNoels
         public const string CONNECTION_ACCESS_KEY = "6db535fbb5ac7e0b031d412a807658f7";
 
         public const string TRANSFER_ACCESS_KEY = "424fe8bd2741b4a4d44411e07c48edff";
+
+        public const string P2P_ACCESS_KEY = "3f3dd28a3b54d0531faa87028b37e590";
 
         public const string SYNC_FILE_NAME = "wnmn_sync.aicsave";
 
