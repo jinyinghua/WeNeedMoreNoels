@@ -4,6 +4,7 @@ using nel;
 using nel.title;
 using System.IO;
 using UnityEngine;
+using WeNeedMoreNoels.DataStruct;
 using XX;
 
 namespace WeNeedMoreNoels.Patch
@@ -199,11 +200,6 @@ namespace WeNeedMoreNoels.Patch
                     stt.DsBlack.alpha = 1;
                 }
             }
-            //if (ConnectCheck)
-            //{
-            //    Plugin.Logger.LogWarning($"无法连接：{IpInput.text}:{PortCon.cnt_val}");
-            //    ConnectCheck = false;
-            //}
         }
 
         static void CreateUIHost(UiBoxDesigner designer)

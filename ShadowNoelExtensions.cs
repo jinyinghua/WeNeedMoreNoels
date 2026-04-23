@@ -1,15 +1,15 @@
 ﻿using m2d;
 using nel;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
-using WeNeedMoreNoels.HostMessages;
+using WeNeedMoreNoels.DataStruct;
 using XX;
 
 namespace WeNeedMoreNoels
 {
     public static class ShadowNoelExtensions
     {
-        public static ShadowNoel GenerateShadowNoel(WNMNTools.NetworkConfig config, int id = -1)
+        public static ShadowNoel GenerateShadowNoel(ClientConfig config, int id = -1)
         {
             Map2d map = M2DBase.Instance.curMap;
             map.Pr.getPosition(out float x, out float y);
@@ -36,16 +36,50 @@ namespace WeNeedMoreNoels
             noel.gameObject.AddComponent<Rigidbody2D>();
             noel.gameObject.name = "ShadowNoel";
             map.assignMover(noel);
+            PartyManager.Party party = PartyManager.InitNewParty(id);
             noel.ID = id;
+            noel.PartyID = party.ID;
             DB.noelIns.Add(id, new()
             {
                 Noel = noel,
-                Nickname = config.nickName,
+                Nickname = config.Nickname,
                 MpKey = map.key,
                 NoelInitConfig = config,
-                NoelInfo = new()
+                NoelInfo = GetSendInfo(),
+                Enabled = true
             });
             return noel;
+        }
+
+        public static void UpdateShadowNoelInfo(int id)
+        {
+            ShadowNoelInstance ins = DB.noelIns[id];
+            UpdateNoelInfo info = ins.NoelInfo;
+            if (!ins.Enabled)
+            {
+                return;
+            }
+            ShadowNoel noel = ins.Noel;
+            MoveShadowNoel(noel, new(info.PositionX, info.PositionY));
+            SetPoseShadowNoel(noel, info.Pose, (AIM)info.Aim);
+            SetHPMP(noel, info.Hp, info.Mp);
+            if (noel.getSkillManager().getCurrentCaneEquip().GetItem().id != info.CaneItemId)
+            {
+                SetCane(noel, (ushort)info.CaneItemId, (byte)info.CaneGrade);
+            }
+            if (noel.state != (PR.STATE)info.State)
+            {
+                noel.changeState((PR.STATE)info.State);
+            }
+            noel.PartyID = info.PartyID;
+            if (noel.PartyID != DB.LocalNoelParty)
+            {
+                EnableShadowNoelHit(noel);
+            }
+            else
+            {
+                DisableShadowNoelHit(noel);
+            }
         }
 
         public static void DisableShadowNoel(int id)
@@ -70,11 +104,6 @@ namespace WeNeedMoreNoels
                 Plugin.Logger.LogWarning("try to disable not existing noel");
             }
             GenerateShadowNoel(DB.noelIns[id].NoelInitConfig, id);
-        }
-
-        public static void UpdateShadowInfo()
-        {
-
         }
 
         public static void MoveShadowNoel(ShadowNoel noel, System.Numerics.Vector2 pos)
@@ -123,14 +152,14 @@ namespace WeNeedMoreNoels
             noel.getSkillManager().switchCane(cane, grade, false);
         }
 
-        public static void DamageNoel(int id, ShadowNoelDamage dmg)
+        public static void DamageNoel(int id, NotifyNoelDamage dmg)
         {
             var Atk = new NelAttackInfo
             {
                 attr = MGATTR.NORMAL,
                 ndmg = NDMG.DEFAULT,
-                hpdmg0 = dmg.hp,
-                mpdmg0 = dmg.mp,
+                hpdmg0 = dmg.Hp,
+                mpdmg0 = dmg.Mp,
                 fix_damage = true,
                 parryable = false,
                 shield_break_ratio = 1f,
@@ -175,13 +204,35 @@ namespace WeNeedMoreNoels
 
         public static void DisableShadowNoelHit(ShadowNoel noel)
         {
-
+            noel.gameObject.tag = "MoverPr";
+            noel.gameObject.layer = 0; //Default
         }
 
         public static void EnableShadowNoelHit(ShadowNoel noel)
         {
             noel.gameObject.tag = "MoverEn";
             noel.gameObject.layer = 23; //23 is EmenyLayer
+        }
+
+        public static UpdateNoelInfo GetSendInfo()
+        {
+            DB.MainPR.getPosition(out float x, out float y);
+            PrNoelAnimator Anm = DB.MainPR.AnmN;
+            PrCaneEquip cane = DB.MainPR.getSkillManager().getCurrentCaneEquip();
+            return new()
+            {
+                PositionX = x,
+                PositionY = y,
+                Pose = Anm.pose_title,
+                Aim = Anm.pose_aim,
+                IsCrouch = DB.MainPR.is_crouch,
+                Hp = DB.MainPR.hp,
+                Mp = DB.MainPR.mp,
+                State = (int)DB.MainPR.state,
+                CaneItemId = cane.GetItem().id,
+                CaneGrade = cane.grade,
+                PartyID = DB.LocalNoelParty
+            };
         }
     }
 }

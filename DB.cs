@@ -1,6 +1,7 @@
 ﻿using nel;
 using System.Collections.Generic;
 using WeNeedMoreNoels.CSNetworking;
+using WeNeedMoreNoels.DataStruct;
 
 namespace WeNeedMoreNoels
 {
@@ -39,6 +40,8 @@ namespace WeNeedMoreNoels
         public static Dictionary<int, PartyManager.Party> partyInfos = [];
 
         public static Dictionary<int, ConnectPeerInfo> peerInfos = [];
+
+        public static Dictionary<int, ClientConfig> peerConfigs = [];
 
         public static float MovementEpslion = 0.001f;
 

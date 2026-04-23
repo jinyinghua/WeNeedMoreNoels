@@ -1,4 +1,4 @@
-﻿using WeNeedMoreNoels.CSNetworking;
+﻿using Newtonsoft.Json;
 using WeNeedMoreNoels.DataStruct;
 
 namespace WeNeedMoreNoels.Networking.ReceiveEvent
@@ -7,17 +7,17 @@ namespace WeNeedMoreNoels.Networking.ReceiveEvent
     {
         public override bool CheckMessage(WNMNPeerMessage message)
         {
-            return message.Type != WNMNPeerMessageType.UpdateNoelInfo;
+            return message.Type == WNMNPeerMessageType.UpdateNoelInfo && message.PeerId != WNMNTools.LocalID;
         }
 
         public override void ReceiveMessage(WNMNPeerMessage message)
         {
-
+            WNMNTools.UpdateNoel(message.PeerId, message.UpdateNoelInfo);
         }
 
         public override string ToMessageString(WNMNPeerMessage message)
         {
-            return "";
+            return $"UpdateInfo:{JsonConvert.SerializeObject(message)}";
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using WeNeedMoreNoels.HostMessages;
+﻿using WeNeedMoreNoels.DataStruct;
 
 namespace WeNeedMoreNoels
 {
@@ -8,8 +8,7 @@ namespace WeNeedMoreNoels
         public bool Enabled;
         public string Nickname;
         public string MpKey;
-        public WNMNTools.NetworkConfig NoelInitConfig;
-        public int PartyID;
-        public ShadowNoelInfo NoelInfo;
+        public ClientConfig NoelInitConfig;
+        public UpdateNoelInfo NoelInfo;
     }
 }

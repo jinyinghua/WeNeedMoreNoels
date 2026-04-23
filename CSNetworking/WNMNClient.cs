@@ -36,10 +36,7 @@ namespace WeNeedMoreNoels.CSNetworking
         public void ConnectHost(string ip = "localhost", int port = 4721)
         {
             client.Start();
-            if (client.Connect(ip, port, DB.CONNECTION_ACCESS_KEY) == null)
-            {
-                Plugin.Logger.LogWarning($"Unable to connect to:{ip}:{port}");
-            }
+            client.Connect(ip, port, DB.CONNECTION_ACCESS_KEY);
         }
 
         private void Listener_NetworkReceiveEvent(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
@@ -48,11 +45,23 @@ namespace WeNeedMoreNoels.CSNetworking
             WNMNHostMessage message = JsonConvert.DeserializeObject<WNMNHostMessage>(json);
             reader.Recycle();
             peerID = message.InitID;
+            WNMNTools.LocalID = message.InitID;
+            PartyManager.Party party = PartyManager.InitNewParty(message.InitID);
+            DB.partyInfos.Add(message.InitID, party);
+            DB.LocalNoelParty = message.InitID;
             WNMNTools.ConnectOtherPeer(message.PeerInfos);
+            WNMNTools.SendInitToAllPeers(message.InitID);
+            WNMNTools.GenerateAllNoels(message.PeerConfigs);
             NetDataWriter writer = new();
-            writer.Put(message.InitID);
-            writer.Put(WNMNTools.GetLocalIP());
-            writer.Put(WNMNTools.peer.GetPeerPort());
+            WNMNClientMessage message1 = new()
+            {
+                ID = peerID,
+                IP = WNMNTools.GetLocalIP(),
+                Port = WNMNTools.peer.GetPeerPort(),
+                NickName = DB.InitConfig.nickName,
+                NoelType = DB.InitConfig.NoelType
+            };
+            writer.Put(JsonConvert.SerializeObject(message1));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
         }
 

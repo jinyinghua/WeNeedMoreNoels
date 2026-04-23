@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using ProtoBuf;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 using WeNeedMoreNoels.CSNetworking;
+using WeNeedMoreNoels.DataStruct;
 using WeNeedMoreNoels.Networking;
 
 namespace WeNeedMoreNoels
@@ -15,7 +18,7 @@ namespace WeNeedMoreNoels
         public static WNMNPeer peer;
 
         public static NetWorkType Type;
-        public static int LocalID;
+        public static int LocalID = -1;
         public static bool Inited;
 
         static int _unique_id;
@@ -43,6 +46,11 @@ namespace WeNeedMoreNoels
                     {
                         IP = GetLocalIP(),
                         Port = port
+                    });
+                    DB.peerConfigs.Add(0, new()
+                    {
+                        Nickname = config.nickName,
+                        NoelType = config.NoelType
                     });
                     break;
                 case NetWorkType.Client:
@@ -124,6 +132,59 @@ namespace WeNeedMoreNoels
             client.ConnectHost(ip, port);
         }
 
+        public static void UpdateNoel(int id, UpdateNoelInfo info)
+        {
+            DB.noelIns[id].NoelInfo = info;
+        }
+
+        public static void UpdateAllNoels()
+        {
+            foreach (var pair in DB.noelIns)
+            {
+                ShadowNoelExtensions.UpdateShadowNoelInfo(pair.Key);
+            }
+        }
+
+        public static void GenerateAllNoels(List<KeyValuePair<int, ClientConfig>> list)
+        {
+            foreach (var pair in list)
+            {
+                ShadowNoelExtensions.GenerateShadowNoel(pair.Value, pair.Key);
+            }
+        }
+
+        public static void SendInitToAllPeers(int id)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.InitNoel,
+                PeerId = id,
+                InitNoelConfig = new()
+                {
+                    Id = id,
+                    ClientConfig = DB.InitConfig
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendUpdateToAllPeers(int id)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.UpdateNoelInfo,
+                PeerId = id,
+                UpdateNoelInfo = ShadowNoelExtensions.GetSendInfo()
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+        }
+
         public class NetworkConfig
         {
             public NetWorkType Type;
@@ -135,6 +196,15 @@ namespace WeNeedMoreNoels
             public NoelType NoelType;
 
             public string nickName;
+
+            public static implicit operator ClientConfig(NetworkConfig config)
+            {
+                return new()
+                {
+                    Nickname = config.nickName,
+                    NoelType = config.NoelType
+                };
+            }
         }
     }
 
@@ -142,11 +212,5 @@ namespace WeNeedMoreNoels
     {
         Host,
         Client
-    }
-
-    public enum NoelType
-    {
-        Normal,
-        Inverse
     }
 }

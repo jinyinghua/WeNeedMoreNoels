@@ -1,18 +1,17 @@
 ﻿using m2d;
 using nel;
 using System;
-using WeNeedMoreNoels.HostMessages;
-using static UnityEngine.GraphicsBuffer;
+using WeNeedMoreNoels.DataStruct;
 
 namespace WeNeedMoreNoels
 {
     public class ShadowNoel : PRMain
     {
-        public WNMNTools.NetworkConfig InitConfig;
-
+        public ClientConfig InitConfig;
         public int ID;
+        public int PartyID;
 
-        public Action<int, ShadowNoelDamage> OnNoelDamage;
+        public Action<int, NotifyNoelDamage> OnNoelDamage;
 
         public override void Awake()
         {
@@ -49,12 +48,12 @@ namespace WeNeedMoreNoels
                     PrPoseContainer container;
                     switch (InitConfig.NoelType)
                     {
-                        case NoelType.Normal:
+                        case DataStruct.NoelType.Normal:
                             m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, "noel_magic", "stand", false, M2Mover.DRAW_ORDER.PR1);
                             container = MTR.PConNoelAnim;
                             container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTR.Anoel_pxls, 56f, CaneManager.DefaultCane);
                             break;
-                        case NoelType.Inverse:
+                        case DataStruct.NoelType.Inverse:
                             m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, "noel_inverse_magic", "stand", false, M2Mover.DRAW_ORDER.PR1);
                             container = MTRExtension.PConNoelIAnim;
                             container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTRExtension.Anoel_inverse_pxls, 56f, CaneManager.DefaultCane);
@@ -78,10 +77,7 @@ namespace WeNeedMoreNoels
 
             this.UP?.destruct();
             this.UP = null;
-
-            this.gameObject.tag = "MoverEn";
-            this.gameObject.layer = 23; //23 is EmenyLayer
-        }
+        }   
 
         public override void refineMoveKey(bool ignore_keypushdown = false) { }
 

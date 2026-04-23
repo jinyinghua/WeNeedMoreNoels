@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using WeNeedMoreNoels.DataStruct;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -7,6 +8,8 @@ namespace WeNeedMoreNoels.CSNetworking
         public int InitID;
 
         public List<KeyValuePair<int, ConnectPeerInfo>> PeerInfos;
+
+        public List<KeyValuePair<int, ClientConfig>> PeerConfigs;
     }
 
     public class ConnectPeerInfo

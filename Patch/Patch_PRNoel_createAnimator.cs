@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using m2d;
 using nel;
+using WeNeedMoreNoels.DataStruct;
 
 namespace WeNeedMoreNoels.Patch
 {

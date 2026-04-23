@@ -1,5 +1,7 @@
 ﻿using LiteNetLib;
-using nel;
+using LiteNetLib.Utils;
+using ProtoBuf;
+using System.IO;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
 
@@ -14,13 +16,14 @@ namespace WeNeedMoreNoels.Networking
             EventBasedNetListener listener = new();
             localPeer = new(listener);
             listener.ConnectionRequestEvent += Listener_ConnectionRequestEvent;
-            listener.PeerConnectedEvent += Listener_PeerConnectedEvent;
             listener.NetworkReceiveEvent += Listener_NetworkReceiveEvent;
         }
 
         private void Update()
         {
+            WNMNTools.SendUpdateToAllPeers(WNMNTools.LocalID);
             localPeer?.PollEvents();
+            WNMNTools.UpdateAllNoels();
         }
 
         private void Listener_ConnectionRequestEvent(ConnectionRequest request)
@@ -29,24 +32,28 @@ namespace WeNeedMoreNoels.Networking
             request.AcceptIfKey(DB.P2P_ACCESS_KEY);
         }
 
-        private void Listener_PeerConnectedEvent(NetPeer peer)
-        {
-
-        }
-
         private void Listener_NetworkReceiveEvent(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
         {
             byte[] receivedData = new byte[reader.UserDataSize];
             reader.GetBytes(receivedData, reader.UserDataSize);
-            WNMNPeerMessage message = WNMNPeerMessage.Parser.ParseFrom(receivedData);
+            using MemoryStream stream = new();
+            stream.Write(receivedData, 0, receivedData.Length);
+            stream.Seek(0, SeekOrigin.Begin);
+            WNMNPeerMessage message = Serializer.Deserialize<WNMNPeerMessage>(stream);
             foreach (PeerReceiveMessageBase receive in ReceiveMessageManager.GetAllReceives(message))
             {
-                if (!receive.CheckMessage(message))
+                if (receive.CheckMessage(message))
                 {
-                    continue;
+                    receive.ReceiveMessage(message);
                 }
-                receive.ReceiveMessage(message);
             }
+        }
+
+        public void SendToAll(byte[] content, DeliveryMethod delivery)
+        {
+            NetDataWriter writer = new();
+            writer.Put(content);
+            localPeer.SendToAll(writer, delivery);
         }
 
         public void ConnectPeer(string ip, int port)

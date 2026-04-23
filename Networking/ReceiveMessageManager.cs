@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
 using WeNeedMoreNoels.DataStruct;
+using WeNeedMoreNoels.Networking.ReceiveEvent;
 
 namespace WeNeedMoreNoels.Networking
 {
     public static class ReceiveMessageManager
     {
-        static List<PeerReceiveMessageBase> list;
+        static List<PeerReceiveMessageBase> list = [];
 
-        static List<bool> debugEnabledList;
+        static List<bool> debugEnabledList = [];
 
         public static void Init()
         {
-
+            RegisterReceiveMessage(new InitNoelEvent());
+            RegisterReceiveMessage(new UpdateNoelInfoEvent());
         }
 
         public static void RegisterReceiveMessage(PeerReceiveMessageBase receive)

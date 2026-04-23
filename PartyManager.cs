@@ -4,16 +4,13 @@ namespace WeNeedMoreNoels
 {
     public class PartyManager
     {
-        static int _unique_ID = -1;
-
-        public static Party InitNewParty()
+        public static Party InitNewParty(int id)
         {
-            _unique_ID++;
             return new()
             {
-                ID = _unique_ID,
+                ID = id,
                 Color = Random.ColorHSV(),
-                Name = $"NoelParty#{_unique_ID}"
+                Name = $"NoelParty#{id}"
             };
         }
 

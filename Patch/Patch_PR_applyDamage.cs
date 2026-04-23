@@ -14,8 +14,8 @@ namespace WeNeedMoreNoels.Patch
             {
                 noel.OnNoelDamage?.Invoke(noel.ID, new()
                 {
-                    hp = Atk._hpdmg,
-                    mp = Atk._mpdmg
+                    Hp = Atk._hpdmg,
+                    Mp = Atk._mpdmg
                 });
             }
         }

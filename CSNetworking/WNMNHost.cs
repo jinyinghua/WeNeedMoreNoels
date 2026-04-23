@@ -2,6 +2,7 @@
 using LiteNetLib.Utils;
 using Newtonsoft.Json;
 using UnityEngine;
+using WeNeedMoreNoels.DataStruct;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -25,6 +26,7 @@ namespace WeNeedMoreNoels.CSNetworking
             transferHost = new(transferListener);
             transferListener.ConnectionRequestEvent += TransferListener_ConnectionRequestEvent;
             transferListener.PeerConnectedEvent += TransferListener_PeerConnectedEvent;
+            WNMNTools.LocalID = 0;
         }
 
         private void Update()
@@ -86,7 +88,8 @@ namespace WeNeedMoreNoels.CSNetworking
             WNMNHostMessage message = new()
             {
                 InitID = id,
-                PeerInfos = [..DB.peerInfos]
+                PeerInfos = [..DB.peerInfos],
+                PeerConfigs = [.. DB.peerConfigs]
             };
             writer.Put(JsonConvert.SerializeObject(message));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
@@ -94,15 +97,20 @@ namespace WeNeedMoreNoels.CSNetworking
 
         private void Listener_NetworkReceiveEvent(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
         {
-            int id = reader.GetInt();
-            string ip = reader.GetString();
-            int port = reader.GetInt();
+            string json = reader.GetString();
+            WNMNClientMessage message = JsonConvert.DeserializeObject<WNMNClientMessage>(json);
             ConnectPeerInfo info = new()
             {
-                IP = ip,
-                Port = port
+                IP = message.IP,
+                Port = message.Port
             };
-            DB.peerInfos.Add(id, info);
+            DB.peerInfos.Add(message.ID, info);
+            ClientConfig config = new()
+            {
+                Nickname = message.NickName,
+                NoelType = message.NoelType
+            };
+            DB.peerConfigs.Add(message.ID, config);
         }
 
         private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
