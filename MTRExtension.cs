@@ -2,8 +2,10 @@
 using nel;
 using PixelLiner;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using WeNeedMoreNoels.DataStruct;
 using XX;
 
 namespace WeNeedMoreNoels
@@ -17,6 +19,16 @@ namespace WeNeedMoreNoels
                 ["noel_inverse", "noel_inverse_r18", "noel_inverse_magic"]
             ];
         }
+
+        static Dictionary<ColorNoelColor, PrPoseContainer> colorDics = [];
+
+        public static string GetColorNoelName(ColorNoelColor color) => "noel_magic_" + color.ToString().ToLower();
+
+        public static string[][] GetColorNoelPxlsFull(ColorNoelColor color) => [["noel", GetColorNoelName(color), "noel_r18"]];
+
+        public static string[][] GetColorNoelPxls(ColorNoelColor color) => [[GetColorNoelName(color)]];
+
+        public static PrPoseContainer GetPrPoseContainer(ColorNoelColor color) => colorDics[color];
 
         public static PrPoseContainer PConNoelIAnim;
 
@@ -66,25 +78,34 @@ namespace WeNeedMoreNoels
             Plugin.Logger.LogInfo("WNMN resources load complete!");
         }
 
-        public static void LoadExtenalPxl()
+        public static void LoadAllPxls()
         {
-            string[][] anoel_inverse_pxls = Anoel_inverse_pxls;
+            PConNoelIAnim = LoadExtenalPxl(Anoel_inverse_pxls, "noel_inverse");
+            for (int i = 0; i < 8; i++)
+            {
+                ColorNoelColor color = (ColorNoelColor)i;
+                colorDics.Add(color, LoadExtenalPxl(GetColorNoelPxls(color), GetColorNoelName(color)));
+            }
+        }
+
+        public static PrPoseContainer LoadExtenalPxl(string[][] pxlPath, string name)
+        {
             LoadTicketManager.PrepareLoadManager();
             LoadTicketManager instance = LoadTicketManager.Instance;
-            int num = anoel_inverse_pxls.Length;
+            int num = pxlPath.Length;
             for (int i = 0; i < num; i++)
             {
-                int num2 = anoel_inverse_pxls[i].Length;
+                int num2 = pxlPath[i].Length;
                 for (int j = 0; j < num2; j++)
                 {
-                    string text = "WNMNResources/pxls/" + anoel_inverse_pxls[i][j] + ".pxls";
+                    string text = "WNMNResources/pxls/" + pxlPath[i][j] + ".pxls";
                     MTIOneImage mtioneImage;
-                    PxlCharacter pxlCharacter = MTRX.loadMtiPxc(out mtioneImage, anoel_inverse_pxls[i][j], text, "_", true, true, true);
+                    PxlCharacter pxlCharacter = MTRX.loadMtiPxc(out mtioneImage, pxlPath[i][j], text, "_", true, true, true);
                     instance.AddTicketInner(pxlCharacter, mtioneImage, 1);
                 }
             }
             CaneManager.reloadScript(false);
-            PConNoelIAnim = new PrPoseContainer("noel_inverse", delegate (PxlFrame F, float rCLENB)
+            return new PrPoseContainer(name, delegate (PxlFrame F, float rCLENB)
             {
                 float num3;
                 float num4;

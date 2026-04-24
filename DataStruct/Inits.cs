@@ -9,6 +9,8 @@ namespace WeNeedMoreNoels.DataStruct
         public string Nickname;
         [ProtoMember(2)]
         public NoelType NoelType;
+        [ProtoMember(3)]
+        public ColorNoelColor NoelColor;
     }
 
     [ProtoContract]
@@ -26,6 +28,29 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoEnum]
         Normal,
         [ProtoEnum]
-        Inverse
+        Inverse,
+        [ProtoEnum]
+        ColorNoel
+    }
+
+    [ProtoContract]
+    public enum ColorNoelColor
+    {
+        [ProtoEnum]
+        Blue,
+        [ProtoEnum]
+        Cyan,
+        [ProtoEnum]
+        Green,
+        [ProtoEnum]
+        Orange,
+        [ProtoEnum]
+        Pink,
+        [ProtoEnum]
+        Purple,
+        [ProtoEnum]
+        Red,
+        [ProtoEnum]
+        Yellow
     }
 }

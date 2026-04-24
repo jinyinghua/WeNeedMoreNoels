@@ -111,7 +111,8 @@ namespace WeNeedMoreNoels.CSNetworking
             ClientConfig config = new()
             {
                 Nickname = message.NickName,
-                NoelType = message.NoelType
+                NoelType = message.NoelType,
+                NoelColor = message.NoelColor
             };
             DB.peerConfigs.Add(message.ID, config);
             DB.partyInfos.Add(message.ID, message.Party);

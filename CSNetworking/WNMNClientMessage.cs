@@ -6,6 +6,7 @@ namespace WeNeedMoreNoels.CSNetworking
     {
         public string NickName;
         public NoelType NoelType;
+        public ColorNoelColor NoelColor;
         public int ID;
         public string IP;
         public int Port;

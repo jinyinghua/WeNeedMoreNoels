@@ -10,7 +10,7 @@ namespace WeNeedMoreNoels.Patch
         static void Postfix()
         {
             DB.PreloadResource = true;
-            MTRExtension.LoadExtenalPxl();
+            MTRExtension.LoadAllPxls();
             DB.PreloadResource = false;
         }
     }

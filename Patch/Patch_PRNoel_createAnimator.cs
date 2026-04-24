@@ -31,6 +31,11 @@ namespace WeNeedMoreNoels.Patch
                     container = MTRExtension.PConNoelIAnim;
                     container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTRExtension.Anoel_inverse_pxls, 56f, CaneManager.DefaultCane);
                     break;
+                case NoelType.ColorNoel:
+                    m2PxlAnimatorRT = noel.Mp.M2D.createBasicPxlAnimatorForRenderTicket(noel, MTRExtension.GetColorNoelName(DB.InitConfig.NoelColor), "stand", false, M2Mover.DRAW_ORDER.PR1);
+                    container = MTRExtension.GetPrPoseContainer(DB.InitConfig.NoelColor);
+                    container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTRExtension.GetColorNoelPxlsFull(DB.InitConfig.NoelColor), 56f, CaneManager.DefaultCane);
+                    break;
                 default:
                     return false;
             }

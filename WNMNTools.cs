@@ -50,7 +50,8 @@ namespace WeNeedMoreNoels
                     DB.peerConfigs.Add(0, new()
                     {
                         Nickname = config.nickName,
-                        NoelType = config.NoelType
+                        NoelType = config.NoelType,
+                        NoelColor = config.NoelColor
                     });
                     break;
                 case NetWorkType.Client:
@@ -218,6 +219,8 @@ namespace WeNeedMoreNoels
 
             public NoelType NoelType;
 
+            public ColorNoelColor NoelColor;
+
             public string nickName;
 
             public static implicit operator ClientConfig(NetworkConfig config)
@@ -225,7 +228,8 @@ namespace WeNeedMoreNoels
                 return new()
                 {
                     Nickname = config.nickName,
-                    NoelType = config.NoelType
+                    NoelType = config.NoelType,
+                    NoelColor = config.NoelColor
                 };
             }
         }

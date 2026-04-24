@@ -22,6 +22,8 @@ namespace WeNeedMoreNoels.Patch
 
         static NoelType type;
 
+        static ColorNoelColor color;
+
         static LabeledInputField IpInput;
 
         static BtnContainerNumCounter<aBtnNumCounter> PortCon;
@@ -104,7 +106,8 @@ namespace WeNeedMoreNoels.Patch
                             ip = "",
                             port = PortCon.cnt_val,
                             nickName = NickNameInput.text,
-                            NoelType = type
+                            NoelType = type,
+                            NoelColor = color
                         };
                         DB.InitConfig = config;
                         BxHC.deactivate();
@@ -167,7 +170,8 @@ namespace WeNeedMoreNoels.Patch
                                 ip = IpInput.text,
                                 port = PortCon.cnt_val,
                                 nickName = NickNameInput.text,
-                                NoelType = type
+                                NoelType = type,
+                                NoelColor = color
                             };
                             DB.InitConfig = config;
                             Plugin.Logger.LogInfo("Client received sync save data.");
@@ -261,7 +265,7 @@ namespace WeNeedMoreNoels.Patch
             designer.addSlider(new()
             {
                 mn = 0,
-                mx = 1,
+                mx = 9,
                 fnChanged = (_b, p_v, c_v) =>
                 {
                     switch (c_v)
@@ -272,6 +276,36 @@ namespace WeNeedMoreNoels.Patch
                         case 1:
                             b.text_content = TX.Get("multiplayer_noel_inverse");
                             break;
+                        case 2:
+                            b.text_content = TX.Get("multiplayer_noel_blue");
+                            break;
+                        case 3:
+                            b.text_content = TX.Get("multiplayer_noel_cyan");
+                            break;
+                        case 4:
+                            b.text_content = TX.Get("multiplayer_noel_green");
+                            break;
+                        case 5:
+                            b.text_content = TX.Get("multiplayer_noel_orange");
+                            break;
+                        case 6:
+                            b.text_content = TX.Get("multiplayer_noel_pink");
+                            break;
+                        case 7:
+                            b.text_content = TX.Get("multiplayer_noel_purple");
+                            break;
+                        case 8:
+                            b.text_content = TX.Get("multiplayer_noel_red");
+                            break;
+                        case 9:
+                            b.text_content = TX.Get("multiplayer_noel_yellow");
+                            break;
+                    }
+                    if (c_v > 1)
+                    {
+                        type = NoelType.ColorNoel;
+                        color = (ColorNoelColor)(c_v - 2);
+                        return true;
                     }
                     type = (NoelType)c_v;
                     return true;
@@ -345,7 +379,7 @@ namespace WeNeedMoreNoels.Patch
             designer.addSlider(new()
             {
                 mn = 0,
-                mx = 1,
+                mx = 9,
                 fnChanged = (_b, p_v, c_v) =>
                 {
                     switch (c_v)
@@ -356,6 +390,36 @@ namespace WeNeedMoreNoels.Patch
                         case 1:
                             b.text_content = TX.Get("multiplayer_noel_inverse");
                             break;
+                        case 2:
+                            b.text_content = TX.Get("multiplayer_noel_blue");
+                            break;
+                        case 3:
+                            b.text_content = TX.Get("multiplayer_noel_cyan");
+                            break;
+                        case 4:
+                            b.text_content = TX.Get("multiplayer_noel_green");
+                            break;
+                        case 5:
+                            b.text_content = TX.Get("multiplayer_noel_orange");
+                            break;
+                        case 6:
+                            b.text_content = TX.Get("multiplayer_noel_pink");
+                            break;
+                        case 7:
+                            b.text_content = TX.Get("multiplayer_noel_purple");
+                            break;
+                        case 8:
+                            b.text_content = TX.Get("multiplayer_noel_red");
+                            break;
+                        case 9:
+                            b.text_content = TX.Get("multiplayer_noel_yellow");
+                            break;
+                    }
+                    if (c_v > 1)
+                    {
+                        type = NoelType.ColorNoel;
+                        color = (ColorNoelColor)(c_v - 2);
+                        return true;
                     }
                     type = (NoelType)c_v;
                     return true;

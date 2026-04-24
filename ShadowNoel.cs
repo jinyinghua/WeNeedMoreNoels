@@ -48,15 +48,20 @@ namespace WeNeedMoreNoels
                     PrPoseContainer container;
                     switch (InitConfig.NoelType)
                     {
-                        case DataStruct.NoelType.Normal:
+                        case NoelType.Normal:
                             m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, "noel_magic", "stand", false, M2Mover.DRAW_ORDER.PR1);
                             container = MTR.PConNoelAnim;
                             container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTR.Anoel_pxls, 56f, CaneManager.DefaultCane);
                             break;
-                        case DataStruct.NoelType.Inverse:
+                        case NoelType.Inverse:
                             m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, "noel_inverse_magic", "stand", false, M2Mover.DRAW_ORDER.PR1);
                             container = MTRExtension.PConNoelIAnim;
                             container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTRExtension.Anoel_inverse_pxls, 56f, CaneManager.DefaultCane);
+                            break;
+                        case NoelType.ColorNoel:
+                            m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, MTRExtension.GetColorNoelName(InitConfig.NoelColor), "stand", false, M2Mover.DRAW_ORDER.PR1);
+                            container = MTRExtension.GetPrPoseContainer(InitConfig.NoelColor);
+                            container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTRExtension.GetColorNoelPxls(InitConfig.NoelColor), 56f, CaneManager.DefaultCane);
                             break;
                         default:
                             return;

@@ -1,0 +1,22 @@
+ManifestFileVersion: 0
+CRC: 3681752683
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 06dab0c5b77a3bf227401f3478f89f7e
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 2d8df09e698f722ada1caa03d3413830
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 06dab0c5b77a3bf227401f3478f89f7e
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Pxl/noel_magic_red.pxls.bytes.texture_0.png
+Dependencies: []
