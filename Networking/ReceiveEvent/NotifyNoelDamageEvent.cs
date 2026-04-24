@@ -3,16 +3,16 @@ using WeNeedMoreNoels.DataStruct;
 
 namespace WeNeedMoreNoels.Networking.ReceiveEvent
 {
-    public class ApplyNoelDamageEvent : PeerReceiveMessageBase
+    public class NotifyNoelDamageEvent : PeerReceiveMessageBase
     {
         public override bool CheckMessage(WNMNPeerMessage message)
         {
-            return message.Type == WNMNPeerMessageType.NotifyNoelDamage && message.PeerId != WNMNTools.LocalID;
+            return message.Type == WNMNPeerMessageType.NotifyNoelDamage && message.PeerId == WNMNTools.LocalID;
         }
 
         public override void ReceiveMessage(WNMNPeerMessage message)
         {
-            ShadowNoelExtensions.DamageNoel(message.PeerId, message.UpdateNoelDamage);
+            ShadowNoelExtensions.DamageNoel(message.PeerId, message.NotifyNoelDamage);
         }
 
         public override string ToMessageString(WNMNPeerMessage message)

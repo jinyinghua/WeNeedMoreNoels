@@ -27,6 +27,8 @@ namespace WeNeedMoreNoels.DataStruct
         public int CaneGrade;
         [ProtoMember(11)]
         public int PartyID;
+        [ProtoMember(12)]
+        public string MpKey;
     }
 
     [ProtoContract] 

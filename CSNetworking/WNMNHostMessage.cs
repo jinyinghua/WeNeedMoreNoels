@@ -10,6 +10,8 @@ namespace WeNeedMoreNoels.CSNetworking
         public List<KeyValuePair<int, ConnectPeerInfo>> PeerInfos;
 
         public List<KeyValuePair<int, ClientConfig>> PeerConfigs;
+
+        public List<KeyValuePair<int, PartyManager.Party>> PeerParties;
     }
 
     public class ConnectPeerInfo

@@ -2,6 +2,7 @@
 using LiteNetLib.Utils;
 using nel;
 using Newtonsoft.Json;
+using System.Linq;
 using UnityEngine;
 
 namespace WeNeedMoreNoels.CSNetworking
@@ -46,9 +47,10 @@ namespace WeNeedMoreNoels.CSNetworking
             reader.Recycle();
             peerID = message.InitID;
             WNMNTools.LocalID = message.InitID;
+            DB.LocalNoelParty = message.InitID;
+            DB.partyInfos = message.PeerParties.Select(x => x.Value).ToDictionary(x => x.ID);
             PartyManager.Party party = PartyManager.InitNewParty(message.InitID);
             DB.partyInfos.Add(message.InitID, party);
-            DB.LocalNoelParty = message.InitID;
             WNMNTools.ConnectOtherPeer(message.PeerInfos);
             WNMNTools.SendInitToAllPeers(message.InitID);
             WNMNTools.GenerateAllNoels(message.PeerConfigs);
@@ -59,7 +61,8 @@ namespace WeNeedMoreNoels.CSNetworking
                 IP = WNMNTools.GetLocalIP(),
                 Port = WNMNTools.peer.GetPeerPort(),
                 NickName = DB.InitConfig.nickName,
-                NoelType = DB.InitConfig.NoelType
+                NoelType = DB.InitConfig.NoelType,
+                Party = party
             };
             writer.Put(JsonConvert.SerializeObject(message1));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
@@ -78,6 +81,9 @@ namespace WeNeedMoreNoels.CSNetworking
             client.DisconnectPeer(hostPeer, writer);
             client.Stop();
             DB.noelIns.Clear();
+            DB.partyInfos.Clear();
+            DB.peerInfos.Clear();
+            DB.peerConfigs.Clear();
         }
     }
 }

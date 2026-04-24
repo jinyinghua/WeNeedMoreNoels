@@ -14,7 +14,7 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoMember(4)]
         public UpdateNoelInfo UpdateNoelInfo;
         [ProtoMember(5)]
-        public NotifyNoelDamage UpdateNoelDamage;
+        public NotifyNoelDamage NotifyNoelDamage;
     }
 
     [ProtoContract]

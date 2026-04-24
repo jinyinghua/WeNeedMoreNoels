@@ -1,6 +1,5 @@
 ﻿using m2d;
 using nel;
-using Newtonsoft.Json;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
 using XX;
@@ -25,7 +24,8 @@ namespace WeNeedMoreNoels
                     noel.gameObject.name = "ShadowNoel";
                     map.assignMover(noel);
                     noel.ID = id;
-                    DB.noelIns[id].Noel = noel;
+                    noel.PartyID = DB.noelIns[id].NoelInfo.PartyID;
+                    noel.OnNoelDamage = WNMNTools.SendDamageToAllPeers;
                     return noel;
                 }
                 return null;
@@ -39,6 +39,7 @@ namespace WeNeedMoreNoels
             PartyManager.Party party = PartyManager.InitNewParty(id);
             noel.ID = id;
             noel.PartyID = party.ID;
+            noel.OnNoelDamage = WNMNTools.SendDamageToAllPeers;
             DB.noelIns.Add(id, new()
             {
                 Noel = noel,
@@ -55,9 +56,15 @@ namespace WeNeedMoreNoels
         {
             ShadowNoelInstance ins = DB.noelIns[id];
             UpdateNoelInfo info = ins.NoelInfo;
-            if (!ins.Enabled)
+            ins.MpKey = info.MpKey;
+            if (ins.MpKey != DB.MainPR.Mp.key)
             {
+                DisableShadowNoel(id);
                 return;
+            }
+            else
+            {
+                EnableShadowNoel(id);
             }
             ShadowNoel noel = ins.Noel;
             MoveShadowNoel(noel, new(info.PositionX, info.PositionY));
@@ -87,12 +94,17 @@ namespace WeNeedMoreNoels
             if (!DB.noelIns.ContainsKey(id))
             {
                 Plugin.Logger.LogWarning("try to disable not existing noel");
+                return;
+            }
+            if (!DB.noelIns[id].Enabled)
+            {
+                return;
             }
             ShadowNoel noel = DB.noelIns[id].Noel;
             noel.Mp.destructPxlAnimByMover(noel);
             noel.Mp.removeMover(noel);
             noel.destruct();
-            Object.DestroyImmediate(noel.gameObject);
+            UnityEngine.Object.DestroyImmediate(noel.gameObject);
             DB.noelIns[id].Enabled = false;
             DB.noelIns[id].Noel = null;
         }
@@ -102,8 +114,15 @@ namespace WeNeedMoreNoels
             if (!DB.noelIns.ContainsKey(id))
             {
                 Plugin.Logger.LogWarning("try to disable not existing noel");
+                return;
             }
-            GenerateShadowNoel(DB.noelIns[id].NoelInitConfig, id);
+            if (DB.noelIns[id].Enabled)
+            {
+                return;
+            }
+            ShadowNoel noel = GenerateShadowNoel(DB.noelIns[id].NoelInitConfig, id);
+            DB.noelIns[id].Enabled = true;
+            DB.noelIns[id].Noel = noel;
         }
 
         public static void MoveShadowNoel(ShadowNoel noel, System.Numerics.Vector2 pos)
@@ -183,25 +202,6 @@ namespace WeNeedMoreNoels
             }
         }
 
-        public static void DisableAllShadowNoels()
-        {
-            foreach (var pair in DB.noelIns)
-            {
-                DisableShadowNoel(pair.Key);
-            }
-        }
-
-        public static void DetectShadowNoelInCurrentMap()
-        {
-            foreach (var pair in DB.noelIns)
-            {
-                if (DB.MainPR.Mp.key == pair.Value.MpKey)
-                {
-                    EnableShadowNoel(pair.Key);
-                }
-            }
-        }
-
         public static void DisableShadowNoelHit(ShadowNoel noel)
         {
             noel.gameObject.tag = "MoverPr";
@@ -231,7 +231,8 @@ namespace WeNeedMoreNoels
                 State = (int)DB.MainPR.state,
                 CaneItemId = cane.GetItem().id,
                 CaneGrade = cane.grade,
-                PartyID = DB.LocalNoelParty
+                PartyID = DB.LocalNoelParty,
+                MpKey = DB.MainPR.Mp.key
             };
         }
     }

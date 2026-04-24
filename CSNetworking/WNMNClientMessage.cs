@@ -9,5 +9,6 @@ namespace WeNeedMoreNoels.CSNetworking
         public int ID;
         public string IP;
         public int Port;
+        public PartyManager.Party Party;
     }
 }

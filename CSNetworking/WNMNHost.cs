@@ -27,6 +27,8 @@ namespace WeNeedMoreNoels.CSNetworking
             transferListener.ConnectionRequestEvent += TransferListener_ConnectionRequestEvent;
             transferListener.PeerConnectedEvent += TransferListener_PeerConnectedEvent;
             WNMNTools.LocalID = 0;
+            PartyManager.Party party = PartyManager.InitNewParty(0);
+            DB.partyInfos.Add(0, party);
         }
 
         private void Update()
@@ -89,7 +91,8 @@ namespace WeNeedMoreNoels.CSNetworking
             {
                 InitID = id,
                 PeerInfos = [..DB.peerInfos],
-                PeerConfigs = [.. DB.peerConfigs]
+                PeerConfigs = [.. DB.peerConfigs],
+                PeerParties = [.. DB.partyInfos]
             };
             writer.Put(JsonConvert.SerializeObject(message));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
@@ -111,11 +114,13 @@ namespace WeNeedMoreNoels.CSNetworking
                 NoelType = message.NoelType
             };
             DB.peerConfigs.Add(message.ID, config);
+            DB.partyInfos.Add(message.ID, message.Party);
         }
 
         private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
         {
-            //TODO:断连
+            int id = disconnectInfo.AdditionalData.GetInt();
+            WNMNTools.DisconnectClient(id);
         }
 
         private void OnDestroy()
@@ -123,6 +128,9 @@ namespace WeNeedMoreNoels.CSNetworking
             host.DisconnectAll();
             host.Stop();
             DB.noelIns.Clear();
+            DB.partyInfos.Clear();
+            DB.peerInfos.Clear();
+            DB.peerConfigs.Clear();
         }
     }
 }

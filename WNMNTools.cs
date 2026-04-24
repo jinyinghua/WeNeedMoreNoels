@@ -182,7 +182,30 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.Unreliable);
+        }
+
+        public static void SendDamageToAllPeers(int id, NotifyNoelDamage dmg)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyNoelDamage,
+                PeerId = id,
+                NotifyNoelDamage = dmg
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
             peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void DisconnectClient(int id)
+        {
+            ShadowNoelExtensions.DisableShadowNoel(id);
+            DB.noelIns.Remove(id);
+            DB.partyInfos.Remove(id);
+            DB.peerInfos.Remove(id);
+            DB.peerConfigs.Remove(id);
         }
 
         public class NetworkConfig

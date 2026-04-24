@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using nel;
 using PixelLiner.PixelLinerLib;
-using System.IO;
 
 namespace WeNeedMoreNoels.Patch
 {

@@ -21,6 +21,10 @@ namespace WeNeedMoreNoels.Networking
 
         private void Update()
         {
+            if (DB.MainPR == null || DB.MainPR.Mp == null)
+            {
+                return;
+            }
             WNMNTools.SendUpdateToAllPeers(WNMNTools.LocalID);
             localPeer?.PollEvents();
             WNMNTools.UpdateAllNoels();

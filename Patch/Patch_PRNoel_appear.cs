@@ -12,9 +12,6 @@ namespace WeNeedMoreNoels.Patch
         [HarmonyPostfix]
         static void Postfix(Map2d Mp)
         {
-            ShadowNoelExtensions.DisableAllShadowNoels();
-            ShadowNoelExtensions.DetectShadowNoelInCurrentMap();
-
             if (!Inited && DB.InitConfig is not null)
             {
                 WNMNTools.InitNetworking(DB.InitConfig);

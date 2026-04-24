@@ -110,6 +110,11 @@ namespace WeNeedMoreNoels
             catch { }
         }
 
+        public override HITTYPE getHitType(M2Ray Ray)
+        {
+            return HITTYPE.EN;
+        }
+
         private PrAnimator AnmN;
     }
 }

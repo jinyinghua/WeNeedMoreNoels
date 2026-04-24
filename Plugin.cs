@@ -16,8 +16,6 @@ namespace WeNeedMoreNoels
         {
             // Plugin startup logic
             Logger = base.Logger;
-            Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
-
             _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
             _harmony.PatchAll();
 
@@ -27,7 +25,8 @@ namespace WeNeedMoreNoels
    \ \  \ /  |\  |    |\  | _| _| 
     \_/\_/  _| \_|   _| \_| _) _)
             """;
-            Logger.LogInfo(logo);
+            Logger.LogMessage(logo);
+            Logger.LogMessage("Created by Alon_, Created at 2026-4-13, Happy birthday to myself");
             MTRExtension.Load();
             ReceiveMessageManager.Init();
         }

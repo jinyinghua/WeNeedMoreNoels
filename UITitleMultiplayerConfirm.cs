@@ -1,5 +1,4 @@
-﻿using nel;
-using nel.title;
+﻿using nel.title;
 using UnityEngine;
 using XX;
 
@@ -43,6 +42,7 @@ namespace WeNeedMoreNoels
             {
                 DB.WNMNEnterNetworkType = (NetWorkType)diff_cursor;
                 DB.WNMNEnterNetworkTypeSelected = true;
+                SND.Ui.play("enter");
             }
             return false;
         }
