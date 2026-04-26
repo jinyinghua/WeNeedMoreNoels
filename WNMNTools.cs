@@ -214,10 +214,10 @@ namespace WeNeedMoreNoels
         public static void SetAllNickNameBgs()
         {
             ShadowNoelNickname nicknameIns = DB.MainPRNickname;
-            nicknameIns.SetBgColor(DB.partyInfos[DB.LocalNoelParty].Color);
+            nicknameIns?.SetBgColor(DB.partyInfos[DB.LocalNoelParty].Color);
             foreach (var pair in DB.noelIns)
             {
-                pair.Value.NicknameIns.SetBgColor(DB.partyInfos[pair.Value.Noel.PartyID].Color);
+                pair.Value.NicknameIns?.SetBgColor(DB.partyInfos[pair.Value.Noel.PartyID].Color);
             }
         }
 

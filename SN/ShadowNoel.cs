@@ -139,6 +139,14 @@ namespace WeNeedMoreNoels.SN
             return HITTYPE.EN;
         }
 
+        public override void deactivateFromMap()
+        {
+            base.deactivateFromMap();
+            Mp.removeMover(NicknameIns);
+            NicknameIns.destruct();
+            DB.noelIns[ID].NicknameIns = null;
+        }
+
         private PrAnimator AnmN;
     }
 }

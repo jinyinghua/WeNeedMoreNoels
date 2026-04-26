@@ -128,7 +128,7 @@ namespace WeNeedMoreNoels.SN
             noel.Mp.destructPxlAnimByMover(noel);
             noel.Mp.removeMover(noel);
             noel.destruct();
-            UnityEngine.Object.DestroyImmediate(noel.gameObject);
+            Object.DestroyImmediate(noel.gameObject);
             DB.noelIns[id].Enabled = false;
             DB.noelIns[id].Noel = null;
         }
