@@ -2,6 +2,7 @@
 using m2d;
 using nel;
 using WeNeedMoreNoels.DataStruct;
+using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels.Patch
 {

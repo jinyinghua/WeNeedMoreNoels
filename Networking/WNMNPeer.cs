@@ -28,6 +28,7 @@ namespace WeNeedMoreNoels.Networking
             WNMNTools.SendUpdateToAllPeers(WNMNTools.LocalID);
             localPeer?.PollEvents();
             WNMNTools.UpdateAllNoels();
+            WNMNTools.SetAllNickNameBgs();
         }
 
         private void Listener_ConnectionRequestEvent(ConnectionRequest request)

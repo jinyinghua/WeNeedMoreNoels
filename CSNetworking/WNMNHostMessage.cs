@@ -1,10 +1,15 @@
 ﻿using System.Collections.Generic;
 using WeNeedMoreNoels.DataStruct;
+using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
     public class WNMNHostMessage
     {
+        public bool InitOther;
+
+        public int ExcludeID;
+
         public int InitID;
 
         public List<KeyValuePair<int, ConnectPeerInfo>> PeerInfos;

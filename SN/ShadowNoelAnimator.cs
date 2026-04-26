@@ -1,7 +1,7 @@
 ﻿using m2d;
 using nel;
 
-namespace WeNeedMoreNoels
+namespace WeNeedMoreNoels.SN
 {
     public class ShadowNoelAnimator : PrNoelAnimator
     {

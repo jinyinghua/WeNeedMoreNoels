@@ -1,4 +1,5 @@
 ﻿using ProtoBuf;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -7,6 +8,7 @@ using UnityEngine;
 using WeNeedMoreNoels.CSNetworking;
 using WeNeedMoreNoels.DataStruct;
 using WeNeedMoreNoels.Networking;
+using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels
 {
@@ -207,6 +209,16 @@ namespace WeNeedMoreNoels
             DB.partyInfos.Remove(id);
             DB.peerInfos.Remove(id);
             DB.peerConfigs.Remove(id);
+        }
+
+        public static void SetAllNickNameBgs()
+        {
+            ShadowNoelNickname nicknameIns = DB.MainPRNickname;
+            nicknameIns.SetBgColor(DB.partyInfos[DB.LocalNoelParty].Color);
+            foreach (var pair in DB.noelIns)
+            {
+                pair.Value.NicknameIns.SetBgColor(DB.partyInfos[pair.Value.Noel.PartyID].Color);
+            }
         }
 
         public class NetworkConfig

@@ -1,9 +1,11 @@
 ﻿using LiteNetLib;
 using LiteNetLib.Utils;
+using MonoMod.Utils;
 using nel;
 using Newtonsoft.Json;
 using System.Linq;
 using UnityEngine;
+using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -45,6 +47,15 @@ namespace WeNeedMoreNoels.CSNetworking
             string json = reader.GetString();
             WNMNHostMessage message = JsonConvert.DeserializeObject<WNMNHostMessage>(json);
             reader.Recycle();
+            if (message.InitOther)
+            {
+                if (message.ExcludeID == WNMNTools.LocalID)
+                {
+                    return;
+                }
+                DB.partyInfos.AddRange(message.PeerParties.Select(x => x.Value).ToDictionary(x => x.ID));
+                return;
+            }
             peerID = message.InitID;
             WNMNTools.LocalID = message.InitID;
             DB.LocalNoelParty = message.InitID;
@@ -66,6 +77,7 @@ namespace WeNeedMoreNoels.CSNetworking
             };
             writer.Put(JsonConvert.SerializeObject(message1));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            WNMNTools.SetAllNickNameBgs();
         }
 
         private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)

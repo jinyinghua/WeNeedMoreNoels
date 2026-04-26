@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using m2d;
 using nel;
+using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels.Patch
 {
@@ -16,6 +17,12 @@ namespace WeNeedMoreNoels.Patch
             {
                 WNMNTools.InitNetworking(DB.InitConfig);
                 Inited = true;
+                ShadowNoelExtensions.GenerateMainPRNickname(DB.InitConfig.nickName);
+                return;
+            }
+            if (DB.InitConfig is not null)
+            {
+                ShadowNoelExtensions.GenerateMainPRNickname(DB.InitConfig.nickName);
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using m2d;
 using nel;
+using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels.Patch
 {//NelAttackInfo Atk, ref HITTYPE add_hittype, bool force

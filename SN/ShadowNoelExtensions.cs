@@ -3,8 +3,11 @@ using nel;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
 using XX;
+using static evt.ManpuDrawer;
+using static nel.NelNPentapodHead;
+using static UnityEngine.GraphicsBuffer;
 
-namespace WeNeedMoreNoels
+namespace WeNeedMoreNoels.SN
 {
     public static class ShadowNoelExtensions
     {
@@ -26,6 +29,8 @@ namespace WeNeedMoreNoels
                     noel.ID = id;
                     noel.PartyID = DB.noelIns[id].NoelInfo.PartyID;
                     noel.OnNoelDamage = WNMNTools.SendDamageToAllPeers;
+                    noel.CreateNicknameWithNoel(config.Nickname);
+                    DB.noelIns[id].NicknameIns = noel.NicknameIns;
                     return noel;
                 }
                 return null;
@@ -40,6 +45,7 @@ namespace WeNeedMoreNoels
             noel.ID = id;
             noel.PartyID = party.ID;
             noel.OnNoelDamage = WNMNTools.SendDamageToAllPeers;
+            noel.CreateNicknameWithNoel(config.Nickname);
             DB.noelIns.Add(id, new()
             {
                 Noel = noel,
@@ -47,9 +53,27 @@ namespace WeNeedMoreNoels
                 MpKey = map.key,
                 NoelInitConfig = config,
                 NoelInfo = GetSendInfo(),
-                Enabled = true
+                Enabled = true,
+                NicknameIns = noel.NicknameIns
             });
             return noel;
+        }
+
+        public static void GenerateMainPRNickname(string nickname)
+        {
+            Map2d Mp = DB.MainPR.Mp;
+            DB.MainPR.getPosition(out float x, out float y);
+            ShadowNoelNickname follower = Mp.createMover<ShadowNoelNickname>($"Nickname_{nickname}", x, y);
+            follower.SetFollowTarget(DB.MainPR, new Vector2(0f, -2f));
+            follower.SetText(nickname);
+            follower.SetTextSize(20f);
+            follower.SetTextColor(uint.MaxValue);
+            follower.SetBorderColor(4278190080U);
+            follower.SetTextOffset(0f, -50f);
+            follower.SetAlpha(1);
+            DB.MainPR.Mp.assignMover(follower);
+            follower.appear(DB.MainPR.Mp);
+            DB.MainPRNickname = follower;
         }
 
         public static void UpdateShadowNoelInfo(int id)

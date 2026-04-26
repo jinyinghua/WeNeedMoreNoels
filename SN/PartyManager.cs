@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
 
-namespace WeNeedMoreNoels
+namespace WeNeedMoreNoels.SN
 {
     public class PartyManager
     {
         public static Party InitNewParty(int id)
         {
+            float r = Random.Range(0f, 1f);
+            float g = Random.Range(0f, 1f);
+            float b = Random.Range(0f, 1f);
             return new()
             {
                 ID = id,
-                Color = Random.ColorHSV(),
+                Color = new Color(r, g, b),
                 Name = $"NoelParty#{id}"
             };
         }

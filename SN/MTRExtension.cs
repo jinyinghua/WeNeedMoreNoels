@@ -8,7 +8,7 @@ using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
 using XX;
 
-namespace WeNeedMoreNoels
+namespace WeNeedMoreNoels.SN
 {
     public static class MTRExtension
     {

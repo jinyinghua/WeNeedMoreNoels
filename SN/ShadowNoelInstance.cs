@@ -1,6 +1,6 @@
 ﻿using WeNeedMoreNoels.DataStruct;
 
-namespace WeNeedMoreNoels
+namespace WeNeedMoreNoels.SN
 {
     public class ShadowNoelInstance
     {
@@ -10,5 +10,6 @@ namespace WeNeedMoreNoels
         public string MpKey;
         public ClientConfig NoelInitConfig;
         public UpdateNoelInfo NoelInfo;
+        public ShadowNoelNickname NicknameIns;
     }
 }

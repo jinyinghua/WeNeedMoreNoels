@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using WeNeedMoreNoels.DataStruct;
+using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels.Networking.ReceiveEvent
 {

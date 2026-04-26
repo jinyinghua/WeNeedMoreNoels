@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using WeNeedMoreNoels.CSNetworking;
 using WeNeedMoreNoels.DataStruct;
+using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels
 {
@@ -26,6 +27,8 @@ namespace WeNeedMoreNoels
         public static bool PreloadResource;
 
         public static PRNoel MainPR;
+
+        public static ShadowNoelNickname MainPRNickname;
 
         public static bool ShadowAppear;
 

@@ -3,6 +3,7 @@ using LiteNetLib.Utils;
 using Newtonsoft.Json;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
+using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -116,6 +117,16 @@ namespace WeNeedMoreNoels.CSNetworking
             };
             DB.peerConfigs.Add(message.ID, config);
             DB.partyInfos.Add(message.ID, message.Party);
+            WNMNHostMessage message1 = new()
+            {
+                InitOther = true,
+                ExcludeID = message.ID,
+                PeerParties = [new(message.ID, message.Party)]
+            };
+            NetDataWriter writer = new();
+            writer.Put(JsonConvert.SerializeObject(message1));
+            host.SendToAll(writer, DeliveryMethod.ReliableOrdered);
+            WNMNTools.SetAllNickNameBgs();
         }
 
         private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)

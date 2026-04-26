@@ -1,0 +1,250 @@
+﻿using m2d;
+using nel;
+using System;
+using UnityEngine;
+using XX;
+
+namespace WeNeedMoreNoels.SN
+{
+    public class ShadowNoelNickname : M2Attackable
+    {
+        private PRMain followTarget;
+        private TextRenderer Tx;
+        private TextRenderer TxBg;
+        private GameObject GobTx;
+        public Vector2 followOffset = new(0f, -1.5f);
+        public float followLerp = 0.15f;
+        public bool immediateFollow = false;
+        private string currentText = "";
+        private bool textVisible = true;
+        private Color32 txColor = MTRX.ColWhite;
+        private Color32 borderColor = C32.d2c(4278190080U);
+        private Color32 bgColor = MTRX.ColWhite;
+        private float txSize = 18f;
+        private ALIGN txAlign = ALIGN.CENTER;
+        private ALIGNY txAlignY = ALIGNY.MIDDLE;
+        private float txOffsetPixelX = 0f;
+        private float txOffsetPixelY = -40f;
+        public override HITTYPE getHitType(M2Ray Ray)
+        {
+            return HITTYPE.NONE;
+        }
+        public override RAYHIT can_hit(M2Ray Ray)
+        {
+            return RAYHIT.NONE;
+        }
+        public override bool isDamagingOrKo()
+        {
+            return false;
+        }
+        public override void appear(Map2d Mp)
+        {
+            base.appear(Mp);
+            this.floating = true;
+            this.base_gravity = 0f;
+            base.gameObject.layer = 2;
+            base.carryable_other_object = false;
+        }
+        public void SetFollowTarget(PRMain target, Vector2? offset = null)
+        {
+            this.followTarget = target;
+            if (offset.HasValue)
+            {
+                this.followOffset = offset.Value;
+            }
+            if (target != null && this.Mp != null)
+            {
+                this.setTo(
+                    target.x + followOffset.x,
+                    target.y + followOffset.y
+                );
+            }
+        }
+        public PRMain GetFollowTarget()
+        {
+            return this.followTarget;
+        }
+        public bool HasTarget()
+        {
+            return this.followTarget != null && !this.followTarget.destructed;
+        }
+        public void SetText(string text)
+        {
+            if (this.currentText == text) return;
+            this.currentText = text ?? "";
+            if (string.IsNullOrEmpty(this.currentText))
+            {
+                HideText();
+                return;
+            }
+            EnsureTextRenderer();
+            this.Tx.html_mode = true;
+            this.Tx.Txt(this.currentText);
+            if (this.textVisible)
+            {
+                this.GobTx.SetActive(true);
+            }
+        }
+        public void ShowText()
+        {
+            this.textVisible = true;
+            if (this.GobTx != null && !string.IsNullOrEmpty(this.currentText))
+            {
+                this.GobTx.SetActive(true);
+            }
+        }
+        public void HideText()
+        {
+            this.textVisible = false;
+            this.GobTx?.SetActive(false);
+        }
+        public void SetTextColor(Color32 color)
+        {
+            this.txColor = color;
+            this.Tx?.Col(color);
+        }
+        public void SetTextColor(uint color)
+        {
+            this.SetTextColor(C32.d2c(color));
+        }
+        public void SetBorderColor(Color32 color)
+        {
+            this.borderColor = color;
+            this.Tx?.BorderCol(color);
+        }
+        public void SetBorderColor(uint color)
+        {
+            this.SetBorderColor(C32.d2c(color));
+        }
+        public void SetTextSize(float size)
+        {
+            this.txSize = size;
+            this.Tx?.Size(size);
+        }
+        public void SetTextAlign(ALIGN ax, ALIGNY ay)
+        {
+            this.txAlign = ax;
+            this.txAlignY = ay;
+            this.Tx?.Align(ax).AlignY(ay);
+        }
+        public void SetTextOffset(float pixelX, float pixelY)
+        {
+            this.txOffsetPixelX = pixelX;
+            this.txOffsetPixelY = pixelY;
+        }
+        public void SetAlpha(float alpha)
+        {
+            this.Tx?.Alpha(alpha);
+        }
+        public string GetCurrentText()
+        {
+            return this.currentText;
+        }
+        public bool IsTextShowing()
+        {
+            return this.GobTx != null && this.GobTx.activeSelf && this.textVisible;
+        }
+        private void EnsureTextRenderer()
+        {
+            if (this.Tx != null) return;
+            this.GobTx = IN.CreateGob(gameObject, "tx", false);
+            this.GobTx.layer = 25; //25 is GUI layer
+            this.Tx = this.GobTx.AddComponent<TextRenderer>();
+            this.Tx.html_mode = true;
+            this.Tx.auto_condense = true;
+            this.Tx.Col(this.txColor);
+            this.Tx.BorderCol(this.borderColor);
+            this.Tx.Size(this.txSize);
+            this.Tx.Align(this.txAlign).AlignY(this.txAlignY);
+            IN.setZ(this.GobTx.transform, -1f);
+            var bg = IN.CreateGob(gameObject, "bg", false);
+            //█
+            bg.layer = 25;
+            this.TxBg = bg.AddComponent<TextRenderer>();
+            this.TxBg.setText(new STB("█"));
+            this.TxBg.Col(this.bgColor);
+            this.TxBg.BorderCol(new Color(0, 0, 0, 0));
+            this.TxBg.Size(40);
+            this.TxBg.Alpha(0.4f);
+            this.TxBg.transform.localPosition += new Vector3(0, -0.56f);
+            float width = this.currentText.Length * 12f;
+            this.TxBg.transform.localScale = new(width / 30f, 1, 1);
+            this.TxBg.transform.localPosition -= new Vector3((this.currentText.Length / 2f) * 0.25f, 0, 0);
+            IN.setZ(this.TxBg.transform, -0.9f);
+        }
+        private void UpdateTextPosition()
+        {
+            if (this.Tx == null || this.Mp == null) return;
+            float px = this.txOffsetPixelX * 0.015625f;
+            float py = this.txOffsetPixelY * 0.015625f;
+            Vector3 pos = this.GobTx.transform.localPosition;
+            pos.x = px;
+            pos.y = py;
+            this.GobTx.transform.localPosition = pos;
+        }
+        public override void runPre()
+        {
+            base.runPre();
+            if (base.destructed) return;
+            if (this.followTarget != null && this.followTarget.destructed)
+            {
+                this.followTarget = null;
+                HideText();
+                return;
+            }
+            if (this.followTarget == null) return;
+            Vector3 delta = GameObject.Find("CameraContainer").transform.position;
+            float targetX = this.followTarget.x + this.followOffset.x - delta.x * 1.15f;
+            float targetY = this.followTarget.y + this.followOffset.y + delta.y * 1.15f;
+            Vector2 off = new(3, -1);
+            targetX += off.x;
+            targetY += off.y;
+            if (this.immediateFollow)
+            {
+                if (base.x != targetX || base.y != targetY)
+                {
+                    this.setTo(targetX, targetY);
+                }
+            }
+            else
+            {
+                float newX = X.NI(base.x, targetX, this.followLerp);
+                float newY = X.NI(base.y, targetY, this.followLerp);
+                float dx = newX - base.x;
+                float dy = newY - base.y;
+                if (X.Abs(dx) > 0.001f || X.Abs(dy) > 0.001f)
+                {
+                    this.moveBy(dx, dy, false);
+                }
+            }
+        }
+        public override void runPost()
+        {
+            base.runPost();
+            if (base.destructed) return;
+            if (this.Tx != null && this.GobTx.activeSelf && this.textVisible)
+            {
+                UpdateTextPosition();
+            }
+        }
+        public override void destruct()
+        {
+            if (base.destructed) return;
+            this.Tx?.OnDestroy();
+            this.Tx = null;
+            if (this.GobTx != null)
+            {
+                IN.DestroyOne(this.GobTx);
+                this.GobTx = null;
+            }
+            this.followTarget = null;
+            base.destruct();
+        }
+
+        public void SetBgColor(Color color)
+        {
+            this.bgColor = color;
+            this.TxBg?.Col(color);
+        }
+    }
+}

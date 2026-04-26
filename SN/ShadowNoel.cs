@@ -1,9 +1,10 @@
 ﻿using m2d;
 using nel;
 using System;
+using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
 
-namespace WeNeedMoreNoels
+namespace WeNeedMoreNoels.SN
 {
     public class ShadowNoel : PRMain
     {
@@ -12,6 +13,24 @@ namespace WeNeedMoreNoels
         public int PartyID;
 
         public Action<int, NotifyNoelDamage> OnNoelDamage;
+
+        public ShadowNoelNickname NicknameIns;
+
+        public void CreateNicknameWithNoel(string nickname)
+        {
+            getPosition(out float x, out float y);
+            ShadowNoelNickname follower = Mp.createMover<ShadowNoelNickname>($"Nickname_{nickname}", x, y);
+            follower.SetFollowTarget(this, new Vector2(0f, -2f));
+            follower.SetText(nickname);
+            follower.SetTextSize(20f);
+            follower.SetTextColor(uint.MaxValue);
+            follower.SetBorderColor(4278190080U);
+            follower.SetTextOffset(0f, -50f);
+            follower.SetAlpha(1);
+            DB.MainPR.Mp.assignMover(follower);
+            follower.appear(DB.MainPR.Mp);
+            NicknameIns = follower;
+        }
 
         public override void Awake()
         {
