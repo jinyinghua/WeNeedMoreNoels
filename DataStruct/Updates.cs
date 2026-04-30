@@ -29,6 +29,12 @@ namespace WeNeedMoreNoels.DataStruct
         public int PartyID;
         [ProtoMember(12)]
         public string MpKey;
+        [ProtoMember(13)]
+        public bool ChantMagic;
+        [ProtoMember(14)]
+        public float MagicAim;
+        [ProtoMember(15)]
+        public float MagicHold;
     }
 
     [ProtoContract] 
@@ -38,5 +44,27 @@ namespace WeNeedMoreNoels.DataStruct
         public int Hp;
         [ProtoMember(2)]
         public int Mp;
+    }
+
+    [ProtoContract]
+    public class NotifyNoelMagic
+    {
+        [ProtoMember(1)]
+        public NotifyMagicTpe Type;
+        [ProtoMember(2)]
+        public int Kind;
+        [ProtoMember(3)]
+        public float T;
+    }
+
+    [ProtoContract]
+    public enum NotifyMagicTpe
+    {
+        [ProtoEnum]
+        Reawake,
+        [ProtoEnum]
+        Sleep,
+        [ProtoEnum]
+        Kill
     }
 }

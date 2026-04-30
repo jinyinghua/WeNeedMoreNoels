@@ -22,6 +22,7 @@ namespace WeNeedMoreNoels
         public static NetWorkType Type;
         public static int LocalID = -1;
         public static bool Inited;
+        public static bool PeerInited;
 
         static int _unique_id;
         public static int Unique_ID
@@ -195,6 +196,20 @@ namespace WeNeedMoreNoels
                 Type = WNMNPeerMessageType.NotifyNoelDamage,
                 PeerId = id,
                 NotifyNoelDamage = dmg
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendMagicToAllPeers(int id, NotifyNoelMagic mg)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyNoelMagic,
+                PeerId = id,
+                NotifyNoelMagic = mg
             };
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);

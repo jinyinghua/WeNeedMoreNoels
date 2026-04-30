@@ -65,6 +65,7 @@ namespace WeNeedMoreNoels.Networking
         {
             localPeer.Connect(ip, port, DB.P2P_ACCESS_KEY);
             Plugin.Logger.LogInfo($"peer connect {ip}:{port}");
+            WNMNTools.PeerInited = true;
         }
 
         public int StartPeer()

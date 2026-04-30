@@ -1,5 +1,6 @@
 ﻿using nel;
 using System.Collections.Generic;
+using System.Numerics;
 using WeNeedMoreNoels.CSNetworking;
 using WeNeedMoreNoels.DataStruct;
 using WeNeedMoreNoels.SN;
@@ -46,6 +47,8 @@ namespace WeNeedMoreNoels
 
         public static Dictionary<int, ClientConfig> peerConfigs = [];
 
+        public static Dictionary<MagicItem, ShadowNoel> MNBridge = [];
+
         public static float MovementEpslion = 0.001f;
 
         public static NetWorkType networkType;
@@ -63,5 +66,13 @@ namespace WeNeedMoreNoels
         public static string Game_streaming_asset;
 
         public static WNMNTools.NetworkConfig InitConfig = null;
+
+        public static bool Test;
+
+        public static float Test1;
+
+        public static bool IsMainPR;
+
+        public static float LocalMagicAim;
     }
 }

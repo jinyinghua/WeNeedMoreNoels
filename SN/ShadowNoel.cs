@@ -3,6 +3,7 @@ using nel;
 using System;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
+using XX;
 
 namespace WeNeedMoreNoels.SN
 {
@@ -11,6 +12,12 @@ namespace WeNeedMoreNoels.SN
         public ClientConfig InitConfig;
         public int ID;
         public int PartyID;
+
+        public bool ChantMagic;
+        public float MagicAim;
+
+        public AIM CurAim;
+        public STATE CurState;
 
         public Action<int, NotifyNoelDamage> OnNoelDamage;
 
@@ -55,6 +62,13 @@ namespace WeNeedMoreNoels.SN
             base.key = "shadow_noel";
             this.AbsorbCon = new AbsorbManagerContainer(5, this);
         }
+
+        public override M2Mover setAim(AIM n, bool sprite_force_aim_set = false)
+        {
+            return this;
+        }
+
+        public override void changeState(STATE state, STATE prestate) { }
 
         public override void createAnimator(ref PrAnimator Anm)
         {
@@ -101,7 +115,7 @@ namespace WeNeedMoreNoels.SN
 
             this.UP?.destruct();
             this.UP = null;
-        }   
+        }
 
         public override void refineMoveKey(bool ignore_keypushdown = false) { }
 
@@ -117,21 +131,19 @@ namespace WeNeedMoreNoels.SN
 
         public override void runPre()
         {
-            try
+            Skill.magic_t = (float)Skill.MAGIC_CHANT_DELAY;
+            base.runPre();
+            base.setAim(CurAim);
+            if (state != CurState)
             {
-                base.runPre();
+                base.changeState(CurState, state);
             }
-            catch { }
         }
 
         public override void runPost()
         {
-            try
-            {
-                base.runPost();
-                Phy.killSpeedForce(true, true, true, true, true);
-            }
-            catch { }
+            base.runPost();
+            Phy.killSpeedForce(true, true, true, true, true);
         }
 
         public override HITTYPE getHitType(M2Ray Ray)
@@ -145,6 +157,30 @@ namespace WeNeedMoreNoels.SN
             Mp.removeMover(NicknameIns);
             NicknameIns.destruct();
             DB.noelIns[ID].NicknameIns = null;
+        }
+
+        public void ReawakeMagic(MGKIND kind, float t)
+        {
+            Skill.reawakeMagic(kind);
+            Skill.CurMg.castedTimeResetTo(t);
+        }
+
+        public void SleepMagic()
+        {
+            Skill.CurMg.Sleep(false);
+        }
+
+        public void KillMagic()
+        {
+            if (Skill.CurMg is null)
+            {
+                return;
+            }
+            Skill.CurMg.close(true);
+            Skill.CurMg.kill(-1f);
+            Skill.OcSlots.clearMagic(Skill.CurMg, false);
+            Skill.CurMg = null;
+            Skill.MagicSel.deactivate();
         }
 
         private PrAnimator AnmN;

@@ -1,10 +1,12 @@
 ﻿using m2d;
 using nel;
+using System.Linq;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
 using XX;
 using static evt.ManpuDrawer;
 using static nel.NelNPentapodHead;
+using static nel.SVD;
 using static UnityEngine.GraphicsBuffer;
 
 namespace WeNeedMoreNoels.SN
@@ -98,9 +100,17 @@ namespace WeNeedMoreNoels.SN
             {
                 SetCane(noel, (ushort)info.CaneItemId, (byte)info.CaneGrade);
             }
-            if (noel.state != (PR.STATE)info.State)
+            if (noel.CurState != (PR.STATE)info.State)
             {
-                noel.changeState((PR.STATE)info.State);
+                noel.CurState = (PR.STATE)info.State;
+                if (noel.CurState == PR.STATE.MAG_EXPLODE_PREPARE)
+                {
+                    Plugin.Logger.LogInfo("prepare");
+                }
+                if (noel.CurState == PR.STATE.MAG_EXPLODED)
+                {
+                    Plugin.Logger.LogInfo("exploded");
+                }
             }
             noel.PartyID = info.PartyID;
             if (noel.PartyID != DB.LocalNoelParty)
@@ -111,6 +121,9 @@ namespace WeNeedMoreNoels.SN
             {
                 DisableShadowNoelHit(noel);
             }
+            noel.ChantMagic = info.ChantMagic;
+            noel.MagicAim = info.MagicAim;
+            noel.Skill.mp_hold = info.MagicHold;
         }
 
         public static void DisableShadowNoel(int id)
@@ -164,14 +177,13 @@ namespace WeNeedMoreNoels.SN
 
         public static void SetPoseShadowNoel(ShadowNoel noel, string pose, AIM aim)
         {
+            noel.CurAim = aim;
             ShadowNoelAnimator Anm = (ShadowNoelAnimator)noel.Anm;
             if (Anm.pose_title == pose)
             {
                 return;
             }
             Anm.setPose(pose);
-            Anm.setAim(aim);
-            noel.Skill.setAim(aim);
         }
 
         public static void SetHPMP(ShadowNoel noel, int hp, int mp)
@@ -226,6 +238,28 @@ namespace WeNeedMoreNoels.SN
             }
         }
 
+        public static void SetNoelMagic(int id, NotifyNoelMagic mg)
+        {
+            switch (mg.Type)
+            {
+                case NotifyMagicTpe.Reawake:
+                    DB.noelIns[id].Noel.ReawakeMagic((MGKIND)mg.Kind, mg.T);
+                    DB.MNBridge.Add(DB.noelIns[id].Noel.Skill.CurMg, DB.noelIns[id].Noel);
+                    break;
+                case NotifyMagicTpe.Sleep:
+                    DB.noelIns[id].Noel.SleepMagic();
+                    break;
+                case NotifyMagicTpe.Kill:
+                    if (DB.MNBridge.Count == 0)
+                    {
+                        break;
+                    }
+                    DB.MNBridge.Remove(DB.MNBridge.First(x => x.Value == DB.noelIns[id].Noel).Key);
+                    DB.noelIns[id].Noel.KillMagic();
+                    break;
+            }
+        }
+
         public static void DisableShadowNoelHit(ShadowNoel noel)
         {
             noel.gameObject.tag = "MoverPr";
@@ -242,7 +276,9 @@ namespace WeNeedMoreNoels.SN
         {
             DB.MainPR.getPosition(out float x, out float y);
             PrNoelAnimator Anm = DB.MainPR.AnmN;
-            PrCaneEquip cane = DB.MainPR.getSkillManager().getCurrentCaneEquip();
+            M2PrSkill skill = DB.MainPR.getSkillManager();
+            MagicItem item = skill.CurMg;
+            PrCaneEquip cane = skill.getCurrentCaneEquip();
             return new()
             {
                 PositionX = x,
@@ -256,7 +292,10 @@ namespace WeNeedMoreNoels.SN
                 CaneItemId = cane.GetItem().id,
                 CaneGrade = cane.grade,
                 PartyID = DB.LocalNoelParty,
-                MpKey = DB.MainPR.Mp.key
+                MpKey = DB.MainPR.Mp.key,
+                ChantMagic = DB.MainPR.magic_chanting,
+                MagicAim = item is null ? 0 : item.aim_agR,
+                MagicHold = skill.mp_hold
             };
         }
     }
