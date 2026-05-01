@@ -248,6 +248,8 @@ namespace WeNeedMoreNoels
 
             public ColorNoelColor NoelColor;
 
+            public bool InvisibleNickname;
+
             public string nickName;
 
             public static implicit operator ClientConfig(NetworkConfig config)

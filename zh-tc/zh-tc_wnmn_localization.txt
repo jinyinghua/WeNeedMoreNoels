@@ -8,6 +8,7 @@
 
 &&multiplayer_nickname 暱稱： 
 &&multiplayer_select_noel 選擇人物：
+&&multiplayer_invisible_nickname 主播模式：
 
 &&multiplayer_con ：
 
@@ -21,6 +22,8 @@
 &&multiplayer_noel_purple 紫衣諾艾兒
 &&multiplayer_noel_red 紅衣諾艾兒
 &&multiplayer_noel_yellow 黃衣諾艾兒
+
+&&multiplayer_noel_nickname 諾艾兒#
 
 // ========================================================
 // MARK : 多人選項選擇

@@ -14,10 +14,8 @@ namespace WeNeedMoreNoels.SN
         public int PartyID;
 
         public bool ChantMagic;
-        public float MagicAim;
+        public float MagicAgR;
         public float MagicT;
-
-        public AIM CurAim;
         public STATE CurState;
 
         public Action<int, NotifyNoelDamage> OnNoelDamage;
@@ -62,11 +60,6 @@ namespace WeNeedMoreNoels.SN
             this.GaugeBrk.reset();
             base.key = "shadow_noel";
             this.AbsorbCon = new AbsorbManagerContainer(5, this);
-        }
-
-        public override M2Mover setAim(AIM n, bool sprite_force_aim_set = false)
-        {
-            return this;
         }
 
         public override void changeState(STATE state, STATE prestate) { }
@@ -129,13 +122,10 @@ namespace WeNeedMoreNoels.SN
             return rt;
         }
 
-
-
         public override void runPre()
         {
             Skill.magic_t = MagicT;
-            base.setAim(CurAim);
-            if (state != CurState && CurState != STATE.MAG_EXPLODED)
+            if (state != CurState)
             {
                 base.changeState(CurState, state);
             }

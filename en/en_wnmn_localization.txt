@@ -8,6 +8,7 @@
 
 &&multiplayer_nickname Nickname: 
 &&multiplayer_select_noel Select character:
+&&multiplayer_invisible_nickname Streamer Mode:
 
 &&multiplayer_con :
 
@@ -21,6 +22,8 @@
 &&multiplayer_noel_purple Noel in purple
 &&multiplayer_noel_red Noel in red
 &&multiplayer_noel_yellow Noel in yellow
+
+&&multiplayer_noel_nickname Noel#
 
 // ========================================================
 // MARK : 多人选项选择

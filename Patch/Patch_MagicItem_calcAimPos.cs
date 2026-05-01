@@ -12,7 +12,7 @@ namespace WeNeedMoreNoels.Patch
             MagicItem item = (MagicItem)__instance;
             if (DB.MNBridge.TryGetValue(item, out var noel))
             {
-                item.aim_agR = noel.MagicAim;
+                item.aim_agR = noel.MagicAgR;
             }
         }
     }

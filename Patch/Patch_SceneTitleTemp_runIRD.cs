@@ -36,6 +36,8 @@ namespace WeNeedMoreNoels.Patch
 
         static SceneTitleTemp stt;
 
+        static bool InvisibleNickname;
+
         [HarmonyPrefix]
         static bool Prefix(object __instance, ref bool __result)
         {
@@ -107,7 +109,8 @@ namespace WeNeedMoreNoels.Patch
                             port = PortCon.cnt_val,
                             nickName = NickNameInput.text,
                             NoelType = type,
-                            NoelColor = color
+                            NoelColor = color,
+                            InvisibleNickname = InvisibleNickname
                         };
                         DB.InitConfig = config;
                         BxHC.deactivate();
@@ -171,7 +174,8 @@ namespace WeNeedMoreNoels.Patch
                                 port = PortCon.cnt_val,
                                 nickName = NickNameInput.text,
                                 NoelType = type,
-                                NoelColor = color
+                                NoelColor = color,
+                                InvisibleNickname = InvisibleNickname
                             };
                             DB.InitConfig = config;
                             Plugin.Logger.LogInfo("Client received sync save data.");
@@ -235,31 +239,38 @@ namespace WeNeedMoreNoels.Patch
             PortCon.setValue(47210);
             designer.addHr(new()
             {
-                margin_t = 5f,
-                margin_b = 5f
+                margin_t = 0,
+                margin_b = 0,
+                line_height = 0
             });
             designer.alignx = ALIGN.CENTER;
+            designer.addP(new()
+            {
+                TxCol = ColorDefault,
+                size = 20f,
+                text = TX.Get("multiplayer_nickname")
+            });
             NickNameInput = designer.addInput(new()
             {
-                h = 30f,
-                label = TX.Get("multiplayer_nickname")
+                h = 20f
             });
             designer.addHr(new()
             {
-                margin_t = 5f,
-                margin_b = 5f
+                margin_t = 0,
+                margin_b = 0,
+                line_height = 0
             });
             designer.alignx = ALIGN.CENTER; 
             designer.addP(new()
             {
                 TxCol = ColorDefault,
-                size = 20,
+                size = 20f,
                 text = TX.Get("multiplayer_select_noel")
             });
             FillBlock b = designer.addP(new()
             {
                 TxCol = ColorDefault,
-                size = 20,
+                size = 20f,
                 text = TX.Get("multiplayer_noel")
             });
             designer.addSlider(new()
@@ -311,6 +322,27 @@ namespace WeNeedMoreNoels.Patch
                     return true;
                 }
             });
+            designer.addHr(new()
+            {
+                margin_t = 0,
+                margin_b = 0,
+                line_height = 0
+            });
+            designer.addP(new()
+            {
+                TxCol = ColorDefault,
+                size = 20f,
+                text = TX.Get("multiplayer_invisible_nickname")
+            });
+            designer.addSlider(new()
+            {
+                checkbox_mode = 1,
+                fnChanged = (_b, p_v, c_v) =>
+                {
+                    InvisibleNickname = c_v == 1;
+                    return true;
+                }
+            });
         }
 
         static void CreateUIClient(UiBoxDesigner designer)
@@ -349,31 +381,38 @@ namespace WeNeedMoreNoels.Patch
             PortCon.setValue(47210);
             designer.addHr(new()
             {
-                margin_t = 5f,
-                margin_b = 5f
-            });
-            designer.alignx = ALIGN.CENTER;
-            NickNameInput = designer.addInput(new()
-            {
-                h = 30f,
-                label = TX.Get("multiplayer_nickname")
-            });
-            designer.addHr(new()
-            {
-                margin_t = 5f,
-                margin_b = 5f
+                margin_t = 0,
+                margin_b = 0,
+                line_height = 0
             });
             designer.alignx = ALIGN.CENTER;
             designer.addP(new()
             {
                 TxCol = ColorDefault,
-                size = 20,
+                size = 20f,
+                text = TX.Get("multiplayer_nickname")
+            });
+            NickNameInput = designer.addInput(new()
+            {
+                h = 20f
+            });
+            designer.addHr(new()
+            {
+                margin_t = 0,
+                margin_b = 0,
+                line_height = 0
+            });
+            designer.alignx = ALIGN.CENTER;
+            designer.addP(new()
+            {
+                TxCol = ColorDefault,
+                size = 20f,
                 text = TX.Get("multiplayer_select_noel")
             });
             var b = designer.addP(new()
             {
                 TxCol = ColorDefault,
-                size = 20,
+                size = 20f,
                 text = TX.Get("multiplayer_noel")
             });
             designer.addSlider(new()
@@ -422,6 +461,27 @@ namespace WeNeedMoreNoels.Patch
                         return true;
                     }
                     type = (NoelType)c_v;
+                    return true;
+                }
+            });
+            designer.addHr(new()
+            {
+                margin_t = 0,
+                margin_b = 0,
+                line_height = 0
+            });
+            designer.addP(new()
+            {
+                TxCol = ColorDefault,
+                size = 20f,
+                text = TX.Get("multiplayer_invisible_nickname")
+            });
+            designer.addSlider(new()
+            {
+                checkbox_mode = 1,
+                fnChanged = (_b, p_v, c_v) =>
+                {
+                    InvisibleNickname = c_v == 1;
                     return true;
                 }
             });

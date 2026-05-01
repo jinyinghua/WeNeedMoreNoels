@@ -32,7 +32,7 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoMember(13)]
         public bool ChantMagic;
         [ProtoMember(14)]
-        public float MagicAim;
+        public float MagicAgR;
         [ProtoMember(15)]
         public float MagicHold;
         [ProtoMember(16)]

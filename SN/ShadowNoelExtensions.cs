@@ -27,7 +27,14 @@ namespace WeNeedMoreNoels.SN
                     noel.ID = id;
                     noel.PartyID = DB.noelIns[id].NoelInfo.PartyID;
                     noel.OnNoelDamage = WNMNTools.SendDamageToAllPeers;
-                    noel.CreateNicknameWithNoel(config.Nickname);
+                    if (DB.InitConfig.InvisibleNickname)
+                    {
+                        noel.CreateNicknameWithNoel(TX.Get("multiplayer_noel_nickname") + id.ToString());
+                    }
+                    else
+                    {
+                        noel.CreateNicknameWithNoel(config.Nickname);
+                    }
                     DB.noelIns[id].NicknameIns = noel.NicknameIns;
                     return noel;
                 }
@@ -43,7 +50,14 @@ namespace WeNeedMoreNoels.SN
             noel.ID = id;
             noel.PartyID = party.ID;
             noel.OnNoelDamage = WNMNTools.SendDamageToAllPeers;
-            noel.CreateNicknameWithNoel(config.Nickname);
+            if (DB.InitConfig.InvisibleNickname)
+            {
+                noel.CreateNicknameWithNoel(TX.Get("multiplayer_noel_nickname") + id.ToString());
+            }
+            else
+            {
+                noel.CreateNicknameWithNoel(config.Nickname);
+            }
             DB.noelIns.Add(id, new()
             {
                 Noel = noel,
@@ -110,7 +124,7 @@ namespace WeNeedMoreNoels.SN
                 DisableShadowNoelHit(noel);
             }
             noel.ChantMagic = info.ChantMagic;
-            noel.MagicAim = info.MagicAim;
+            noel.MagicAgR = info.MagicAgR;
             noel.Skill.mp_hold = info.MagicHold;
             noel.MagicT = info.MagicT;
         }
@@ -163,7 +177,7 @@ namespace WeNeedMoreNoels.SN
 
         public static void SetPoseShadowNoel(ShadowNoel noel, string pose, AIM aim)
         {
-            noel.CurAim = aim;
+            noel.setAim(aim);
             ShadowNoelAnimator Anm = (ShadowNoelAnimator)noel.Anm;
             if (Anm.pose_title == pose)
             {
@@ -230,6 +244,10 @@ namespace WeNeedMoreNoels.SN
             {
                 case NotifyMagicTpe.Reawake:
                     DB.noelIns[id].Noel.ReawakeMagic((MGKIND)mg.Kind, mg.T);
+                    if (DB.MNBridge.ContainsKey(DB.noelIns[id].Noel.Skill.CurMg))
+                    {
+                        break;
+                    }
                     DB.MNBridge.Add(DB.noelIns[id].Noel.Skill.CurMg, DB.noelIns[id].Noel);
                     break;
                 case NotifyMagicTpe.Sleep:
@@ -280,9 +298,9 @@ namespace WeNeedMoreNoels.SN
                 PartyID = DB.LocalNoelParty,
                 MpKey = DB.MainPR.Mp.key,
                 ChantMagic = DB.MainPR.magic_chanting,
-                MagicAim = item is null ? 0 : item.aim_agR,
+                MagicAgR = item is null ? 0 : item.aim_agR,
                 MagicHold = skill.mp_hold,
-                MagicT = skill.magic_t
+                MagicT = skill.magic_t,
             };
         }
     }
