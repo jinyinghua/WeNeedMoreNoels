@@ -4,10 +4,6 @@ using System.Linq;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
 using XX;
-using static evt.ManpuDrawer;
-using static nel.NelNPentapodHead;
-using static nel.SVD;
-using static UnityEngine.GraphicsBuffer;
 
 namespace WeNeedMoreNoels.SN
 {
@@ -103,14 +99,6 @@ namespace WeNeedMoreNoels.SN
             if (noel.CurState != (PR.STATE)info.State)
             {
                 noel.CurState = (PR.STATE)info.State;
-                if (noel.CurState == PR.STATE.MAG_EXPLODE_PREPARE)
-                {
-                    Plugin.Logger.LogInfo("prepare");
-                }
-                if (noel.CurState == PR.STATE.MAG_EXPLODED)
-                {
-                    Plugin.Logger.LogInfo("exploded");
-                }
             }
             noel.PartyID = info.PartyID;
             if (noel.PartyID != DB.LocalNoelParty)
@@ -124,6 +112,7 @@ namespace WeNeedMoreNoels.SN
             noel.ChantMagic = info.ChantMagic;
             noel.MagicAim = info.MagicAim;
             noel.Skill.mp_hold = info.MagicHold;
+            noel.MagicT = info.MagicT;
         }
 
         public static void DisableShadowNoel(int id)
@@ -168,9 +157,6 @@ namespace WeNeedMoreNoels.SN
             {
                 return;
             }
-            noel.getPosition(out float x, out float y);
-            float dx = pos.X - x;
-            float dy = pos.Y - y;
             noel.setTo(pos.X, pos.Y);
             noel.Phy.killSpeedForce(true, true, true, true, true);
         }
@@ -295,7 +281,8 @@ namespace WeNeedMoreNoels.SN
                 MpKey = DB.MainPR.Mp.key,
                 ChantMagic = DB.MainPR.magic_chanting,
                 MagicAim = item is null ? 0 : item.aim_agR,
-                MagicHold = skill.mp_hold
+                MagicHold = skill.mp_hold,
+                MagicT = skill.magic_t
             };
         }
     }

@@ -15,6 +15,7 @@ namespace WeNeedMoreNoels.SN
 
         public bool ChantMagic;
         public float MagicAim;
+        public float MagicT;
 
         public AIM CurAim;
         public STATE CurState;
@@ -121,23 +122,24 @@ namespace WeNeedMoreNoels.SN
 
         public override bool runUi() {
             var tg = this.Mp.TalkTarget_;
-            bool rt = true;
-            rt = base.runUi();
+            bool rt = base.runUi();
             if (tg != this.Mp.TalkTarget_) {
                 this.Mp.setTalkTarget(tg);
             }
             return rt;
         }
 
+
+
         public override void runPre()
         {
-            Skill.magic_t = (float)Skill.MAGIC_CHANT_DELAY;
-            base.runPre();
+            Skill.magic_t = MagicT;
             base.setAim(CurAim);
-            if (state != CurState)
+            if (state != CurState && CurState != STATE.MAG_EXPLODED)
             {
                 base.changeState(CurState, state);
             }
+            base.runPre();
         }
 
         public override void runPost()

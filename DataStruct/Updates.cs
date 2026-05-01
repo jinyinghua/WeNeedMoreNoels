@@ -35,6 +35,8 @@ namespace WeNeedMoreNoels.DataStruct
         public float MagicAim;
         [ProtoMember(15)]
         public float MagicHold;
+        [ProtoMember(16)]
+        public float MagicT;
     }
 
     [ProtoContract] 

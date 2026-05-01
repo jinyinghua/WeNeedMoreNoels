@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using nel;
+using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels.Patch
 {
@@ -7,13 +8,18 @@ namespace WeNeedMoreNoels.Patch
     public class Patch_M2PrSkill_initMagicSleep
     {
         [HarmonyPrefix]
-        static void Prefix(object __instance)
+        static bool Prefix(object __instance)
         {
             M2PrSkill skill = (M2PrSkill)__instance;
             if (skill.Pr is PRNoel)
             {
                 DB.IsMainPR = true;
             }
+            if (skill.Pr is ShadowNoel)
+            {
+                return false;
+            }
+            return true;
         }
 
         [HarmonyPostfix]
