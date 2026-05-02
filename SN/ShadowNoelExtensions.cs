@@ -127,6 +127,7 @@ namespace WeNeedMoreNoels.SN
             noel.MagicAgR = info.MagicAgR;
             noel.Skill.mp_hold = info.MagicHold;
             noel.MagicT = info.MagicT;
+            noel.MagicHoldAim = info.MagicHoldAim;
         }
 
         public static void DisableShadowNoel(int id)
@@ -264,6 +265,31 @@ namespace WeNeedMoreNoels.SN
             }
         }
 
+        public static void StartCurMapBattle()
+        {
+            if (M2LpSummon.NearLpSmn is not null)
+            {
+                DB.CurSummoner = M2LpSummon.NearLpSmn;
+                DB.CurEnemies.Clear();
+                M2LpSummon.NearLpSmn.openSummoner(DB.MainPR);
+            }
+        }
+
+        public static void EndCurMapBattle()
+        {
+            if (DB.CurSummoner is not null)
+            {
+                foreach (NelEnemy enemy in DB.CurEnemies)
+                {
+                    DB.MainPR.Mp.removeMover(enemy);
+                    enemy.destruct();
+                }
+                DB.CurEnemies.Clear();
+                DB.CurSummoner.closeSummoner(true, out _);
+                DB.CurSummoner = null;
+            }
+        }
+
         public static void DisableShadowNoelHit(ShadowNoel noel)
         {
             noel.gameObject.tag = "MoverPr";
@@ -301,6 +327,7 @@ namespace WeNeedMoreNoels.SN
                 MagicAgR = item is null ? 0 : item.aim_agR,
                 MagicHold = skill.mp_hold,
                 MagicT = skill.magic_t,
+                MagicHoldAim = skill.Cursor.pre_hold_aim
             };
         }
     }

@@ -16,6 +16,8 @@ namespace WeNeedMoreNoels.Networking
             RegisterReceiveMessage(new UpdateNoelInfoEvent());
             RegisterReceiveMessage(new NotifyNoelDamageEvent());
             RegisterReceiveMessage(new NotifyNoelMagicEvent());
+            RegisterReceiveMessage(new NotifyNoelStartBattleEvent());
+            RegisterReceiveMessage(new NotifyNoelEndBattleEvent());
         }
 
         public static void RegisterReceiveMessage(PeerReceiveMessageBase receive)

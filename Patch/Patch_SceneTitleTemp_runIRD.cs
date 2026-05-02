@@ -18,8 +18,6 @@ namespace WeNeedMoreNoels.Patch
 
         static UiBoxDesigner BxHCI;
 
-        static Designer Black;
-
         static NoelType type;
 
         static ColorNoelColor color;
@@ -29,8 +27,6 @@ namespace WeNeedMoreNoels.Patch
         static BtnContainerNumCounter<aBtnNumCounter> PortCon;
 
         static LabeledInputField NickNameInput;
-
-        static FillBlock StateBlock;
 
         static NetManager client;
 
@@ -276,7 +272,7 @@ namespace WeNeedMoreNoels.Patch
             designer.addSlider(new()
             {
                 mn = 0,
-                mx = 9,
+                mx = 1,
                 fnChanged = (_b, p_v, c_v) =>
                 {
                     switch (c_v)
@@ -418,7 +414,7 @@ namespace WeNeedMoreNoels.Patch
             designer.addSlider(new()
             {
                 mn = 0,
-                mx = 9,
+                mx = 1,
                 fnChanged = (_b, p_v, c_v) =>
                 {
                     switch (c_v)

@@ -49,6 +49,8 @@ namespace WeNeedMoreNoels
 
         public static Dictionary<MagicItem, ShadowNoel> MNBridge = [];
 
+        public static List<NelEnemy> CurEnemies = [];
+
         public static float MovementEpslion = 0.001f;
 
         public static NetWorkType networkType;
@@ -74,5 +76,7 @@ namespace WeNeedMoreNoels
         public static bool IsMainPR;
 
         public static float LocalMagicAim;
+
+        public static M2LpSummon CurSummoner;
     }
 }

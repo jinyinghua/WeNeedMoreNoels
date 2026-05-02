@@ -29,6 +29,10 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoEnum]
         NotifyNoelDamage,
         [ProtoEnum]
-        NotifyNoelMagic
+        NotifyNoelMagic,
+        [ProtoEnum]
+        NotifyNoelStartBattle,
+        [ProtoEnum]
+        NotifyNoelEndBattle
     }
 }

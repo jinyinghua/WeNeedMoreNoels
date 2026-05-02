@@ -17,6 +17,7 @@ namespace WeNeedMoreNoels.SN
         public float MagicAgR;
         public float MagicT;
         public STATE CurState;
+        public int MagicHoldAim;
 
         public Action<int, NotifyNoelDamage> OnNoelDamage;
 
@@ -129,12 +130,20 @@ namespace WeNeedMoreNoels.SN
             {
                 base.changeState(CurState, state);
             }
-            base.runPre();
+            try
+            {
+                base.runPre();
+            }
+            catch { }
         }
 
         public override void runPost()
         {
-            base.runPost();
+            try
+            {
+                base.runPost();
+            }
+            catch { }
             Phy.killSpeedForce(true, true, true, true, true);
         }
 

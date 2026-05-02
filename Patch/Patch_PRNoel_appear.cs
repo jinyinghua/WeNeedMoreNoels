@@ -3,7 +3,6 @@ using m2d;
 using nel;
 using WeNeedMoreNoels.SN;
 using XX;
-using static Fusion.Allocator;
 
 namespace WeNeedMoreNoels.Patch
 {
@@ -15,7 +14,7 @@ namespace WeNeedMoreNoels.Patch
         [HarmonyPostfix]
         static void Postfix(Map2d Mp)
         {
-            if (!Inited)
+            if (!Inited && DB.InitConfig is not null)
             {
                 WNMNTools.InitNetworking(DB.InitConfig);
                 Inited = true;

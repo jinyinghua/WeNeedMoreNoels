@@ -205,11 +205,49 @@ namespace WeNeedMoreNoels
 
         public static void SendMagicToAllPeers(int id, NotifyNoelMagic mg)
         {
+            if (DB.InitConfig is null)
+            {
+                return;
+            }
             WNMNPeerMessage messageSend = new()
             {
                 Type = WNMNPeerMessageType.NotifyNoelMagic,
                 PeerId = id,
                 NotifyNoelMagic = mg
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendBattleStartToAllPeers(int id)
+        {
+            if (DB.InitConfig is null)
+            {
+                return;
+            }
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyNoelStartBattle,
+                PeerId = id
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendBattleEndToAllPeers(int id)
+        {
+            if (DB.InitConfig is null)
+            {
+                return;
+            }
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyNoelEndBattle,
+                PeerId = id
             };
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
