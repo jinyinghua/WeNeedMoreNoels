@@ -92,6 +92,7 @@ namespace WeNeedMoreNoels.CSNetworking
             writer.Put(peerID);
             client.DisconnectPeer(hostPeer, writer);
             client.Stop();
+            DB.InitConfig = null;
             DB.noelIns.Clear();
             DB.partyInfos.Clear();
             DB.peerInfos.Clear();
