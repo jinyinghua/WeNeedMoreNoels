@@ -72,6 +72,19 @@ namespace WeNeedMoreNoels.Patch
                 .MatchStartBackwards(new CodeMatch(OpCodes.Break))
                 .Set(OpCodes.Brfalse, label);
 
+                //.MatchStartForward(
+                //    new CodeMatch(OpCodes.Ldarg_0),
+                //    new CodeMatch(OpCodes.Ldstr, "MAIN"),
+                //    new CodeMatch(OpCodes.Ldc_I4_0),
+                //    new CodeMatch(OpCodes.Ldc_I4_1),
+                //    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(UiCFG), nameof(UiCFG.fineTabVisibility)))
+                //)
+                //.Advance(1)
+                //.SetInstructionAndAdvance(new CodeInstruction(OpCodes.Pop))
+                //.SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
+                //.SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
+                //.SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop));
+
             return matcher.InstructionEnumeration();
         }
 
@@ -80,15 +93,18 @@ namespace WeNeedMoreNoels.Patch
         {
             if (DB.IsMultiplayer)
             {
-                var designer = __instance.BxOut.addTab("_DsmInner_Mp", __instance.BxOut.use_w, __instance.BxOut.use_h, __instance.BxOut.use_w, __instance.BxOut.use_h, true);
+                var w = __instance.OTab["MAIN"].w;    // idk but __instance.BxOut.use_w/h changed somewhere, get original value here
+                var h = __instance.OTab["MAIN"].h;
+                var designer = __instance.BxOut.addTab("_DsmInner_Mp", w, h, w, h, true);
                 __instance.setBoxMainStencil();
 
-                designer.addButton(new() { title = "Test123" });
+                CFGMultiplayer.CreateBoxDesignerContentSp(__instance, __instance.BxOut, designer);
 
                 __instance.BxOut.endTab(true, true);
                 __instance.OTab["MP"] = designer;
-                __instance.fineTabVisibility("MAIN", false, true);  // idk but it fix some visual things
+                
             }
+            __instance.fineTabVisibility("MAIN", false, true);  // idk but it fix some visual things
         }
     }
 }

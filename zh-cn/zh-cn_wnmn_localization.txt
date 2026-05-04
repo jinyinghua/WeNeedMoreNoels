@@ -43,3 +43,17 @@
 /* ___ Title_multiplayer_desc_client ___ */ 
 连接到一个已有的主机
 享受多重「可怜即可爱」吧！
+
+// ========================================================
+// MARK : 多人模式设置菜单
+// ========================================================
+
+&&Config_mpconfig_show_nicknames 显示玩家昵称
+&&Config_desc_mpconfig_show_nicknames 设置在游戏内是否显示玩家昵称
+
+/* ___ Config_mpconfig_cure_all_players_on_bench ___ */
+长椅指令对
+所有玩家起效
+/* ___ Config_desc_mpconfig_cure_all_players_on_bench ___ */ 
+设置坐在长椅上时，「恢复HP」等
+指令是否对所有玩家同时起效
