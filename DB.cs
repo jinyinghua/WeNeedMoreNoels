@@ -69,6 +69,8 @@ namespace WeNeedMoreNoels
 
         public static WNMNTools.NetworkConfig InitConfig = null;
 
+        public static bool IsMultiplayer => InitConfig != null;
+
         public static bool Test;
 
         public static float Test1;

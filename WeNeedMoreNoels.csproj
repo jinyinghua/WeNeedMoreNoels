@@ -65,6 +65,10 @@
       <HintPath>$(GameAssembliesPath)\unsafeAssem.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="better">
+      <HintPath>$(GameAssembliesPath)\better.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
