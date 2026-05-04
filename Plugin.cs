@@ -20,11 +20,15 @@ namespace WeNeedMoreNoels
             _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
             _harmony.PatchAll();
 
-            string logo = @"""
- \ \          \    \   \  |  |  | 
-  \ \  \   /   \ | \/   \ |  |  | 
-   \ \  \ /  |\  |    |\  | _| _| 
-    \_/\_/  _| \_|   _| \_| _) _)
+            string logo =
+            """
+
+
+             \ \          \    \   \  |  |  | 
+              \ \  \   /   \ | \/   \ |  |  | 
+               \ \  \ /  |\  |    |\  | _| _| 
+                \_/\_/  _| \_|   _| \_| _) _)
+            
             """;
             Logger.LogMessage(logo);
             Logger.LogMessage("Created by Alon_, Created at 2026-4-13, Happy birthday to myself");
