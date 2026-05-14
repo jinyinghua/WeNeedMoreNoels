@@ -7,7 +7,7 @@ using XX;
 
 namespace WeNeedMoreNoels.Patch
 {
-    [HarmonyDebug]
+    //[HarmonyDebug]
     [HarmonyPatch(typeof(UiCFG), MethodType.Constructor,
         [typeof(UiBoxDesigner), typeof(UiBoxDesigner), typeof(Designer), typeof(bool), typeof(bool), typeof(UiCFG.FnCfgTabCreateAfter), typeof(bool)])]
     public class Patch_UiCFG_ctor

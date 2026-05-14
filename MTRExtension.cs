@@ -8,7 +8,7 @@ using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
 using XX;
 
-namespace WeNeedMoreNoels.SN
+namespace WeNeedMoreNoels
 {
     public static class MTRExtension
     {
@@ -44,6 +44,7 @@ namespace WeNeedMoreNoels.SN
             string L_zhPath = Path.Combine(localLocalizationPath, "zh-cn\\");
             string L_zhtcPath = Path.Combine(localLocalizationPath, "zh-tc\\");
             string L_enPath = Path.Combine(localLocalizationPath, "en\\");
+            string L_jpPath = Path.Combine(localLocalizationPath, "_\\");
             string pluginFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BepInEx", "plugins");
             string pluginPath = Path.Combine(pluginFolderPath, "WNMN");
             string pluginPxlPath = Path.Combine(pluginPath, "pxls\\");
@@ -51,6 +52,7 @@ namespace WeNeedMoreNoels.SN
             string zhPath = Path.Combine(pluginPath, "zh-cn\\");
             string zhtcPath = Path.Combine(pluginPath, "zh-tc\\");
             string enPath = Path.Combine(pluginPath, "en\\");
+            string jpPath = Path.Combine(pluginPath, "_\\");
             DB.Plugin_local_path = pluginPath;
             DB.Game_streaming_asset = assetOriginPath;
             if (!Directory.Exists(assetOriginPath))
@@ -75,6 +77,7 @@ namespace WeNeedMoreNoels.SN
             File.Copy(zhPath + $"zh-cn{LOCALIZATION_FILE_NAME}.txt", L_zhPath + $"zh-cn{LOCALIZATION_FILE_NAME}.txt", true);
             File.Copy(zhtcPath + $"zh-tc{LOCALIZATION_FILE_NAME}.txt", L_zhtcPath + $"zh-tc{LOCALIZATION_FILE_NAME}.txt", true);
             File.Copy(enPath + $"en{LOCALIZATION_FILE_NAME}.txt", L_enPath + $"en{LOCALIZATION_FILE_NAME}.txt", true);
+            File.Copy(jpPath + $"_{LOCALIZATION_FILE_NAME}.txt", L_jpPath + $"_{LOCALIZATION_FILE_NAME}.txt", true);
             Plugin.Logger.LogInfo("WNMN resources load complete!");
         }
 

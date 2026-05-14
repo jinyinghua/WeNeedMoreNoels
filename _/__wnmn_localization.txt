@@ -1,0 +1,45 @@
+﻿&&btn_multiplayer 複数プレーヤー
+
+&&multiplayer_host_title 主人の配置
+&&multiplayer_client_title 客人の配置
+
+&&multiplayer_host_port 主人のポート：
+&&multiplayer_host_closed ポートが消えた
+
+&&multiplayer_nickname ニックネーム：
+&&multiplayer_select_noel キャラクターを選択：
+&&multiplayer_invisible_nickname 配信モード：
+
+&&multiplayer_con ：
+
+&&multiplayer_noel ノエル（通常）
+&&multiplayer_noel_inverse ノエル（逆）
+&&multiplayer_noel_blue ノエル（青）
+&&multiplayer_noel_cyan ノエル（空色）
+&&multiplayer_noel_green ノエル（緑）
+&&multiplayer_noel_orange ノエル（オレンジ）
+&&multiplayer_noel_pink ノエル（ピンク）
+&&multiplayer_noel_purple ノエル（紫）
+&&multiplayer_noel_red ノエル（赤）
+&&multiplayer_noel_yellow ノエル（黄）
+
+&&multiplayer_noel_nickname ノエル＃
+
+// ========================================================
+// MARK : Multiplayer Options
+// ========================================================
+
+/* ___ Title_multiplayer_top ___ */ 
+<key la/><key ra/>切り替える　<key submit/>決定　<key cancel/>キャンセル
+複数プレーヤーモードを選択します。
+
+&&Title_multiplayer_host 主人として
+&&Title_multiplayer_client 客人として
+
+/* ___ Title_multiplayer_desc_host ___ */ 
+ホストを始めに、他のプレーヤーを招待します。
+（強いパソコンが必要です）
+
+/* ___ Title_multiplayer_desc_client ___ */ 
+存在するホストを連絡します。
+ダブルかわいそうをエンジョイして！

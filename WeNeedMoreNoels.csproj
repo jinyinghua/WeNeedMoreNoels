@@ -10,7 +10,6 @@
     <RestoreAdditionalProjectSources>
       https://api.nuget.org/v3/index.json;
       https://nuget.bepinex.dev/v3/index.json;
-      https://nuget.samboy.dev/v3/index.json
     </RestoreAdditionalProjectSources>
     <RootNamespace>WeNeedMoreNoels</RootNamespace>
     <OutputPath>$(GameRootPath)\BepInEx\plugins\WNMN</OutputPath>
@@ -244,6 +243,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="zh-tc\zh-tc_wnmn_localization.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="_\__wnmn_localization.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
