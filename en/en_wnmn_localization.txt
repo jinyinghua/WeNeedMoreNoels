@@ -27,6 +27,19 @@
 
 &&multiplayer_cata Multiplayer
 &&multiplayer_menu_title Multiplayer Menu
+&&multiplayer_menu_utilities Common Utilities
+&&multiplayer_menu_modify_nickname Change nickname
+&&multiplayer_menu_modify_party Change party
+&&multiplayer_menu_teleport Teleport to ...
+&&multiplayer_menu_syncbackpackandmony Manually sync backpack & money
+&&multiplayer_menu_syncbackpackandmony_warn *Synchronizing will cause the current backpack items to be lost. Continue?
+&&multiplayer_menu_sendmsg Send short message
+&&multiplayer_menu_host_utilities Host Utilities
+&&multiplayer_menu_host_kick Kick out ...
+&&multiplayer_menu_host_mute Mute ...
+&&multiplayer_menu_host_teleportallself Teleport everybody here
+&&multiplayer_menu_host_modifyplayerparty Modify player's party
+&&multiplayer_menu_host_modifyroomconfig Modify room's config
 
 // ========================================================
 // MARK : 多人选项选择

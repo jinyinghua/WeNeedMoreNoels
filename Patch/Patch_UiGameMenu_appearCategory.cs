@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using nel.gm;
-using static UnityEngine.ParticleSystem.PlaybackState;
 
 namespace WeNeedMoreNoels.Patch
 {
@@ -9,6 +8,7 @@ namespace WeNeedMoreNoels.Patch
     {
         private static bool Prefix(UiGameMenu __instance, CATEG ct)
         {
+            UiMenuMul.BxP.deactivate();
             if ((int)ct == 10)
             {
                 __instance.quitAppearCategory();

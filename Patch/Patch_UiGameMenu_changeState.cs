@@ -9,6 +9,7 @@ namespace WeNeedMoreNoels.Patch
         [HarmonyPrefix]
         static bool Prefix(UiGameMenu __instance)
         {
+            UiMenuMul.BxP.deactivate();
             if (UiMenuMul.IsMulCata)
             {
                 __instance.BxCategory.getBtn(10).Select(true);

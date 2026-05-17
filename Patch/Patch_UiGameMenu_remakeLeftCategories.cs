@@ -26,6 +26,7 @@ namespace WeNeedMoreNoels.Patch
                 {
                     UiMenuMul.IsMulCata = true;
                     __instance.initCategoryEdit((CATEG)10, true);
+                    UiMenuMul.SendMsgButton.Select(true);
                     return true;
                 },
                 fnOut = B =>

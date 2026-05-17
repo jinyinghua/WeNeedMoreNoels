@@ -1,6 +1,6 @@
-﻿using nel.gm;
+﻿using nel;
+using nel.gm;
 using System;
-using System.ComponentModel.Design;
 using UnityEngine;
 using XX;
 
@@ -32,16 +32,291 @@ namespace WeNeedMoreNoels
                 margin_t = 5f,
                 margin_b = 5f
             });
+            BxR.alignx = ALIGN.CENTER;
+            BxR.addP(new()
+            {
+                TxCol = ColorDefault,
+                size = 30,
+                text = TX.Get("multiplayer_menu_utilities")
+            });
+            BxR.Br();
+            BxR.addButton(new()
+            {
+                title = TX.Get("multiplayer_menu_modify_nickname"),
+                fnClick = B =>
+                {
+                    UiBoxDesigner BxCmd = UiMenuMul.BxP;
+                    BxCmd.activate();
+                    IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
+                    BxCmd.Clear();
+                    BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+                    BxCmd.WH(300f, 150f);
+                    BxCmd.margin_in_lr = 10f;
+                    BxCmd.margin_in_tb = 10f;
+                    BxCmd.init();
+                    BxCmd.alignx = ALIGN.CENTER;
+                    var nicknameInput = BxCmd.addInput(new()
+                    {
+                        h = 20f
+                    });
+                    nicknameInput.text = DB.InitConfig.nickName;
+                    BxCmd.Br();
+                    BxCmd.addButton(new()
+                    {
+                        title = TX.Get("Submit"),
+                        fnClick = B =>
+                        {
+                            BxCmd.deactivate();
+                            BxR.Focus();
+                            return true;
+                        }
+                    });
+                    BxCmd.addButton(new()
+                    {
+                        title = TX.Get("Cancel"),
+                        fnClick = B =>
+                        {
+                            BxCmd.deactivate();
+                            BxR.Focus();
+                            return true;
+                        }
+                    });
+                    Vector3 btnPos = B.transform.position;
+                    float targetX = btnPos.x * 64f + 300f;
+                    float targetY = btnPos.y * 64f;
+                    BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+                    BxCmd.Focusable(true, true);
+                    BxCmd.Focus();
+                    return true;
+                }
+            });
+            BxR.addP(new()
+            {
+                text = "  "
+            });
+            BxR.addButton(new()
+            {
+                title = TX.Get("multiplayer_menu_modify_party"),
+                fnClick = B =>
+                {
+                    string[] btns = [.. WNMNTools.AllNicknames, TX.Get("Cancel")];
+                    UiBoxDesigner BxCmd = UiMenuMul.BxP;
+                    BxCmd.activate();
+                    IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
+                    BxCmd.Clear();
+                    BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+                    BxCmd.WH(200f, 48f * btns.Length);
+                    BxCmd.margin_in_lr = 10f;
+                    BxCmd.margin_in_tb = 10f;
+                    BxCmd.init();
+                    BxCmd.addButtonMultiT<aBtnNel>(new DsnDataButtonMulti
+                    {
+                        name = "sub_menu",
+                        titles = btns,
+                        skin = "row_center",
+                        clms = 1,
+                        w = BxCmd.use_w,
+                        h = 30f,
+                        fnClick = (aBtn BSub) =>
+                        {
+                            BxCmd.deactivate();
+                            B.Select(true);
+                            BxR.Focus();
+                            return true;
+                        }
+                    });
+                    Vector3 btnPos = B.transform.position;
+                    float targetX = btnPos.x * 64f + 300f;
+                    float targetY = btnPos.y * 64f;
+                    BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+                    BxCmd.Focusable(true, true);
+                    BxCmd.Focus();
+                    return true;
+                }
+            });
+            BxR.Br();
+            BxR.addButton(new()
+            {
+                title = TX.Get("multiplayer_menu_teleport"),
+                fnClick = B =>
+                {
+                    OnPlayerSelect(B, i => { });
+                    return true;
+                }
+            });
+            BxR.addP(new()
+            {
+                text = "  "
+            });
+            BxR.addButton(new()
+            {
+                title = TX.Get("multiplayer_menu_syncbackpackandmony"),
+                fnClick = B =>
+                {
+                    UiBoxDesigner BxCmd = UiMenuMul.BxP;
+                    BxCmd.activate();
+                    IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
+                    BxCmd.Clear();
+                    BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+                    BxCmd.WH(300f, 150f);
+                    BxCmd.margin_in_lr = 10f;
+                    BxCmd.margin_in_tb = 10f;
+                    BxCmd.init();
+                    BxCmd.alignx = ALIGN.CENTER;
+                    BxCmd.addP(new()
+                    {
+                        text = "multiplayer_menu_syncbackpackandmony_warn",
+                        TxCol = Color.HSVToRGB(0, 0.95f, 0.91f)
+                    });
+                    BxCmd.Br();
+                    BxCmd.addButton(new()
+                    {
+                        title = TX.Get("Submit"),
+                        fnClick = B =>
+                        {
+                            BxCmd.deactivate();
+                            BxR.Focus();
+                            return true;
+                        }
+                    });
+                    BxCmd.addButton(new()
+                    {
+                        title = TX.Get("Cancel"),
+                        fnClick = B =>
+                        {
+                            BxCmd.deactivate();
+                            BxR.Focus();
+                            return true;
+                        }
+                    });
+                    Vector3 btnPos = B.transform.position;
+                    float targetX = btnPos.x * 64f + 300f;
+                    float targetY = btnPos.y * 64f;
+                    BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+                    BxCmd.Focusable(true, true);
+                    BxCmd.Focus();
+                    return true;
+                }
+            });
+            BxR.Br();
+            BxR.alignx = ALIGN.CENTER;
+            UiMenuMul.SendMsgButton = BxR.addButton(new()
+            {
+                title = TX.Get("multiplayer_menu_sendmsg")
+            });
+            BxR.Br();
+            if (WNMNTools.Type == NetWorkType.Host)
+            {
+                BxR.addHr(new()
+                {
+                    margin_t = 5f,
+                    margin_b = 5f
+                });
+                BxR.alignx = ALIGN.CENTER;
+                BxR.addP(new()
+                {
+                    TxCol = ColorDefault,
+                    size = 30,
+                    text = TX.Get("multiplayer_menu_host_utilities")
+                });
+                BxR.Br();
+                BxR.addButton(new()
+                {
+                    title = TX.Get("multiplayer_menu_host_kick"),
+                    fnClick = B =>
+                    {
+                        OnPlayerSelect(B, i => { });
+                        return true;
+                    }
+                });
+                BxR.addP(new()
+                {
+                    text = "  "
+                });
+                BxR.addButton(new()
+                {
+                    title = TX.Get("multiplayer_menu_host_mute"),
+                    fnClick = B =>
+                    {
+                        OnPlayerSelect(B, i => { });
+                        return true;
+                    }
+                });
+                BxR.Br();
+                BxR.addButton(new()
+                {
+                    title = TX.Get("multiplayer_menu_host_teleportallself")
+                });
+                BxR.addP(new()
+                {
+                    text = "  "
+                });
+                BxR.addButton(new()
+                {
+                    title = TX.Get("multiplayer_menu_host_modifyplayerparty"),
+                    fnClick = B =>
+                    {
+                        OnPlayerSelect(B, i => { });
+                        return true;
+                    }
+                });
+                BxR.Br();
+                BxR.alignx = ALIGN.CENTER;
+                BxR.addButton(new()
+                {
+                    title = TX.Get("multiplayer_menu_host_modifyroomconfig")
+                });
+                BxR.addFocusFn(_B =>
+                {
+                    UiMenuMul.BxP.deactivate();
+                    return true;
+                });
+            }
             return true;
         }
 
         public override void initEdit()
         {
-            UiBenchMenu.fineEpEvent(this.GM.Pr);
         }
 
         public override void quitEdit()
         {
+        }
+
+        void OnPlayerSelect(aBtn B, Action<int> OnSelectedIndex)
+        {
+            string[] btns = [.. WNMNTools.AllNicknames, TX.Get("Cancel")];
+            UiBoxDesigner BxCmd = UiMenuMul.BxP;
+            BxCmd.activate();
+            IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
+            BxCmd.Clear();
+            BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+            BxCmd.WH(200f, 48f * btns.Length);
+            BxCmd.margin_in_lr = 10f;
+            BxCmd.margin_in_tb = 10f;
+            BxCmd.init();
+            BxCmd.addButtonMultiT<aBtnNel>(new DsnDataButtonMulti
+            {
+                name = "sub_menu",
+                titles = btns,
+                skin = "row_center",
+                clms = 1,
+                w = BxCmd.use_w,
+                h = 30f,
+                fnClick = (aBtn BSub) =>
+                {
+                    BxCmd.deactivate();
+                    B.Select(true);
+                    BxR.Focus();
+                    return true;
+                }
+            });
+            Vector3 btnPos = B.transform.position;
+            float targetX = btnPos.x * 64f + 300f;
+            float targetY = btnPos.y * 64f;
+            BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+            BxCmd.Focusable(true, true);
+            BxCmd.Focus();
         }
 
         static Color ColorDefault => Color.HSVToRGB(0, 0, 0.219f);

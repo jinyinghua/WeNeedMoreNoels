@@ -27,6 +27,19 @@
 
 &&multiplayer_cata 多人
 &&multiplayer_menu_title 多人游戏菜单
+&&multiplayer_menu_utilities 常用功能
+&&multiplayer_menu_modify_nickname 修改昵称
+&&multiplayer_menu_modify_party 更改阵营
+&&multiplayer_menu_teleport 传送至...
+&&multiplayer_menu_syncbackpackandmony 手动同步背包&金钱
+&&multiplayer_menu_syncbackpackandmony_warn *同步将导致当前背包物品丢失，继续？
+&&multiplayer_menu_sendmsg 发送短语
+&&multiplayer_menu_host_utilities 房主功能
+&&multiplayer_menu_host_kick 踢出...
+&&multiplayer_menu_host_mute 禁言...
+&&multiplayer_menu_host_teleportallself 传送所有玩家到这里
+&&multiplayer_menu_host_modifyplayerparty 修改玩家阵营
+&&multiplayer_menu_host_modifyroomconfig 修改房间设置
 
 // ========================================================
 // MARK : 多人选项选择

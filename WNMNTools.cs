@@ -1,6 +1,7 @@
 ﻿using ProtoBuf;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
@@ -8,6 +9,7 @@ using WeNeedMoreNoels.CSNetworking;
 using WeNeedMoreNoels.DataStruct;
 using WeNeedMoreNoels.Networking;
 using WeNeedMoreNoels.SN;
+using XX;
 
 namespace WeNeedMoreNoels
 {
@@ -30,6 +32,14 @@ namespace WeNeedMoreNoels
             {
                 _unique_id++;
                 return _unique_id;
+            }
+        }
+
+        public static List<string> AllNicknames
+        {
+            get
+            {
+                return [.. DB.peerConfigs.Where(x => x.Key != LocalID).Select(x => DB.InitConfig.InvisibleNickname ? TX.Get("multiplayer_noel_nickname") + x.Key : x.Value.Nickname)];
             }
         }
 
