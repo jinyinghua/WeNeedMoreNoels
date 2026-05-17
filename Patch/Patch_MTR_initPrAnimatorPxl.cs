@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using nel;
-using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels.Patch
 {

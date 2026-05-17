@@ -25,6 +25,9 @@
 
 &&multiplayer_noel_nickname Noel#
 
+&&multiplayer_cata Multiplayer
+&&multiplayer_menu_title Multiplayer Menu
+
 // ========================================================
 // MARK : 多人选项选择
 // ========================================================

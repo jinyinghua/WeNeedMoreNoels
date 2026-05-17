@@ -2,8 +2,8 @@
 using BepInEx.Logging;
 using BepInEx.Unity.Mono;
 using HarmonyLib;
+using System;
 using WeNeedMoreNoels.Networking;
-using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels
 {
@@ -20,21 +20,22 @@ namespace WeNeedMoreNoels
             _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
             _harmony.PatchAll();
 
-            string logo =
-            """
-
-
-             \ \          \    \   \  |  |  | 
-              \ \  \   /   \ | \/   \ |  |  | 
-               \ \  \ /  |\  |    |\  | _| _| 
-                \_/\_/  _| \_|   _| \_| _) _)
-            
-            """;
-            Logger.LogMessage(logo);
+            Logger.LogMessage(Environment.NewLine + LOGO_PLUGIN);
             Logger.LogMessage("Created by Alon_, Created at 2026-4-13, Happy birthday to myself");
             MTRExtension.Load();
             ReceiveMessageManager.Init();
+            WNMNConsole.Init();
         }
+
+        public const string LOGO_PLUGIN =
+            """
+            ██╗    ███╗   ███╗   ████╗   ██╗
+            ██║    ████╗  ████╗ ██████╗  ██║
+            ██║ █╗ ██╔██╗ ██╔████╔██╔██╗ ██║
+            ██║███╗██║╚██╗██║╚██╔╝██║╚██╗██║
+            ╚███╔███╔╝ ╚████║ ╚═╝ ██║ ╚████║
+             ╚══╝╚══╝   ╚═══╝     ╚═╝  ╚═══╝
+            """;
 
         private void OnDestroy()
         {

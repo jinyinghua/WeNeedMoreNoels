@@ -3,7 +3,6 @@ using nel;
 using System;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
-using XX;
 
 namespace WeNeedMoreNoels.SN
 {

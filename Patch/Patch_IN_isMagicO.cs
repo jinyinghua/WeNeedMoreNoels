@@ -1,7 +1,4 @@
-﻿using HarmonyLib;
-using XX;
-
-namespace WeNeedMoreNoels.Patch
+﻿namespace WeNeedMoreNoels.Patch
 {
     //[HarmonyPatch(typeof(IN), nameof(IN.isMagicO))]
     //public class Patch_IN_isMagicO
