@@ -166,6 +166,10 @@ namespace WeNeedMoreNoels.CSNetworking
 
         private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
         {
+            if (disconnectInfo.AdditionalData.AvailableBytes == 0)
+            {
+                return;
+            }
             int id = disconnectInfo.AdditionalData.GetInt();
             WNMNTools.CleanUpClient(id);
         }

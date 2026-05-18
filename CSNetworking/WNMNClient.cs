@@ -93,9 +93,9 @@ namespace WeNeedMoreNoels.CSNetworking
 
         private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
         {
-            if (disconnectInfo.Reason == DisconnectReason.DisconnectPeerCalled)
+            if (disconnectInfo.AdditionalData.AvailableBytes != 0 && disconnectInfo.AdditionalData.GetBool())
             {
-                DB.WNMNHostClosed = true;
+                DB.WNMNHostKicked = true;
             }
             DB.WNMNHostClosed = true;
             ((NelM2DBase)DB.MainPR.M2D).quitGame("SceneTitle");

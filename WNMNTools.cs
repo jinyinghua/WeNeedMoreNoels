@@ -1,4 +1,5 @@
 ﻿using LiteNetLib;
+using LiteNetLib.Utils;
 using m2d;
 using nel;
 using ProtoBuf;
@@ -145,6 +146,10 @@ namespace WeNeedMoreNoels
 
         public static void UpdateNoel(int id, UpdateNoelInfo info)
         {
+            if (!DB.noelIns.ContainsKey(id))
+            {
+                return;
+            }
             DB.noelIns[id].NoelInfo = info;
         }
 
@@ -373,7 +378,16 @@ namespace WeNeedMoreNoels
         public static void Kick(int id)
         {
             host.SendKick(id);
+            NetDataWriter writer = new();
+            writer.Put(true);
+            PeerDic[id].Disconnect(writer);
+            PeerDic.Remove(id);
+            CleanUpClient(id);
+        }
 
+        public static void Mute(int id)
+        {
+            host.SendMute(id);
         }
 
         public static void ToggleMute()

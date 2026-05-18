@@ -242,7 +242,10 @@ namespace WeNeedMoreNoels
                     title = TX.Get("multiplayer_menu_host_kick"),
                     fnClick = B =>
                     {
-                        OnPlayerSelect(B, i => { });
+                        OnPlayerSelect(B, i =>
+                        {
+                            WNMNTools.Kick(i);
+                        });
                         return true;
                     }
                 });
@@ -255,7 +258,10 @@ namespace WeNeedMoreNoels
                     title = TX.Get("multiplayer_menu_host_mute"),
                     fnClick = B =>
                     {
-                        OnPlayerSelect(B, i => { });
+                        OnPlayerSelect(B, i =>
+                        {
+                            WNMNTools.Mute(i);
+                        });
                         return true;
                     }
                 });
