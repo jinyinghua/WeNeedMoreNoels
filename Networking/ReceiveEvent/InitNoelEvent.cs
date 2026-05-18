@@ -14,6 +14,7 @@ namespace WeNeedMoreNoels.Networking.ReceiveEvent
         public override void ReceiveMessage(WNMNPeerMessage message)
         {
             IniConfig config = message.InitNoelConfig;
+            DB.partyInfos.Add(message.PeerId, config.PartyConfig);
             ShadowNoelExtensions.GenerateShadowNoel(config.ClientConfig, config.Id);
         }
 

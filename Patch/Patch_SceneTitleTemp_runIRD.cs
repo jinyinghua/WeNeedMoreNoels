@@ -56,8 +56,9 @@ namespace WeNeedMoreNoels.Patch
                     size = 40,
                     alignx = ALIGN.CENTER,
                     aligny = ALIGNY.MIDDLE,
-                    text = TX.Get("multiplayer_host_closed")
+                    text = DB.WNMNHostKicked ? TX.Get("multiplayer_host_kicked") : TX.Get("multiplayer_host_closed")
                 });
+                DB.WNMNHostKicked = false;
                 BxHCI.activate();
                 BxHCI.positionD(0f, 40f, 3, 50f);
                 BxHCI.margin_in_tb = 30f;

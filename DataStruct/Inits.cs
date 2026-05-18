@@ -11,6 +11,25 @@ namespace WeNeedMoreNoels.DataStruct
         public NoelType NoelType;
         [ProtoMember(3)]
         public ColorNoelColor NoelColor;
+        [ProtoMember(4)]
+        public bool EmptyNickname;
+    }
+
+    [ProtoContract]
+    public class PartyConfig
+    {
+        [ProtoMember(1)]
+        public int ID;
+        [ProtoMember(2)]
+        public float R;
+        [ProtoMember(3)]
+        public float G;
+        [ProtoMember(4)]
+        public float B;
+        [ProtoMember(5)]
+        public float A;
+        [ProtoMember(6)]
+        public string Name;
     }
 
     [ProtoContract]
@@ -20,6 +39,8 @@ namespace WeNeedMoreNoels.DataStruct
         public int Id;
         [ProtoMember(2)]
         public ClientConfig ClientConfig;
+        [ProtoMember(3)]
+        public PartyConfig PartyConfig;
     }
 
     [ProtoContract]

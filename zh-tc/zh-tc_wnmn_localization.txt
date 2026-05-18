@@ -4,6 +4,7 @@
 &&multiplayer_client_title 客戶端設置
 
 &&multiplayer_host_port 主機端口
+&&multiplayer_host_kicked 主機將你踢出
 &&multiplayer_host_closed 主機已關閉
 
 &&multiplayer_nickname 暱稱： 
@@ -34,6 +35,7 @@
 &&multiplayer_menu_syncbackpackandmony 手動同步背包&金錢
 &&multiplayer_menu_syncbackpackandmony_warn *同步將導致當前背包物品丟失，繼續？
 &&multiplayer_menu_sendmsg 發送短語
+&&multiplayer_menu_mute *你已被禁言
 &&multiplayer_menu_host_utilities 房主功能
 &&multiplayer_menu_host_kick 踢出...
 &&multiplayer_menu_host_mute 禁言...

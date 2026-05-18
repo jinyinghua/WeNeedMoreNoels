@@ -1,6 +1,8 @@
 ﻿using nel;
 using nel.gm;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using XX;
 
@@ -181,7 +183,43 @@ namespace WeNeedMoreNoels
             BxR.alignx = ALIGN.CENTER;
             UiMenuMul.SendMsgButton = BxR.addButton(new()
             {
-                title = TX.Get("multiplayer_menu_sendmsg")
+                title = TX.Get("multiplayer_menu_sendmsg"),
+                fnClick = B =>
+                {
+                    UiBoxDesigner BxCmd = UiMenuMul.BxP;
+                    BxCmd.activate();
+                    IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
+                    BxCmd.Clear();
+                    BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+                    BxCmd.WH(300f, 150f);
+                    BxCmd.margin_in_lr = 10f;
+                    BxCmd.margin_in_tb = 10f;
+                    BxCmd.init();
+                    BxCmd.alignx = ALIGN.CENTER;
+                    BxCmd.addP(new()
+                    {
+                        text = TX.Get("multiplayer_menu_mute"),
+                        TxCol = Color.HSVToRGB(0, 0.95f, 0.91f)
+                    });
+                    BxCmd.Br();
+                    BxCmd.addButton(new()
+                    {
+                        title = TX.Get("Submit"),
+                        fnClick = B =>
+                        {
+                            BxCmd.deactivate();
+                            BxR.Focus();
+                            return true;
+                        }
+                    });
+                    Vector3 btnPos = B.transform.position;
+                    float targetX = btnPos.x * 64f + 300f;
+                    float targetY = btnPos.y * 64f;
+                    BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+                    BxCmd.Focusable(true, true);
+                    BxCmd.Focus();
+                    return true;
+                }
             });
             BxR.Br();
             if (WNMNTools.Type == NetWorkType.Host)
@@ -269,20 +307,20 @@ namespace WeNeedMoreNoels
 
         void OnPlayerSelect(aBtn B, Action<int> OnSelectedIndex)
         {
-            string[] btns = [.. WNMNTools.AllNicknames, TX.Get("Cancel")];
+            List<KeyValuePair<int, string>> btns = [.. WNMNTools.AllNicknames, new(0, TX.Get("Cancel"))];
             UiBoxDesigner BxCmd = UiMenuMul.BxP;
             BxCmd.activate();
             IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
             BxCmd.Clear();
             BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
-            BxCmd.WH(200f, 48f * btns.Length);
+            BxCmd.WH(200f, 48f * btns.Count);
             BxCmd.margin_in_lr = 10f;
             BxCmd.margin_in_tb = 10f;
             BxCmd.init();
             BxCmd.addButtonMultiT<aBtnNel>(new DsnDataButtonMulti
             {
                 name = "sub_menu",
-                titles = btns,
+                titles = [.. btns.Select(x => x.Value)],
                 skin = "row_center",
                 clms = 1,
                 w = BxCmd.use_w,
@@ -291,7 +329,7 @@ namespace WeNeedMoreNoels
                 {
                     if (BSub.title != TX.Get("Cancel"))
                     {
-                        OnSelectedIndex?.Invoke(btns.IndexOf(BSub.title));
+                        OnSelectedIndex?.Invoke(btns.Find(x => x.Value == BSub.title).Key);
                     }
                     BxCmd.deactivate();
                     BSub.Select(true);

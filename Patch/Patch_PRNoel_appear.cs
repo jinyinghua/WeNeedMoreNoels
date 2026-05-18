@@ -19,7 +19,7 @@ namespace WeNeedMoreNoels.Patch
                 WNMNTools.InitNetworking(DB.InitConfig);
                 Inited = true;
             }
-            if (DB.InitConfig is not null)
+            if (DB.InitConfig is not null && WNMNTools.LocalID != -1)
             {
                 if (DB.InitConfig.InvisibleNickname)
                 {
@@ -27,7 +27,7 @@ namespace WeNeedMoreNoels.Patch
                 }
                 else
                 {
-                    ShadowNoelExtensions.GenerateMainPRNickname(DB.InitConfig.nickName);
+                    ShadowNoelExtensions.GenerateMainPRNickname(DB.InitConfig.nickName == "" ? $"Nickname#{WNMNTools.LocalID}" : DB.InitConfig.nickName);
                 }
             }
         }

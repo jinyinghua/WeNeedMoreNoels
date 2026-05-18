@@ -8,8 +8,17 @@ namespace WeNeedMoreNoels.SN
         public bool Enabled;
         public string Nickname;
         public string MpKey;
+        public int ID;
         public ClientConfig NoelInitConfig;
         public UpdateNoelInfo NoelInfo;
         public ShadowNoelNickname NicknameIns;
+
+        public string NickNameStr
+        {
+            get
+            {
+                return Nickname == "" ? $"Nickname#{ID}" : Nickname;
+            }
+        }
     }
 }

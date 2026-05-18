@@ -2,11 +2,10 @@
 using m2d;
 using nel;
 using ProtoBuf;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using UnityEngine;
 using WeNeedMoreNoels.CSNetworking;
 using WeNeedMoreNoels.DataStruct;
@@ -30,6 +29,8 @@ namespace WeNeedMoreNoels
 
         public static string LocalIP;
 
+        public static Dictionary<int, NetPeer> PeerDic = [];
+
         static int _unique_id;
         public static int Unique_ID
         {
@@ -40,11 +41,11 @@ namespace WeNeedMoreNoels
             }
         }
 
-        public static List<string> AllNicknames
+        public static List<KeyValuePair<int, string>> AllNicknames
         {
             get
             {
-                return [.. DB.peerConfigs.Where(x => x.Key != LocalID).Select(x => DB.InitConfig.InvisibleNickname ? TX.Get("multiplayer_noel_nickname") + x.Key : x.Value.Nickname)];
+                return [.. DB.noelIns.Select(x => new KeyValuePair<int, string>(x.Key, DB.InitConfig.InvisibleNickname ? TX.Get("multiplayer_noel_nickname") + x.Key : x.Value.NickNameStr))];
             }
         }
 
@@ -172,13 +173,22 @@ namespace WeNeedMoreNoels
                 InitNoelConfig = new()
                 {
                     Id = id,
-                    ClientConfig = DB.InitConfig
+                    ClientConfig = DB.InitConfig,
+                    PartyConfig = new()
+                    {
+                        ID = LocalID,
+                        A = DB.partyInfos[LocalID].Color.a,
+                        R = DB.partyInfos[LocalID].Color.r,
+                        G = DB.partyInfos[LocalID].Color.g,
+                        B = DB.partyInfos[LocalID].Color.b,
+                        Name = DB.partyInfos[LocalID].Name
+                    }
                 }
             };
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
         public static void SendUpdateToAllPeers(int id)
@@ -192,7 +202,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.Unreliable);
+            peer.SendToAll(buffer, DeliveryMethod.Unreliable);
         }
 
         public static void SendDamageToAllPeers(int id, NotifyNoelDamage dmg)
@@ -206,7 +216,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
         public static void SendMagicToAllPeers(int id, NotifyNoelMagic mg)
@@ -224,7 +234,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
         public static void SendBattleStartToAllPeers(int id)
@@ -241,7 +251,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
         public static void SendBattleEndToAllPeers(int id)
@@ -258,7 +268,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
         public static void SendUpdatePeerInfoToAllPeers(int id, string nickname)
@@ -276,7 +286,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
         public static void SendUpdatePeerInfoToAllPeers(int id, int party)
@@ -294,7 +304,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
         public static void SendNotifyNoelTransferToAllPeers(int id)
@@ -314,10 +324,10 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
-        public static void DisconnectClient(int id)
+        public static void CleanUpClient(int id)
         {
             ShadowNoelExtensions.DisableShadowNoel(id);
             DB.noelIns.Remove(id);
@@ -360,9 +370,15 @@ namespace WeNeedMoreNoels
             M2LpMapTransferBase.executeTransferFastTravel(map, (int)x, (int)y);
         }
 
-        public static void SendKickEvent(int id)
+        public static void Kick(int id)
         {
             host.SendKick(id);
+
+        }
+
+        public static void ToggleMute()
+        {
+            DB.Mute = !DB.Mute;
         }
 
         public class NetworkConfig

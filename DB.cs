@@ -20,6 +20,8 @@ namespace WeNeedMoreNoels
 
         public static bool WNMNHostClosed = false;
 
+        public static bool WNMNHostKicked = false;
+
         public static bool ShowReceiveDebug = false;
 
         public static bool ShowLocationDebug = false;
@@ -79,5 +81,7 @@ namespace WeNeedMoreNoels
         public static float LocalMagicAim;
 
         public static M2LpSummon CurSummoner;
+
+        public static bool Mute;
     }
 }

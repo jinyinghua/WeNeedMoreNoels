@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using WeNeedMoreNoels.DataStruct;
 
 namespace WeNeedMoreNoels.SN
 {
@@ -22,6 +23,16 @@ namespace WeNeedMoreNoels.SN
             public int ID;
             public ColorIns Color;
             public string Name;
+
+            public static implicit operator Party(PartyConfig config)
+            {
+                return new()
+                {
+                    ID = config.ID,
+                    Color = new(config.R, config.G, config.B, config.A),
+                    Name = new(config.Name)
+                };
+            }
         }
     }
 

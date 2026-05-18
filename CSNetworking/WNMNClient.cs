@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using UnityEngine;
 using WeNeedMoreNoels.SN;
+using XX;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -47,13 +48,14 @@ namespace WeNeedMoreNoels.CSNetworking
             string json = reader.GetString();
             WNMNHostMessage message = JsonConvert.DeserializeObject<WNMNHostMessage>(json);
             reader.Recycle();
-            if (message.InitOther)
+            if (message.KickPlayer)
             {
-                if (message.ExcludeID == WNMNTools.LocalID)
-                {
-                    return;
-                }
-                DB.partyInfos.AddRange(message.PeerParties.Select(x => x.Value).ToDictionary(x => x.ID));
+                WNMNTools.CleanUpClient(message.PlayerID);
+                return;
+            }
+            if (message.MutePlayer)
+            {
+                WNMNTools.ToggleMute();
                 return;
             }
             peerID = message.InitID;
@@ -78,11 +80,23 @@ namespace WeNeedMoreNoels.CSNetworking
             };
             writer.Put(JsonConvert.SerializeObject(message1));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            if (DB.InitConfig.InvisibleNickname)
+            {
+                ShadowNoelExtensions.GenerateMainPRNickname(TX.Get("multiplayer_noel_nickname") + WNMNTools.LocalID.ToString());
+            }
+            else
+            {
+                ShadowNoelExtensions.GenerateMainPRNickname(DB.InitConfig.nickName == "" ? $"Nickname#{WNMNTools.LocalID}" : DB.InitConfig.nickName);
+            }
             WNMNTools.SetAllNickNameBgs();
         }
 
         private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
         {
+            if (disconnectInfo.Reason == DisconnectReason.DisconnectPeerCalled)
+            {
+                DB.WNMNHostClosed = true;
+            }
             DB.WNMNHostClosed = true;
             ((NelM2DBase)DB.MainPR.M2D).quitGame("SceneTitle");
         }

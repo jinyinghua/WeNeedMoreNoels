@@ -4,6 +4,7 @@
 &&multiplayer_client_title 客户端设置
 
 &&multiplayer_host_port 主机端口
+&&multiplayer_host_kicked 主机将你踢出
 &&multiplayer_host_closed 主机已关闭
 
 &&multiplayer_nickname 昵称： 
@@ -34,6 +35,7 @@
 &&multiplayer_menu_syncbackpackandmony 手动同步背包&金钱
 &&multiplayer_menu_syncbackpackandmony_warn *同步将导致当前背包物品丢失，继续？
 &&multiplayer_menu_sendmsg 发送短语
+&&multiplayer_menu_mute *你已被禁言
 &&multiplayer_menu_host_utilities 房主功能
 &&multiplayer_menu_host_kick 踢出...
 &&multiplayer_menu_host_mute 禁言...

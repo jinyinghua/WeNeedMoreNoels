@@ -4,6 +4,7 @@
 &&multiplayer_client_title Client config
 
 &&multiplayer_host_port Host port: 
+&&multiplayer_host_kicked Host kicked you out
 &&multiplayer_host_closed Host closed
 
 &&multiplayer_nickname Nickname: 
@@ -34,6 +35,7 @@
 &&multiplayer_menu_syncbackpackandmony Manually sync backpack & money
 &&multiplayer_menu_syncbackpackandmony_warn *Synchronizing will cause the current backpack items to be lost. Continue?
 &&multiplayer_menu_sendmsg Send short message
+&&multiplayer_menu_mute *You have been muted.
 &&multiplayer_menu_host_utilities Host Utilities
 &&multiplayer_menu_host_kick Kick out ...
 &&multiplayer_menu_host_mute Mute ...

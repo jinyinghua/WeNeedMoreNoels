@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
 using WeNeedMoreNoels.SN;
+using XX;
 
 namespace WeNeedMoreNoels.CSNetworking
 {
@@ -30,6 +31,15 @@ namespace WeNeedMoreNoels.CSNetworking
             WNMNTools.LocalID = 0;
             PartyManager.Party party = PartyManager.InitNewParty(0);
             DB.partyInfos.Add(0, party);
+            if (DB.InitConfig.InvisibleNickname)
+            {
+                ShadowNoelExtensions.GenerateMainPRNickname(TX.Get("multiplayer_noel_nickname") + WNMNTools.LocalID.ToString());
+            }
+            else
+            {
+                ShadowNoelExtensions.GenerateMainPRNickname(DB.InitConfig.nickName == "" ? $"Nickname#{WNMNTools.LocalID}" : DB.InitConfig.nickName);
+            }
+            WNMNTools.SetAllNickNameBgs();
         }
 
         private void Update()
@@ -58,7 +68,14 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public void SendKick(int id)
         {
-
+            WNMNHostMessage message = new()
+            {
+                KickPlayer = true,
+                PlayerID = id
+            };
+            NetDataWriter writer = new();
+            writer.Put(JsonConvert.SerializeObject(message));
+            host.SendToAll(writer, DeliveryMethod.ReliableOrdered);
         }
 
         public void SendMute(int id)
@@ -68,7 +85,9 @@ namespace WeNeedMoreNoels.CSNetworking
                 MutePlayer = true,
                 PlayerID = id
             };
-
+            NetDataWriter writer = new();
+            writer.Put(JsonConvert.SerializeObject(message));
+            WNMNTools.PeerDic[id].Send(writer, DeliveryMethod.ReliableOrdered);
         }
 
         private void TransferListener_ConnectionRequestEvent(ConnectionRequest request)
@@ -114,6 +133,7 @@ namespace WeNeedMoreNoels.CSNetworking
             };
             writer.Put(JsonConvert.SerializeObject(message));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            WNMNTools.PeerDic.Add(id, peer);
         }
 
         private void Listener_NetworkReceiveEvent(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
@@ -142,23 +162,12 @@ namespace WeNeedMoreNoels.CSNetworking
                 NoelColor = message.NoelColor
             };
             DB.peerConfigs.Add(message.ID, config);
-            DB.partyInfos.Add(message.ID, message.Party);
-            WNMNHostMessage message1 = new()
-            {
-                InitOther = true,
-                ExcludeID = message.ID,
-                PeerParties = [new(message.ID, message.Party)]
-            };
-            NetDataWriter writer = new();
-            writer.Put(JsonConvert.SerializeObject(message1));
-            host.SendToAll(writer, DeliveryMethod.ReliableOrdered);
-            WNMNTools.SetAllNickNameBgs();
         }
 
         private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
         {
             int id = disconnectInfo.AdditionalData.GetInt();
-            WNMNTools.DisconnectClient(id);
+            WNMNTools.CleanUpClient(id);
         }
 
         private void OnDestroy()

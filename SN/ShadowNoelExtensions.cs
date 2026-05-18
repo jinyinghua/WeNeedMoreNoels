@@ -33,7 +33,7 @@ namespace WeNeedMoreNoels.SN
                     }
                     else
                     {
-                        noel.CreateNicknameWithNoel(config.Nickname);
+                        noel.CreateNicknameWithNoel(DB.noelIns[id].NickNameStr);
                     }
                     DB.noelIns[id].NicknameIns = noel.NicknameIns;
                     return noel;
@@ -46,18 +46,9 @@ namespace WeNeedMoreNoels.SN
             noel.gameObject.AddComponent<Rigidbody2D>();
             noel.gameObject.name = "ShadowNoel";
             map.assignMover(noel);
-            PartyManager.Party party = PartyManager.InitNewParty(id);
             noel.ID = id;
-            noel.PartyID = party.ID;
+            noel.PartyID = DB.partyInfos[id].ID;
             noel.OnNoelDamage = WNMNTools.SendDamageToAllPeers;
-            if (DB.InitConfig.InvisibleNickname)
-            {
-                noel.CreateNicknameWithNoel(TX.Get("multiplayer_noel_nickname") + id.ToString());
-            }
-            else
-            {
-                noel.CreateNicknameWithNoel(config.Nickname);
-            }
             DB.noelIns.Add(id, new()
             {
                 Noel = noel,
@@ -66,8 +57,18 @@ namespace WeNeedMoreNoels.SN
                 NoelInitConfig = config,
                 NoelInfo = GetSendInfo(),
                 Enabled = true,
-                NicknameIns = noel.NicknameIns
+                NicknameIns = noel.NicknameIns,
+                ID = id
             });
+            if (DB.InitConfig.InvisibleNickname)
+            {
+                noel.CreateNicknameWithNoel(TX.Get("multiplayer_noel_nickname") + id.ToString());
+            }
+            else
+            {
+                noel.CreateNicknameWithNoel(DB.noelIns[id].NickNameStr);
+            }
+            DB.noelIns[id].NicknameIns = noel.NicknameIns;
             return noel;
         }
 
