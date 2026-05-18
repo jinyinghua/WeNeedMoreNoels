@@ -9,7 +9,7 @@ namespace WeNeedMoreNoels.CSNetworking
         public NoelType NoelType;
         public ColorNoelColor NoelColor;
         public int ID;
-        public string IP;
+        public string HostIP;
         public int Port;
         public PartyManager.Party Party;
     }

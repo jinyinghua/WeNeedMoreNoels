@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using WeNeedMoreNoels.DataStruct;
-using WeNeedMoreNoels.Networking.ReceiveEvent;
 
 namespace WeNeedMoreNoels.Networking
 {
@@ -12,12 +14,14 @@ namespace WeNeedMoreNoels.Networking
 
         public static void Init()
         {
-            RegisterReceiveMessage(new InitNoelEvent());
-            RegisterReceiveMessage(new UpdateNoelInfoEvent());
-            RegisterReceiveMessage(new NotifyNoelDamageEvent());
-            RegisterReceiveMessage(new NotifyNoelMagicEvent());
-            RegisterReceiveMessage(new NotifyNoelStartBattleEvent());
-            RegisterReceiveMessage(new NotifyNoelEndBattleEvent());
+            Type baseType = typeof(PeerReceiveMessageBase);
+            var subTypes = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => t.BaseType == baseType);
+            foreach (var type in subTypes)
+            {
+                RegisterReceiveMessage((PeerReceiveMessageBase)Activator.CreateInstance(type));
+            }
         }
 
         public static void RegisterReceiveMessage(PeerReceiveMessageBase receive)

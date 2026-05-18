@@ -71,4 +71,33 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoEnum]
         Kill
     }
+
+    [ProtoContract]
+    public class UpdatePeerInfo
+    {
+        [ProtoMember(1)]
+        public UpdatePeerType Type;
+        [ProtoMember(2)]
+        public string NickName;
+        [ProtoMember(3)]
+        public int PartyID;
+    }
+
+    [ProtoContract]
+    public enum UpdatePeerType
+    {
+        Nickname,
+        Party
+    }
+
+    [ProtoContract]
+    public class NotifyNoelTransfer
+    {
+        [ProtoMember(1)]
+        public string Key;
+        [ProtoMember(2)]
+        public float X;
+        [ProtoMember(3)]
+        public float Y;
+    }
 }

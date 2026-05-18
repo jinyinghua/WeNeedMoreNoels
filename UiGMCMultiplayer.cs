@@ -66,6 +66,7 @@ namespace WeNeedMoreNoels
                         title = TX.Get("Submit"),
                         fnClick = B =>
                         {
+                            WNMNTools.SendUpdatePeerInfoToAllPeers(WNMNTools.LocalID, nicknameInput.text);
                             BxCmd.deactivate();
                             BxR.Focus();
                             return true;
@@ -99,38 +100,10 @@ namespace WeNeedMoreNoels
                 title = TX.Get("multiplayer_menu_modify_party"),
                 fnClick = B =>
                 {
-                    string[] btns = [.. WNMNTools.AllNicknames, TX.Get("Cancel")];
-                    UiBoxDesigner BxCmd = UiMenuMul.BxP;
-                    BxCmd.activate();
-                    IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
-                    BxCmd.Clear();
-                    BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
-                    BxCmd.WH(200f, 48f * btns.Length);
-                    BxCmd.margin_in_lr = 10f;
-                    BxCmd.margin_in_tb = 10f;
-                    BxCmd.init();
-                    BxCmd.addButtonMultiT<aBtnNel>(new DsnDataButtonMulti
+                    OnPlayerSelect(B, i =>
                     {
-                        name = "sub_menu",
-                        titles = btns,
-                        skin = "row_center",
-                        clms = 1,
-                        w = BxCmd.use_w,
-                        h = 30f,
-                        fnClick = (aBtn BSub) =>
-                        {
-                            BxCmd.deactivate();
-                            B.Select(true);
-                            BxR.Focus();
-                            return true;
-                        }
+                        WNMNTools.SendUpdatePeerInfoToAllPeers(WNMNTools.LocalID, i);
                     });
-                    Vector3 btnPos = B.transform.position;
-                    float targetX = btnPos.x * 64f + 300f;
-                    float targetY = btnPos.y * 64f;
-                    BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
-                    BxCmd.Focusable(true, true);
-                    BxCmd.Focus();
                     return true;
                 }
             });
@@ -140,7 +113,13 @@ namespace WeNeedMoreNoels
                 title = TX.Get("multiplayer_menu_teleport"),
                 fnClick = B =>
                 {
-                    OnPlayerSelect(B, i => { });
+                    OnPlayerSelect(B, i =>
+                    {
+                        string targetKey = DB.noelIns[i].MpKey;
+                        float x = DB.noelIns[i].NoelInfo.PositionX;
+                        float y = DB.noelIns[i].NoelInfo.PositionY;
+                        WNMNTools.TransferMainNoel(targetKey, x, y);
+                    });
                     return true;
                 }
             });
@@ -245,7 +224,12 @@ namespace WeNeedMoreNoels
                 BxR.Br();
                 BxR.addButton(new()
                 {
-                    title = TX.Get("multiplayer_menu_host_teleportallself")
+                    title = TX.Get("multiplayer_menu_host_teleportallself"),
+                    fnClick = B =>
+                    {
+                        WNMNTools.SendNotifyNoelTransferToAllPeers(0);
+                        return true;
+                    }
                 });
                 BxR.addP(new()
                 {
@@ -305,8 +289,12 @@ namespace WeNeedMoreNoels
                 h = 30f,
                 fnClick = (aBtn BSub) =>
                 {
+                    if (BSub.title != TX.Get("Cancel"))
+                    {
+                        OnSelectedIndex?.Invoke(btns.IndexOf(BSub.title));
+                    }
                     BxCmd.deactivate();
-                    B.Select(true);
+                    BSub.Select(true);
                     BxR.Focus();
                     return true;
                 }

@@ -17,6 +17,10 @@ namespace WeNeedMoreNoels.DataStruct
         public NotifyNoelDamage NotifyNoelDamage;
         [ProtoMember(6)]
         public NotifyNoelMagic NotifyNoelMagic;
+        [ProtoMember(7)]
+        public UpdatePeerInfo UpdatePeerInfo;
+        [ProtoMember(8)]
+        public NotifyNoelTransfer NotifyNoelTransfer;
     }
 
     [ProtoContract]
@@ -33,6 +37,10 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoEnum]
         NotifyNoelStartBattle,
         [ProtoEnum]
-        NotifyNoelEndBattle
+        NotifyNoelEndBattle,
+        [ProtoEnum]
+        UpdatePeerInfo,
+        [ProtoEnum]
+        NotifyNoelTransfer
     }
 }

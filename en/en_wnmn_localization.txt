@@ -37,7 +37,7 @@
 &&multiplayer_menu_host_utilities Host Utilities
 &&multiplayer_menu_host_kick Kick out ...
 &&multiplayer_menu_host_mute Mute ...
-&&multiplayer_menu_host_teleportallself Teleport everybody here
+&&multiplayer_menu_host_teleportallself Regroup players
 &&multiplayer_menu_host_modifyplayerparty Modify player's party
 &&multiplayer_menu_host_modifyroomconfig Modify room's config
 

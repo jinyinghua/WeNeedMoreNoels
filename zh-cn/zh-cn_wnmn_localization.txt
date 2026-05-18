@@ -37,7 +37,7 @@
 &&multiplayer_menu_host_utilities 房主功能
 &&multiplayer_menu_host_kick 踢出...
 &&multiplayer_menu_host_mute 禁言...
-&&multiplayer_menu_host_teleportallself 传送所有玩家到这里
+&&multiplayer_menu_host_teleportallself 集合玩家
 &&multiplayer_menu_host_modifyplayerparty 修改玩家阵营
 &&multiplayer_menu_host_modifyroomconfig 修改房间设置
 

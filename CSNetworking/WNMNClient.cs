@@ -62,14 +62,15 @@ namespace WeNeedMoreNoels.CSNetworking
             DB.partyInfos = message.PeerParties.Select(x => x.Value).ToDictionary(x => x.ID);
             PartyManager.Party party = PartyManager.InitNewParty(message.InitID);
             DB.partyInfos.Add(message.InitID, party);
-            WNMNTools.ConnectOtherPeer(message.PeerInfos);
+            WNMNTools.LocalIP = message.ClientIP;
+            WNMNTools.ConnectOtherPeer(message.PeerInfos, peer, message.HostPort);
             WNMNTools.SendInitToAllPeers(message.InitID);
             WNMNTools.GenerateAllNoels(message.PeerConfigs);
             NetDataWriter writer = new();
             WNMNClientMessage message1 = new()
             {
                 ID = peerID,
-                IP = WNMNTools.GetLocalIP(),
+                HostIP = peer.EndPoint.Address.ToString(),
                 Port = WNMNTools.peer.GetPeerPort(),
                 NickName = DB.InitConfig.nickName,
                 NoelType = DB.InitConfig.NoelType,

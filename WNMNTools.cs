@@ -1,4 +1,7 @@
-﻿using ProtoBuf;
+﻿using LiteNetLib;
+using m2d;
+using nel;
+using ProtoBuf;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,6 +27,8 @@ namespace WeNeedMoreNoels
         public static int LocalID = -1;
         public static bool Inited;
         public static bool PeerInited;
+
+        public static string LocalIP;
 
         static int _unique_id;
         public static int Unique_ID
@@ -54,11 +59,6 @@ namespace WeNeedMoreNoels
                 case NetWorkType.Host:
                     RunHost(config.port);
                     Type = NetWorkType.Host;
-                    DB.peerInfos.Add(0, new()
-                    {
-                        IP = GetLocalIP(),
-                        Port = port
-                    });
                     DB.peerConfigs.Add(0, new()
                     {
                         Nickname = config.nickName,
@@ -105,16 +105,13 @@ namespace WeNeedMoreNoels
             Inited = true;
         }
 
-        public static string GetLocalIP()
+        public static void ConnectOtherPeer(List<KeyValuePair<int, ConnectPeerInfo>> peerList, NetPeer hostPeer, int hostPort)
         {
-            using Socket socket = new(AddressFamily.InterNetwork, SocketType.Dgram, 0);
-            socket.Connect("8.8.8.8", 65530); // 不会真正发送数据
-            IPEndPoint endPoint = (IPEndPoint)socket.LocalEndPoint;
-            return endPoint.Address.ToString();
-        }
-
-        public static void ConnectOtherPeer(List<KeyValuePair<int, ConnectPeerInfo>> peerList)
-        {
+            if (peerList.Count == 0)
+            {
+                peer.ConnectPeer(hostPeer.EndPoint.Address.ToString(), hostPort);
+                return;
+            }
             int id = Type == NetWorkType.Host ? 0 : client.peerID;
             foreach (var pair in peerList)
             {
@@ -264,6 +261,62 @@ namespace WeNeedMoreNoels
             peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
         }
 
+        public static void SendUpdatePeerInfoToAllPeers(int id, string nickname)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.UpdatePeerInfo,
+                PeerId = id,
+                UpdatePeerInfo = new()
+                {
+                    Type = UpdatePeerType.Nickname,
+                    NickName = nickname
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendUpdatePeerInfoToAllPeers(int id, int party)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.UpdatePeerInfo,
+                PeerId = id,
+                UpdatePeerInfo = new()
+                {
+                    Type = UpdatePeerType.Party,
+                    PartyID = party
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendNotifyNoelTransferToAllPeers(int id)
+        {
+            DB.MainPR.getPosition(out float x, out float y);
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyNoelTransfer,
+                PeerId = id,
+                NotifyNoelTransfer = new()
+                {
+                    Key = DB.MainPR.Mp.key,
+                    X = x,
+                    Y = y
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
+        }
+
         public static void DisconnectClient(int id)
         {
             ShadowNoelExtensions.DisableShadowNoel(id);
@@ -281,6 +334,35 @@ namespace WeNeedMoreNoels
             {
                 pair.Value.NicknameIns?.SetBgColor(DB.partyInfos[pair.Value.Noel.PartyID].Color);
             }
+        }
+
+        public static void UpdatePeer(int id, UpdatePeerInfo info)
+        {
+            switch (info.Type)
+            {
+                case UpdatePeerType.Nickname:
+                    DB.peerConfigs[id].Nickname = info.NickName;
+                    break;
+                case UpdatePeerType.Party:
+                    DB.noelIns[id].Noel.PartyID = info.PartyID;
+                    break;
+            }
+        }
+
+        public static void TransferMainNoel(NotifyNoelTransfer transfer)
+        {
+            TransferMainNoel(transfer.Key, transfer.X, transfer.Y);
+        }
+
+        public static void TransferMainNoel(string key, float x, float y)
+        {
+            Map2d map = DB.MainPR.NM2D.Get(key);
+            M2LpMapTransferBase.executeTransferFastTravel(map, (int)x, (int)y);
+        }
+
+        public static void SendKickEvent(int id)
+        {
+            host.SendKick(id);
         }
 
         public class NetworkConfig

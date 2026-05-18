@@ -6,11 +6,21 @@ namespace WeNeedMoreNoels.CSNetworking
 {
     public class WNMNHostMessage
     {
+        public string ClientIP;
+
+        public int HostPort;
+
         public bool InitOther;
 
         public int ExcludeID;
 
         public int InitID;
+
+        public bool KickPlayer;
+
+        public bool MutePlayer;
+
+        public int PlayerID;
 
         public List<KeyValuePair<int, ConnectPeerInfo>> PeerInfos;
 

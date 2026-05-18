@@ -56,6 +56,21 @@ namespace WeNeedMoreNoels.CSNetworking
             Plugin.Logger.LogInfo($"WNMN Sync transfer host started, port:{port + 1}");
         }
 
+        public void SendKick(int id)
+        {
+
+        }
+
+        public void SendMute(int id)
+        {
+            WNMNHostMessage message = new()
+            {
+                MutePlayer = true,
+                PlayerID = id
+            };
+
+        }
+
         private void TransferListener_ConnectionRequestEvent(ConnectionRequest request)
         {
             Plugin.Logger.LogInfo($"Transfer host got request: {request.RemoteEndPoint}");
@@ -90,6 +105,8 @@ namespace WeNeedMoreNoels.CSNetworking
             int id = WNMNTools.Unique_ID;
             WNMNHostMessage message = new()
             {
+                ClientIP = peer.EndPoint.Address.ToString(),
+                HostPort = WNMNTools.peer.GetPeerPort(),
                 InitID = id,
                 PeerInfos = [..DB.peerInfos],
                 PeerConfigs = [.. DB.peerConfigs],
@@ -103,9 +120,18 @@ namespace WeNeedMoreNoels.CSNetworking
         {
             string json = reader.GetString();
             WNMNClientMessage message = JsonConvert.DeserializeObject<WNMNClientMessage>(json);
+            WNMNTools.LocalIP = message.HostIP;
+            if (!DB.peerInfos.ContainsKey(0))
+            {
+                DB.peerInfos.Add(0, new()
+                {
+                    IP = WNMNTools.LocalIP,
+                    Port = WNMNTools.peer.GetPeerPort()
+                });
+            }
             ConnectPeerInfo info = new()
             {
-                IP = message.IP,
+                IP = peer.EndPoint.Address.ToString(),
                 Port = message.Port
             };
             DB.peerInfos.Add(message.ID, info);
