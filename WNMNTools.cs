@@ -1,4 +1,5 @@
-﻿using LiteNetLib;
+﻿using evt;
+using LiteNetLib;
 using LiteNetLib.Utils;
 using m2d;
 using nel;
@@ -393,6 +394,13 @@ namespace WeNeedMoreNoels
         public static void ToggleMute()
         {
             DB.Mute = !DB.Mute;
+        }
+
+        public static void SendMsg()
+        {
+            evt.EvReader reader = new evt.EvReader("%ShortMsg");
+            reader.parseText("HKDS mul T T ONELINE\nMSG mul_<<<EOF P[120]C\n");
+            evt.EV.stackReader(reader);
         }
 
         public class NetworkConfig

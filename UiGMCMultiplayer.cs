@@ -121,6 +121,7 @@ namespace WeNeedMoreNoels
                         float x = DB.noelIns[i].NoelInfo.PositionX;
                         float y = DB.noelIns[i].NoelInfo.PositionY;
                         WNMNTools.TransferMainNoel(targetKey, x, y);
+                        GM.deactivate();
                     });
                     return true;
                 }
@@ -134,48 +135,51 @@ namespace WeNeedMoreNoels
                 title = TX.Get("multiplayer_menu_syncbackpackandmony"),
                 fnClick = B =>
                 {
-                    UiBoxDesigner BxCmd = UiMenuMul.BxP;
-                    BxCmd.activate();
-                    IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
-                    BxCmd.Clear();
-                    BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
-                    BxCmd.WH(300f, 150f);
-                    BxCmd.margin_in_lr = 10f;
-                    BxCmd.margin_in_tb = 10f;
-                    BxCmd.init();
-                    BxCmd.alignx = ALIGN.CENTER;
-                    BxCmd.addP(new()
+                    OnPlayerSelect(B, i =>
                     {
-                        text = "multiplayer_menu_syncbackpackandmony_warn",
-                        TxCol = Color.HSVToRGB(0, 0.95f, 0.91f)
-                    });
-                    BxCmd.Br();
-                    BxCmd.addButton(new()
-                    {
-                        title = TX.Get("Submit"),
-                        fnClick = B =>
+                        UiBoxDesigner BxCmd = UiMenuMul.BxP;
+                        BxCmd.activate();
+                        IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
+                        BxCmd.Clear();
+                        BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+                        BxCmd.WH(300f, 150f);
+                        BxCmd.margin_in_lr = 10f;
+                        BxCmd.margin_in_tb = 10f;
+                        BxCmd.init();
+                        BxCmd.alignx = ALIGN.CENTER;
+                        BxCmd.addP(new()
                         {
-                            BxCmd.deactivate();
-                            BxR.Focus();
-                            return true;
-                        }
-                    });
-                    BxCmd.addButton(new()
-                    {
-                        title = TX.Get("Cancel"),
-                        fnClick = B =>
+                            text = "multiplayer_menu_syncbackpackandmony_warn",
+                            TxCol = Color.HSVToRGB(0, 0.95f, 0.91f)
+                        });
+                        BxCmd.Br();
+                        BxCmd.addButton(new()
                         {
-                            BxCmd.deactivate();
-                            BxR.Focus();
-                            return true;
-                        }
+                            title = TX.Get("Submit"),
+                            fnClick = B =>
+                            {
+                                BxCmd.deactivate();
+                                BxR.Focus();
+                                return true;
+                            }
+                        });
+                        BxCmd.addButton(new()
+                        {
+                            title = TX.Get("Cancel"),
+                            fnClick = B =>
+                            {
+                                BxCmd.deactivate();
+                                BxR.Focus();
+                                return true;
+                            }
+                        });
+                        Vector3 btnPos = B.transform.position;
+                        float targetX = btnPos.x * 64f + 300f;
+                        float targetY = btnPos.y * 64f;
+                        BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+                        BxCmd.Focusable(true, true);
+                        BxCmd.Focus();
                     });
-                    Vector3 btnPos = B.transform.position;
-                    float targetX = btnPos.x * 64f + 300f;
-                    float targetY = btnPos.y * 64f;
-                    BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
-                    BxCmd.Focusable(true, true);
-                    BxCmd.Focus();
                     return true;
                 }
             });
@@ -245,6 +249,7 @@ namespace WeNeedMoreNoels
                         OnPlayerSelect(B, i =>
                         {
                             WNMNTools.Kick(i);
+                            GM.deactivate();
                         });
                         return true;
                     }
@@ -261,6 +266,7 @@ namespace WeNeedMoreNoels
                         OnPlayerSelect(B, i =>
                         {
                             WNMNTools.Mute(i);
+                            GM.deactivate();
                         });
                         return true;
                     }
@@ -272,21 +278,13 @@ namespace WeNeedMoreNoels
                     fnClick = B =>
                     {
                         WNMNTools.SendNotifyNoelTransferToAllPeers(0);
+                        GM.deactivate();
                         return true;
                     }
                 });
                 BxR.addP(new()
                 {
                     text = "  "
-                });
-                BxR.addButton(new()
-                {
-                    title = TX.Get("multiplayer_menu_host_modifyplayerparty"),
-                    fnClick = B =>
-                    {
-                        OnPlayerSelect(B, i => { });
-                        return true;
-                    }
                 });
                 BxR.Br();
                 BxR.alignx = ALIGN.CENTER;

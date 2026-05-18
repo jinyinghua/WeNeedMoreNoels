@@ -40,7 +40,6 @@
 &&multiplayer_menu_host_kick 踢出...
 &&multiplayer_menu_host_mute 禁言...
 &&multiplayer_menu_host_teleportallself 集合玩家
-&&multiplayer_menu_host_modifyplayerparty 修改玩家阵营
 &&multiplayer_menu_host_modifyroomconfig 修改房间设置
 
 // ========================================================
@@ -75,3 +74,17 @@
 /* ___ Config_desc_mpconfig_cure_all_players_on_bench ___ */ 
 设置坐在长椅上时，「恢复HP」等
 指令是否对所有玩家同时起效
+
+// ========================================================
+// MARK : 短消息
+// ========================================================
+
+&&multiplayer_msg_greeting 你好！
+&&multiplayer_msg_come_here 来这里！
+&&multiplayer_msg_pve_start 一起战斗吧！
+&&multiplayer_msg_pve_warn 小心躲避！
+&&multiplayer_msg_pve_help 救命！
+&&multiplayer_msg_pvp_start 来比试吧！
+&&multiplayer_msg_pvp_greeting 请多指教！
+&&multiplayer_msg_sitting 休息一下吧！
+&&multiplayer_msg_goodbye 再见！

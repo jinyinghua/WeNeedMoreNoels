@@ -40,7 +40,6 @@
 &&multiplayer_menu_host_kick 踢出...
 &&multiplayer_menu_host_mute 禁言...
 &&multiplayer_menu_host_teleportallself 集合玩家
-&&multiplayer_menu_host_modifyplayerparty 修改玩家陣營
 &&multiplayer_menu_host_modifyroomconfig 修改房間設置
 
 // ========================================================
