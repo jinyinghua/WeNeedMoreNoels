@@ -32,6 +32,8 @@ namespace WeNeedMoreNoels
 
         public static ShadowNoelNickname MainPRNickname;
 
+        public static ShadowNoelNickname MainPRMsg;
+
         public static bool ShadowAppear;
 
         public static string Nickname;

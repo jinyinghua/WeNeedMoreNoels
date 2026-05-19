@@ -333,6 +333,24 @@ namespace WeNeedMoreNoels
             peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
+        public static void SendNotifyShortMsgToAllPeers(int id, string key)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyShortMsg,
+                PeerId = id,
+                NotifyShortMsg = new()
+                {
+                    ID = id,
+                    key = key
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
+        }
+
         public static void CleanUpClient(int id)
         {
             ShadowNoelExtensions.DisableShadowNoel(id);
@@ -396,11 +414,22 @@ namespace WeNeedMoreNoels
             DB.Mute = !DB.Mute;
         }
 
-        public static void SendMsg()
+        public static void BroadcastMsg(string id)
         {
-            evt.EvReader reader = new evt.EvReader("%ShortMsg");
-            reader.parseText("HKDS mul T T ONELINE\nMSG mul_<<<EOF P[120]C\n");
-            evt.EV.stackReader(reader);
+            SendMsg(LocalID, id);
+            SendNotifyShortMsgToAllPeers(LocalID, id);
+        }
+
+        public static void SendMsg(int id, string txtID)
+        {
+            if (id == LocalID)
+            {
+                DB.MainPRMsg.ShowMsg(txtID);
+            }
+            else
+            {
+                DB.noelIns[id].Noel.MsgIns?.ShowMsg(txtID);
+            }
         }
 
         public class NetworkConfig

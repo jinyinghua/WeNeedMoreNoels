@@ -1,4 +1,5 @@
-﻿using m2d;
+﻿using evt;
+using m2d;
 using nel;
 using System.Linq;
 using UnityEngine;
@@ -87,6 +88,24 @@ namespace WeNeedMoreNoels.SN
             DB.MainPR.Mp.assignMover(follower);
             follower.appear(DB.MainPR.Mp);
             DB.MainPRNickname = follower;
+            GenerateMainPRMsg();
+        }
+
+        public static void GenerateMainPRMsg()
+        {
+            Map2d Mp = DB.MainPR.Mp;
+            DB.MainPR.getPosition(out float x, out float y);
+            ShadowNoelNickname follower = Mp.createMover<ShadowNoelNickname>($"Msg_{DB.MainPR}", x, y);
+            follower.SetFollowTarget(DB.MainPR, new Vector2(0f, -2f));
+            follower.SetTextSize(20f);
+            follower.SetTextColor(uint.MaxValue);
+            follower.SetBorderColor(4278190080U);
+            follower.SetTextOffset(0f, 0f);
+            follower.SetAlpha(1);
+            follower.SetBgColor(new(0, 0, 0, 0));
+            DB.MainPR.Mp.assignMover(follower);
+            follower.appear(DB.MainPR.Mp);
+            DB.MainPRMsg = follower;
         }
 
         public static void UpdateShadowNoelInfo(int id)

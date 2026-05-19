@@ -1,5 +1,6 @@
 ﻿using m2d;
 using nel;
+using System.Collections;
 using UnityEngine;
 using XX;
 
@@ -244,6 +245,31 @@ namespace WeNeedMoreNoels.SN
         {
             this.bgColor = color;
             this.TxBg?.Col(color);
+        }
+
+        private Coroutine Msg;
+
+        public void ShowMsg(string txtID)
+        {
+            if (Msg != null)
+            {
+                StopCoroutine(Msg);
+                Msg = null;
+            }
+            Msg = StartCoroutine(OnMsg(txtID));
+        }
+        public IEnumerator OnMsg(string txtID)
+        {
+            string text = TX.Get(txtID);
+            for (int i = 0; i < text.Length; i++)
+            {
+                SetText(text[..(i + 1)]);
+                ShowText();
+                yield return new WaitForSecondsRealtime(0.25f);
+            }
+            yield return new WaitForSecondsRealtime(2f);
+            SetText("");
+            Msg = null;
         }
     }
 }

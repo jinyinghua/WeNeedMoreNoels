@@ -190,32 +190,49 @@ namespace WeNeedMoreNoels
                 title = TX.Get("multiplayer_menu_sendmsg"),
                 fnClick = B =>
                 {
+                    string[] titles = [.. msgs.Select(x => TX.Get(x)), TX.Get("Cancel")];
+                    if (DB.Mute)
+                    {
+                        Mutted(B, UiMenuMul.BxP);
+                        return true;
+                    }
                     UiBoxDesigner BxCmd = UiMenuMul.BxP;
                     BxCmd.activate();
                     IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
                     BxCmd.Clear();
                     BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
-                    BxCmd.WH(300f, 150f);
+                    BxCmd.WH(200f, 48f * titles.Length);
                     BxCmd.margin_in_lr = 10f;
                     BxCmd.margin_in_tb = 10f;
                     BxCmd.init();
-                    BxCmd.alignx = ALIGN.CENTER;
-                    BxCmd.addP(new()
+                    var BCon = BxCmd.addButtonMultiT<aBtnNel>(new DsnDataButtonMulti
                     {
-                        text = TX.Get("multiplayer_menu_mute"),
-                        TxCol = Color.HSVToRGB(0, 0.95f, 0.91f)
-                    });
-                    BxCmd.Br();
-                    BxCmd.addButton(new()
-                    {
-                        title = TX.Get("Submit"),
-                        fnClick = B =>
+                        name = "sub_menu",
+                        titles = titles,
+                        skin = "row_center",
+                        clms = 1,
+                        w = BxCmd.use_w,
+                        h = 30f,
+                        fnClick = (aBtn BSub) =>
                         {
-                            BxCmd.deactivate();
-                            BxR.Focus();
+                            if (BSub.title != TX.Get("Cancel"))
+                            {
+                                WNMNTools.BroadcastMsg(msgs[titles.IndexOf(BSub.title)]);
+                                BxCmd.deactivate();
+                                BSub.Select(true);
+                                BxR.Focus();
+                                GM.deactivate();
+                            }
+                            else
+                            {
+                                BxCmd.deactivate();
+                                BSub.Select(true);
+                                BxR.Focus();
+                            }
                             return true;
                         }
                     });
+                    BCon.Get(0).Select(true);
                     Vector3 btnPos = B.transform.position;
                     float targetX = btnPos.x * 64f + 300f;
                     float targetY = btnPos.y * 64f;
@@ -286,8 +303,6 @@ namespace WeNeedMoreNoels
                 {
                     text = "  "
                 });
-                BxR.Br();
-                BxR.alignx = ALIGN.CENTER;
                 BxR.addButton(new()
                 {
                     title = TX.Get("multiplayer_menu_host_modifyroomconfig")
@@ -307,6 +322,41 @@ namespace WeNeedMoreNoels
 
         public override void quitEdit()
         {
+        }
+
+        void Mutted(aBtn B, UiBoxDesigner BxCmd)
+        {
+            BxCmd.activate();
+            IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
+            BxCmd.Clear();
+            BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+            BxCmd.WH(300f, 150f);
+            BxCmd.margin_in_lr = 10f;
+            BxCmd.margin_in_tb = 10f;
+            BxCmd.init();
+            BxCmd.alignx = ALIGN.CENTER;
+            BxCmd.addP(new()
+            {
+                text = TX.Get("multiplayer_menu_mute"),
+                TxCol = Color.HSVToRGB(0, 0.95f, 0.91f)
+            });
+            BxCmd.Br();
+            BxCmd.addButton(new()
+            {
+                title = TX.Get("Submit"),
+                fnClick = B =>
+                {
+                    BxCmd.deactivate();
+                    BxR.Focus();
+                    return true;
+                }
+            });
+            Vector3 btnPos = B.transform.position;
+            float targetX = btnPos.x * 64f + 300f;
+            float targetY = btnPos.y * 64f;
+            BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+            BxCmd.Focusable(true, true);
+            BxCmd.Focus();
         }
 
         void OnPlayerSelect(aBtn B, Action<int> OnSelectedIndex)
@@ -350,5 +400,7 @@ namespace WeNeedMoreNoels
         }
 
         static Color ColorDefault => Color.HSVToRGB(0, 0, 0.219f);
+
+        static readonly string[] msgs = ["multiplayer_msg_greeting", "multiplayer_msg_come_here", "multiplayer_msg_pve_start", "multiplayer_msg_pve_warn", "multiplayer_msg_pve_help", "multiplayer_msg_pvp_start", "multiplayer_msg_pvp_greeting", "multiplayer_msg_sitting", "multiplayer_msg_goodbye"];
     }
 }

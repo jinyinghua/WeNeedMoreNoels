@@ -100,4 +100,13 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoMember(3)]
         public float Y;
     }
+
+    [ProtoContract]
+    public class NotifyShortMsg
+    {
+        [ProtoMember(1)]
+        public int ID;
+        [ProtoMember(2)]
+        public string key;
+    }
 }

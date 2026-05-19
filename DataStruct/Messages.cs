@@ -21,6 +21,8 @@ namespace WeNeedMoreNoels.DataStruct
         public UpdatePeerInfo UpdatePeerInfo;
         [ProtoMember(8)]
         public NotifyNoelTransfer NotifyNoelTransfer;
+        [ProtoMember(9)]
+        public NotifyShortMsg NotifyShortMsg;
     }
 
     [ProtoContract]
@@ -41,6 +43,8 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoEnum]
         UpdatePeerInfo,
         [ProtoEnum]
-        NotifyNoelTransfer
+        NotifyNoelTransfer,
+        [ProtoEnum]
+        NotifyShortMsg
     }
 }

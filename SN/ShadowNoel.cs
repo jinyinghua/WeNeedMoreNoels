@@ -21,6 +21,7 @@ namespace WeNeedMoreNoels.SN
         public Action<int, NotifyNoelDamage> OnNoelDamage;
 
         public ShadowNoelNickname NicknameIns;
+        public ShadowNoelNickname MsgIns;
 
         public void CreateNicknameWithNoel(string nickname)
         {
@@ -36,6 +37,23 @@ namespace WeNeedMoreNoels.SN
             DB.MainPR.Mp.assignMover(follower);
             follower.appear(DB.MainPR.Mp);
             NicknameIns = follower;
+            CreateShortMsgWithNoel();
+        }
+
+        public void CreateShortMsgWithNoel()
+        {
+            getPosition(out float x, out float y);
+            ShadowNoelNickname follower = Mp.createMover<ShadowNoelNickname>($"Msg_{this}", x, y);
+            follower.SetFollowTarget(this, new Vector2(0f, -2f));
+            follower.SetTextSize(20f);
+            follower.SetTextColor(uint.MaxValue);
+            follower.SetBorderColor(4278190080U);
+            follower.SetTextOffset(0f, 0f);
+            follower.SetAlpha(1);
+            follower.SetBgColor(new(0, 0, 0, 0));
+            DB.MainPR.Mp.assignMover(follower);
+            follower.appear(DB.MainPR.Mp);
+            MsgIns = follower;
         }
 
         public override void Awake()
