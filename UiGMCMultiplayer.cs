@@ -347,7 +347,109 @@ namespace WeNeedMoreNoels
                 });
                 btns.Add(BxR.addButton(new()
                 {
-                    title = TX.Get("multiplayer_menu_host_modifyroomconfig")
+                    title = TX.Get("multiplayer_menu_host_modifyroomconfig"),
+                    fnClick = B =>
+                    {
+                        UiBoxDesigner BxCmd = UiMenuMul.BxP;
+                        BxCmd.activate();
+                        IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
+                        BxCmd.Clear();
+                        BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+                        BxCmd.WH(600f, 400f);
+                        BxCmd.margin_in_lr = 10f;
+                        BxCmd.margin_in_tb = 10f;
+                        BxCmd.init();
+                        BxCmd.alignx = ALIGN.CENTER;
+                        BxCmd.addP(new()
+                        {
+                            TxCol = ColorDefault,
+                            size = 30,
+                            text = TX.Get("multiplayer_menu_config_title")
+                        });
+                        BxCmd.addHr(new()
+                        {
+                            margin_t = 5f,
+                            margin_b = 5f
+                        });
+                        BxCmd.alignx = ALIGN.CENTER;
+                        List<string> counts = [];
+                        for (int i = 2; i <= 16; i++)
+                        {
+                            if (i <= 5)
+                            {
+                                counts.Add(i.ToString() + " " + TX.Get("multiplayer_recommend"));
+                            }
+                            else if (i <= 11)
+                            {
+                                counts.Add(i.ToString() + " " + TX.Get("multiplayer_unstable"));
+                            }
+                            else
+                            {
+                                counts.Add(i.ToString() + " " + TX.Get("multiplayer_experimental"));
+                            }
+                        }
+                        BxCmd.addP(new()
+                        {
+                            TxCol = ColorDefault,
+                            size = 20f,
+                            alignx = ALIGN.LEFT,
+                            text = TX.Get("multiplayer_room_maxplayercount"),
+                        });
+                        BxCmd.addSliderCT(new()
+                        {
+                            name = "maxPlayer",
+                            skin_title = "",
+                            def = DB.MaxPlayerCount - 2,
+                            mn = 0f,
+                            mx = counts.Count - 1,
+                            Adesc_keys = [.. counts],
+                            checkbox_mode = 2,
+                            fnChanged = (_, _, i) =>
+                            {
+                                DB.MaxPlayerCount = (int)i + 2;
+                                return true;
+                            }
+                        });
+                        BxCmd.Br();
+                        BxCmd.addP(new()
+                        {
+                            TxCol = ColorDefault,
+                            size = 20f,
+                            alignx = ALIGN.LEFT,
+                            text = TX.Get("multiplayer_room_enablepvp"),
+                        });
+                        BxCmd.addSlider(new()
+                        {
+                            name = "EnablePVP",
+                            skin_title = "",
+                            checkbox_mode = 1,
+                            def = WNMNTools.EnablePVP ? 1 : 0,
+                            Adesc_keys = TX.GetArray("Disabled", "Enabled"),
+                            fnChanged = (_, _, i) =>
+                            {
+                                WNMNTools.EnablePVP = i == 1;
+                                return true;
+                            }
+                        });
+                        BxCmd.Br();
+                        BxCmd.addButton(new()
+                        {
+                            title = TX.Get("Submit"),
+                            fnClick = B =>
+                            {
+                                BxCmd.deactivate();
+                                BxR.Focus();
+                                return true;
+                            }
+                        });
+                        Vector3 btnPos = B.transform.position;
+                        float targetX = btnPos.x * 64f + 300f;
+                        float targetY = btnPos.y * 64f;
+                        BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+                        BxCmd.Focusable(true, true);
+                        BxCmd.Focus();
+                        return true;
+                    }
                 }));
             }
             BxR.addFocusFn(_B =>

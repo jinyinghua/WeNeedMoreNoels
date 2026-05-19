@@ -14,8 +14,6 @@ namespace WeNeedMoreNoels.CSNetworking
 
         NetManager transferHost;
 
-        public int maxPlayerCount = 5;
-
         private void Awake()
         {
             EventBasedNetListener listener = new();
@@ -93,7 +91,7 @@ namespace WeNeedMoreNoels.CSNetworking
         private void TransferListener_ConnectionRequestEvent(ConnectionRequest request)
         {
             Plugin.Logger.LogInfo($"Transfer host got request: {request.RemoteEndPoint}");
-            if (host.ConnectedPeersCount < maxPlayerCount /* max connections */)
+            if (host.ConnectedPeersCount < DB.MaxPlayerCount - 1 /* max connections */)
                 request.AcceptIfKey(DB.TRANSFER_ACCESS_KEY);
             else
                 request.Reject();
@@ -102,7 +100,7 @@ namespace WeNeedMoreNoels.CSNetworking
         private void Listener_ConnectionRequestEvent(ConnectionRequest request)
         {
             Plugin.Logger.LogInfo($"Host got request: {request.RemoteEndPoint}");
-            if (host.ConnectedPeersCount < maxPlayerCount /* max connections */)
+            if (host.ConnectedPeersCount < DB.MaxPlayerCount - 1 /* max connections */)
                 request.AcceptIfKey(DB.CONNECTION_ACCESS_KEY);
             else
                 request.Reject();

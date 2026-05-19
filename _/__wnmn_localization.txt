@@ -25,7 +25,11 @@
 
 &&multiplayer_noel_nickname ノエル＃
 
-&&multiplayer_reset Reset
+&&multiplayer_reset 重置
+
+&&multiplayer_recommend 推荐
+&&multiplayer_unstable 不稳定
+&&multiplayer_experimental 实验性的
 
 &&multiplayer_cata 複数プレーヤー
 
@@ -75,6 +79,13 @@
 /* ___ Config_desc_mpconfig_cure_all_players_on_bench ___ */ 
 设置坐在长椅上时，「恢复HP」等
 指令是否对所有玩家同时起效
+
+// ========================================================
+// MARK : 多人房间设置菜单
+// ========================================================
+
+&&multiplayer_room_maxplayercount 最大玩家数量
+&&multiplayer_room_enablepvp 启用PVP
 
 // ========================================================
 // MARK : 短消息

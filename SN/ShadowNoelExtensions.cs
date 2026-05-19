@@ -135,7 +135,7 @@ namespace WeNeedMoreNoels.SN
                 noel.CurState = (PR.STATE)info.State;
             }
             noel.PartyID = info.PartyID;
-            if (noel.PartyID != DB.LocalNoelParty)
+            if (noel.PartyID != DB.LocalNoelParty && WNMNTools.EnablePVP)
             {
                 EnableShadowNoelHit(noel);
             }

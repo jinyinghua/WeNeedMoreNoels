@@ -27,6 +27,8 @@ namespace WeNeedMoreNoels.DataStruct
         public NotifyItemChanged NotifyItemChanged;
         [ProtoMember(11)]
         public NotifyCoinChanged NotifyCoinChanged;
+        [ProtoMember(12)]
+        public NotifyRoomUpdate NotifyRoomUpdate;
     }
 
     [ProtoContract]
@@ -57,6 +59,8 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoEnum]
         NotifyGetCoin,
         [ProtoEnum]
-        NotifyLoseCoin
+        NotifyLoseCoin,
+        [ProtoEnum]
+        NotifyRoomUpdate
     }
 }

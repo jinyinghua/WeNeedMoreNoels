@@ -134,4 +134,11 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoMember(3)]
         public int count;
     }
+
+    [ProtoContract]
+    public class NotifyRoomUpdate
+    {
+        [ProtoMember(1)]
+        public bool EnablePVP;
+    }
 }

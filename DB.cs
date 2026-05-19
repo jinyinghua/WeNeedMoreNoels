@@ -8,6 +8,8 @@ namespace WeNeedMoreNoels
 {
     public static class DB
     {
+        public static int MaxPlayerCount = 5;
+
         public static bool WNMNUIClicking = false;
 
         public static NetWorkType WNMNEnterNetworkType;

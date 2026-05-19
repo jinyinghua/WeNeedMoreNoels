@@ -28,6 +28,10 @@
 
 &&multiplayer_reset Reset
 
+&&multiplayer_recommend Recommend
+&&multiplayer_unstable Unstable
+&&multiplayer_experimental Experimental
+
 &&multiplayer_cata Multiplayer
 
 &&multiplayer_menu_title Multiplayer Menu
@@ -44,6 +48,7 @@
 &&multiplayer_menu_host_mute Mute ...
 &&multiplayer_menu_host_teleportallself Regroup players
 &&multiplayer_menu_host_modifyroomconfig Modify room's config
+&&multiplayer_menu_config_title Room configs
 
 // ========================================================
 // MARK : 多人选项选择
@@ -76,6 +81,13 @@ The bench command affects all players
 /* ___ Config_desc_mpconfig_cure_all_players_on_bench ___ */ 
 When setting to sit on the bench, do commands
 like 'Restore HP' affect all players at the same time.
+
+// ========================================================
+// MARK : 多人房间设置菜单
+// ========================================================
+
+&&multiplayer_room_maxplayercount Maximum player count
+&&multiplayer_room_enablepvp Enable PVP
 
 // ========================================================
 // MARK : 短消息

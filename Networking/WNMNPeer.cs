@@ -26,6 +26,10 @@ namespace WeNeedMoreNoels.Networking
                 return;
             }
             WNMNTools.SendUpdateToAllPeers(WNMNTools.LocalID);
+            if (WNMNTools.Type == NetWorkType.Host)
+            {
+                WNMNTools.UpdateRoomConfigToAllPeers();
+            }
             localPeer?.PollEvents();
             WNMNTools.UpdateAllNoels();
             WNMNTools.SetAllNickNameBgs();

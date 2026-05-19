@@ -34,6 +34,8 @@ namespace WeNeedMoreNoels
 
         public static Dictionary<int, NetPeer> PeerDic = [];
 
+        public static bool EnablePVP;
+
         static int _unique_id;
         public static int Unique_ID
         {
@@ -428,6 +430,28 @@ namespace WeNeedMoreNoels
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
             peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void UpdateRoomConfigToAllPeers()
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyRoomUpdate,
+                PeerId = LocalID,
+                NotifyRoomUpdate = new()
+                {
+                    EnablePVP = EnablePVP
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, DeliveryMethod.Unreliable);
+        }
+
+        public static void UpdateRoomConfig(NotifyRoomUpdate update)
+        {
+            EnablePVP = update.EnablePVP;
         }
 
         public static void CleanUpClient(int id)
