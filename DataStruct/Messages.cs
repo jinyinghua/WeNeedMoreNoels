@@ -23,6 +23,10 @@ namespace WeNeedMoreNoels.DataStruct
         public NotifyNoelTransfer NotifyNoelTransfer;
         [ProtoMember(9)]
         public NotifyShortMsg NotifyShortMsg;
+        [ProtoMember(10)]
+        public NotifyItemChanged NotifyItemChanged;
+        [ProtoMember(11)]
+        public NotifyCoinChanged NotifyCoinChanged;
     }
 
     [ProtoContract]
@@ -45,6 +49,14 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoEnum]
         NotifyNoelTransfer,
         [ProtoEnum]
-        NotifyShortMsg
+        NotifyShortMsg,
+        [ProtoEnum]
+        NotifyGetItem,
+        [ProtoEnum]
+        NotifyLoseItem,
+        [ProtoEnum]
+        NotifyGetCoin,
+        [ProtoEnum]
+        NotifyLoseCoin
     }
 }

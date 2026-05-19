@@ -13,6 +13,10 @@ namespace WeNeedMoreNoels.Patch
         [HarmonyPostfix]
         private static void Postfix(UiGameMenu __instance)
         {
+            if (!DB.IsMultiplayer)
+            {
+                return;
+            }
             Designer bxCategory = __instance.BxCategory;
             DsnDataButton dsn = new()
             {

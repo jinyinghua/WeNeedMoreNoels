@@ -21,6 +21,7 @@ namespace WeNeedMoreNoels
             {
                 return true;
             }
+            List<aBtn> btns = [];
             BxR.init();
             BxR.alignx = ALIGN.CENTER;
             BxR.addP(new()
@@ -42,7 +43,7 @@ namespace WeNeedMoreNoels
                 text = TX.Get("multiplayer_menu_utilities")
             });
             BxR.Br();
-            BxR.addButton(new()
+            btns.Add(BxR.addButton(new()
             {
                 title = TX.Get("multiplayer_menu_modify_nickname"),
                 fnClick = B =>
@@ -92,25 +93,65 @@ namespace WeNeedMoreNoels
                     BxCmd.Focus();
                     return true;
                 }
-            });
+            }));
             BxR.addP(new()
             {
                 text = "  "
             });
-            BxR.addButton(new()
+            btns.Add(BxR.addButton(new()
             {
                 title = TX.Get("multiplayer_menu_modify_party"),
                 fnClick = B =>
                 {
-                    OnPlayerSelect(B, i =>
+                    List<KeyValuePair<int, string>> btns = [.. WNMNTools.AllNicknames, new(-1, TX.Get("multiplayer_reset")), new(0, TX.Get("Cancel"))];
+                    UiBoxDesigner BxCmd = UiMenuMul.BxP;
+                    BxCmd.activate();
+                    IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
+                    BxCmd.Clear();
+                    BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+                    BxCmd.WH(200f, 48f * btns.Count);
+                    BxCmd.margin_in_lr = 10f;
+                    BxCmd.margin_in_tb = 10f;
+                    BxCmd.init();
+                    BxCmd.addButtonMultiT<aBtnNel>(new DsnDataButtonMulti
                     {
-                        WNMNTools.SendUpdatePeerInfoToAllPeers(WNMNTools.LocalID, i);
+                        name = "sub_menu",
+                        titles = [.. btns.Select(x => x.Value)],
+                        skin = "row_center",
+                        clms = 1,
+                        w = BxCmd.use_w,
+                        h = 30f,
+                        fnClick = (aBtn BSub) =>
+                        {
+                            if (BSub.title != TX.Get("Cancel"))
+                            {
+                                int i = btns.Find(x => x.Value == BSub.title).Key;
+                                if (i == -1)
+                                {
+                                    DB.LocalNoelParty = WNMNTools.LocalID;
+                                }
+                                else
+                                {
+                                    DB.LocalNoelParty = DB.noelIns[i].NoelInfo.PartyID;
+                                }
+                            }
+                            BxCmd.deactivate();
+                            BSub.Select(true);
+                            BxR.Focus();
+                            return true;
+                        }
                     });
+                    Vector3 btnPos = B.transform.position;
+                    float targetX = btnPos.x * 64f + 300f;
+                    float targetY = btnPos.y * 64f;
+                    BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+                    BxCmd.Focusable(true, true);
+                    BxCmd.Focus();
                     return true;
                 }
-            });
+            }));
             BxR.Br();
-            BxR.addButton(new()
+            btns.Add(BxR.addButton(new()
             {
                 title = TX.Get("multiplayer_menu_teleport"),
                 fnClick = B =>
@@ -125,66 +166,66 @@ namespace WeNeedMoreNoels
                     });
                     return true;
                 }
-            });
+            }));
             BxR.addP(new()
             {
                 text = "  "
             });
-            BxR.addButton(new()
-            {
-                title = TX.Get("multiplayer_menu_syncbackpackandmony"),
-                fnClick = B =>
-                {
-                    OnPlayerSelect(B, i =>
-                    {
-                        UiBoxDesigner BxCmd = UiMenuMul.BxP;
-                        BxCmd.activate();
-                        IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
-                        BxCmd.Clear();
-                        BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
-                        BxCmd.WH(300f, 150f);
-                        BxCmd.margin_in_lr = 10f;
-                        BxCmd.margin_in_tb = 10f;
-                        BxCmd.init();
-                        BxCmd.alignx = ALIGN.CENTER;
-                        BxCmd.addP(new()
-                        {
-                            text = "multiplayer_menu_syncbackpackandmony_warn",
-                            TxCol = Color.HSVToRGB(0, 0.95f, 0.91f)
-                        });
-                        BxCmd.Br();
-                        BxCmd.addButton(new()
-                        {
-                            title = TX.Get("Submit"),
-                            fnClick = B =>
-                            {
-                                BxCmd.deactivate();
-                                BxR.Focus();
-                                return true;
-                            }
-                        });
-                        BxCmd.addButton(new()
-                        {
-                            title = TX.Get("Cancel"),
-                            fnClick = B =>
-                            {
-                                BxCmd.deactivate();
-                                BxR.Focus();
-                                return true;
-                            }
-                        });
-                        Vector3 btnPos = B.transform.position;
-                        float targetX = btnPos.x * 64f + 300f;
-                        float targetY = btnPos.y * 64f;
-                        BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
-                        BxCmd.Focusable(true, true);
-                        BxCmd.Focus();
-                    });
-                    return true;
-                }
-            });
-            BxR.Br();
-            BxR.alignx = ALIGN.CENTER;
+            //BxR.addButton(new()
+            //{
+            //    title = TX.Get("multiplayer_menu_syncbackpackandmony"),
+            //    fnClick = B =>
+            //    {
+            //        OnPlayerSelect(B, i =>
+            //        {
+            //            UiBoxDesigner BxCmd = UiMenuMul.BxP;
+            //            BxCmd.activate();
+            //            IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
+            //            BxCmd.Clear();
+            //            BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+            //            BxCmd.WH(300f, 150f);
+            //            BxCmd.margin_in_lr = 10f;
+            //            BxCmd.margin_in_tb = 10f;
+            //            BxCmd.init();
+            //            BxCmd.alignx = ALIGN.CENTER;
+            //            BxCmd.addP(new()
+            //            {
+            //                text = "multiplayer_menu_syncbackpackandmony_warn",
+            //                TxCol = Color.HSVToRGB(0, 0.95f, 0.91f)
+            //            });
+            //            BxCmd.Br();
+            //            BxCmd.addButton(new()
+            //            {
+            //                title = TX.Get("Submit"),
+            //                fnClick = B =>
+            //                {
+            //                    BxCmd.deactivate();
+            //                    BxR.Focus();
+            //                    return true;
+            //                }
+            //            });
+            //            BxCmd.addButton(new()
+            //            {
+            //                title = TX.Get("Cancel"),
+            //                fnClick = B =>
+            //                {
+            //                    BxCmd.deactivate();
+            //                    BxR.Focus();
+            //                    return true;
+            //                }
+            //            });
+            //            Vector3 btnPos = B.transform.position;
+            //            float targetX = btnPos.x * 64f + 300f;
+            //            float targetY = btnPos.y * 64f;
+            //            BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+            //            BxCmd.Focusable(true, true);
+            //            BxCmd.Focus();
+            //        });
+            //        return true;
+            //    }
+            //});
+            //BxR.Br();
+            //BxR.alignx = ALIGN.CENTER;
             UiMenuMul.SendMsgButton = BxR.addButton(new()
             {
                 title = TX.Get("multiplayer_menu_sendmsg"),
@@ -242,6 +283,7 @@ namespace WeNeedMoreNoels
                     return true;
                 }
             });
+            btns.Add(UiMenuMul.SendMsgButton);
             BxR.Br();
             if (WNMNTools.Type == NetWorkType.Host)
             {
@@ -258,7 +300,7 @@ namespace WeNeedMoreNoels
                     text = TX.Get("multiplayer_menu_host_utilities")
                 });
                 BxR.Br();
-                BxR.addButton(new()
+                btns.Add(BxR.addButton(new()
                 {
                     title = TX.Get("multiplayer_menu_host_kick"),
                     fnClick = B =>
@@ -270,12 +312,12 @@ namespace WeNeedMoreNoels
                         });
                         return true;
                     }
-                });
+                }));
                 BxR.addP(new()
                 {
                     text = "  "
                 });
-                BxR.addButton(new()
+                btns.Add(BxR.addButton(new()
                 {
                     title = TX.Get("multiplayer_menu_host_mute"),
                     fnClick = B =>
@@ -287,9 +329,9 @@ namespace WeNeedMoreNoels
                         });
                         return true;
                     }
-                });
+                }));
                 BxR.Br();
-                BxR.addButton(new()
+                btns.Add(BxR.addButton(new()
                 {
                     title = TX.Get("multiplayer_menu_host_teleportallself"),
                     fnClick = B =>
@@ -298,21 +340,22 @@ namespace WeNeedMoreNoels
                         GM.deactivate();
                         return true;
                     }
-                });
+                }));
                 BxR.addP(new()
                 {
                     text = "  "
                 });
-                BxR.addButton(new()
+                btns.Add(BxR.addButton(new()
                 {
                     title = TX.Get("multiplayer_menu_host_modifyroomconfig")
-                });
-                BxR.addFocusFn(_B =>
-                {
-                    UiMenuMul.BxP.deactivate();
-                    return true;
-                });
+                }));
             }
+            BxR.addFocusFn(_B =>
+            {
+                UiMenuMul.BxP.deactivate();
+                return true;
+            });
+            BxR.AddSelectableItems(btns, false);
             return true;
         }
 

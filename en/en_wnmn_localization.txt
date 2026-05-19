@@ -1,8 +1,4 @@
-﻿// ========================================================
-// MARK : 基础键
-// ========================================================
-
-&&btn_multiplayer Multiplayer
+﻿&&btn_multiplayer Multiplayer
 
 &&multiplayer_host_title Host config
 &&multiplayer_client_title Client config
@@ -30,7 +26,10 @@
 
 &&multiplayer_noel_nickname Noel#
 
+&&multiplayer_reset Reset
+
 &&multiplayer_cata Multiplayer
+
 &&multiplayer_menu_title Multiplayer Menu
 &&multiplayer_menu_utilities Common Utilities
 &&multiplayer_menu_modify_nickname Change nickname
@@ -64,3 +63,30 @@ Start a host and let other player connect.
 /* ___ Title_multiplayer_desc_client ___ */ 
 Connect to existed host.
 Enjoy multi-"KAWAISOU"!
+
+// ========================================================
+// MARK : 多人模式设置菜单
+// ========================================================
+
+&&Config_mpconfig_show_nicknames Show nicknames
+&&Config_desc_mpconfig_show_nicknames Set whether to display the player's nickname in the game.
+
+/* ___ Config_mpconfig_cure_all_players_on_bench ___ */
+The bench command affects all players
+/* ___ Config_desc_mpconfig_cure_all_players_on_bench ___ */ 
+When setting to sit on the bench, do commands
+like 'Restore HP' affect all players at the same time.
+
+// ========================================================
+// MARK : 短消息
+// ========================================================
+
+&&multiplayer_msg_greeting Hello!
+&&multiplayer_msg_come_here Come here!
+&&multiplayer_msg_pve_start Let's fight together!
+&&multiplayer_msg_pve_warn Watch out!
+&&multiplayer_msg_pve_help Help!
+&&multiplayer_msg_pvp_start Let's fight!
+&&multiplayer_msg_pvp_greeting Please be kind!
+&&multiplayer_msg_sitting Let's break!
+&&multiplayer_msg_goodbye Goodbye!

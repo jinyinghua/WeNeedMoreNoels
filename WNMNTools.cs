@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using UnityEngine;
 using WeNeedMoreNoels.CSNetworking;
 using WeNeedMoreNoels.DataStruct;
@@ -351,6 +352,84 @@ namespace WeNeedMoreNoels
             peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
+        public static void SendGetItemToAllPeers(string key, int count, int grade)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyGetItem,
+                PeerId = LocalID,
+                NotifyItemChanged = new()
+                {
+                    PartyID = DB.LocalNoelParty,
+                    key = key,
+                    count = count,
+                    grade = grade
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendLoseItemToAllPeers(string key, int count, int grade)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyLoseItem,
+                PeerId = LocalID,
+                NotifyItemChanged = new()
+                {
+                    PartyID = DB.LocalNoelParty,
+                    key = key,
+                    count = count,
+                    grade = grade
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendGetCoinToAllPeers(CoinStorage.CTYPE type, int count)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyGetCoin,
+                PeerId = LocalID,
+                NotifyCoinChanged = new()
+                {
+                    PartyID = DB.LocalNoelParty,
+                    coinType = type,
+                    count = count,
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendLoseCoinToAllPeers(CoinStorage.CTYPE type, int count)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyLoseCoin,
+                PeerId = LocalID,
+                NotifyCoinChanged = new()
+                {
+                    PartyID = DB.LocalNoelParty,
+                    coinType = type,
+                    count = count,
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
+        }
+
         public static void CleanUpClient(int id)
         {
             ShadowNoelExtensions.DisableShadowNoel(id);
@@ -430,6 +509,50 @@ namespace WeNeedMoreNoels
             {
                 DB.noelIns[id].Noel.MsgIns?.ShowMsg(txtID);
             }
+        }
+
+        public static void GetItem(int partyID, string key, int count, int grade)
+        {
+            if (partyID != DB.LocalNoelParty)
+            {
+                return;
+            }
+            NelItem item = NelItem.GetById(key);
+            if (item is null)
+            {
+                DB.MainPR.NM2D.IMNG.getItem(item, count, grade);
+            }
+        }
+
+        public static void LoseItem(int partyID, string key, int count, int grade)
+        {
+            if (partyID != DB.LocalNoelParty)
+            {
+                return;
+            }
+            NelItem item = NelItem.GetById(key);
+            if (item is null)
+            {
+                DB.MainPR.NM2D.IMNG.reduceItem(item, count, grade);
+            }
+        }
+
+        public static void GetCoin(int partyID, CoinStorage.CTYPE type, int count)
+        {
+            if (partyID != DB.LocalNoelParty)
+            {
+                return;
+            }
+            CoinStorage.addCount(count, type);
+        }
+
+        public static void LoseCoin(int partyID, CoinStorage.CTYPE type, int count)
+        {
+            if (partyID != DB.LocalNoelParty)
+            {
+                return;
+            }
+            CoinStorage.reduceCount(count, type);
         }
 
         public class NetworkConfig

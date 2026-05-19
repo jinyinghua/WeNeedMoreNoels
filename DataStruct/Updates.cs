@@ -1,4 +1,5 @@
-﻿using ProtoBuf;
+﻿using nel;
+using ProtoBuf;
 
 namespace WeNeedMoreNoels.DataStruct
 {
@@ -108,5 +109,29 @@ namespace WeNeedMoreNoels.DataStruct
         public int ID;
         [ProtoMember(2)]
         public string key;
+    }
+
+    [ProtoContract]
+    public class NotifyItemChanged
+    {
+        [ProtoMember(1)]
+        public int PartyID;
+        [ProtoMember(2)]
+        public string key;
+        [ProtoMember(3)]
+        public int count;
+        [ProtoMember(4)]
+        public int grade;
+    }
+
+    [ProtoContract]
+    public class NotifyCoinChanged
+    {
+        [ProtoMember(1)]
+        public int PartyID;
+        [ProtoMember(2)]
+        public CoinStorage.CTYPE coinType;
+        [ProtoMember(3)]
+        public int count;
     }
 }

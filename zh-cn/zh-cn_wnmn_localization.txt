@@ -26,7 +26,10 @@
 
 &&multiplayer_noel_nickname 诺艾儿#
 
+&&multiplayer_reset 重置
+
 &&multiplayer_cata 多人
+
 &&multiplayer_menu_title 多人游戏菜单
 &&multiplayer_menu_utilities 常用功能
 &&multiplayer_menu_modify_nickname 修改昵称
@@ -69,8 +72,7 @@
 &&Config_desc_mpconfig_show_nicknames 设置在游戏内是否显示玩家昵称
 
 /* ___ Config_mpconfig_cure_all_players_on_bench ___ */
-长椅指令对
-所有玩家起效
+长椅指令对所有玩家起效
 /* ___ Config_desc_mpconfig_cure_all_players_on_bench ___ */ 
 设置坐在长椅上时，「恢复HP」等
 指令是否对所有玩家同时起效
