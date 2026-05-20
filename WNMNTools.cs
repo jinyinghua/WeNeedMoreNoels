@@ -579,6 +579,20 @@ namespace WeNeedMoreNoels
             CoinStorage.reduceCount(count, type);
         }
 
+        public static void NotifyFireBallTurn(MagicItem Mg, M2MagicCaster _Mv)
+        {
+            if (_Mv is not PRNoel)
+            {
+                return;
+            }
+            NotifyNoelMagic mg = new()
+            {
+                Type = NotifyMagicTpe.Turn,
+                da = Mg.da
+            };
+            SendMagicToAllPeers(LocalID, mg);
+        }
+
         public class NetworkConfig
         {
             public NetWorkType Type;

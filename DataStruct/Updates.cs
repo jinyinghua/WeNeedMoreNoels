@@ -40,6 +40,10 @@ namespace WeNeedMoreNoels.DataStruct
         public float MagicT;
         [ProtoMember(17)]
         public int MagicHoldAim;
+        [ProtoMember(18)]
+        public bool IsEvadePD;
+        [ProtoMember(19)]
+        public bool IsEvadeO;
     }
 
     [ProtoContract] 
@@ -60,6 +64,8 @@ namespace WeNeedMoreNoels.DataStruct
         public int Kind;
         [ProtoMember(3)]
         public float T;
+        [ProtoMember(4)]
+        public float da;
     }
 
     [ProtoContract]
@@ -70,7 +76,9 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoEnum]
         Sleep,
         [ProtoEnum]
-        Kill
+        Kill,
+        [ProtoEnum]
+        Turn
     }
 
     [ProtoContract]

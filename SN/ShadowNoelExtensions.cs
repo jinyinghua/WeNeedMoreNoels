@@ -148,6 +148,8 @@ namespace WeNeedMoreNoels.SN
             noel.Skill.mp_hold = info.MagicHold;
             noel.MagicT = info.MagicT;
             noel.MagicHoldAim = info.MagicHoldAim;
+            noel.IsEvadePD = info.IsEvadePD;
+            noel.IsEvadeO = info.IsEvadeO;
         }
 
         public static void DisableShadowNoel(int id)
@@ -282,6 +284,19 @@ namespace WeNeedMoreNoels.SN
                     DB.MNBridge.Remove(DB.MNBridge.First(x => x.Value == DB.noelIns[id].Noel).Key);
                     DB.noelIns[id].Noel.KillMagic();
                     break;
+                case NotifyMagicTpe.Turn:
+                    MagicItem item = DB.noelIns[id].Noel.Skill.Cursor.getCurMg();
+                    MagicNotifiear mn = item.Mn;
+                    float accel_maxt = mn._2.accel_maxt;
+                    mn._0.time += 1f;
+                    mn._0.v0 = mn._2.v0;
+                    mn._0.maxt += mn._2.time + 1f - item.t;
+                    mn._0.accel_mint = accel_maxt;
+                    item.da = (item.sa = mg.da);
+                    item.sz = 0f;
+                    item.t = 1f;
+                    item.PtcST("mg_fireball_curve", PTCThread.StFollow.NO_FOLLOW, false);
+                    break;
             }
         }
 
@@ -347,7 +362,9 @@ namespace WeNeedMoreNoels.SN
                 MagicAgR = item is null ? 0 : item.aim_agR,
                 MagicHold = skill.mp_hold,
                 MagicT = skill.magic_t,
-                MagicHoldAim = skill.Cursor.pre_hold_aim
+                MagicHoldAim = skill.Cursor.pre_hold_aim,
+                IsEvadePD = DB.MainPR.isEvadePD(30),
+                IsEvadeO = DB.MainPR.isEvadeO()
             };
         }
     }

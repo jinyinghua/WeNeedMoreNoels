@@ -18,6 +18,9 @@ namespace WeNeedMoreNoels.SN
         public STATE CurState;
         public int MagicHoldAim;
 
+        public bool IsEvadePD;
+        public bool IsEvadeO;
+
         public Action<int, NotifyNoelDamage> OnNoelDamage;
 
         public ShadowNoelNickname NicknameIns;
