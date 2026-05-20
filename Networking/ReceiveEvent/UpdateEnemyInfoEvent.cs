@@ -1,24 +1,26 @@
 ﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using WeNeedMoreNoels.DataStruct;
-using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels.Networking.ReceiveEvent
 {
-    public class NotifyNoelDamageEvent : PeerReceiveMessageBase
+    internal class UpdateEnemyInfoEvent : PeerReceiveMessageBase
     {
         public override bool CheckMessage(WNMNPeerMessage message)
         {
-            return message.Type == WNMNPeerMessageType.NotifyNoelDamage && message.PeerId == WNMNTools.LocalID;
+            return message.Type == WNMNPeerMessageType.UpdateEnemyInfo && message.PeerId != WNMNTools.LocalID;
         }
 
         public override void ReceiveMessage(WNMNPeerMessage message)
         {
-            ShadowNoelExtensions.DamageNoel(message.PeerId, message.NotifyNoelDamage);
+            WNMNTools.UpdateEnemyInfo(message.UpdateEnemyInfo);
         }
 
         public override string ToMessageString(WNMNPeerMessage message)
         {
-            return $"DamageInfo:{JsonConvert.SerializeObject(message)}";
+            return $"UpdateEnemyInfo:{JsonConvert.SerializeObject(message)}";
         }
     }
 }

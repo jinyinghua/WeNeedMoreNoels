@@ -149,4 +149,38 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoMember(1)]
         public bool EnablePVP;
     }
+
+    [ProtoContract]
+    public class UpdateEnemyInfo
+    {
+        [ProtoMember(1)]
+        public string Key;
+        [ProtoMember(2)]
+        public float PositionX;
+        [ProtoMember(3)]
+        public float PositionY;
+        [ProtoMember(4)]
+        public string Pose;
+        [ProtoMember(5)]
+        public int Aim;
+        [ProtoMember(6)]
+        public int Hp;
+        [ProtoMember(7)]
+        public int Mp;
+        [ProtoMember(8)]
+        public int State;
+        [ProtoMember(9)]
+        public float T;
+    }
+
+    [ProtoContract]
+    public class NotifyEnemyDamage
+    {
+        [ProtoMember(1)]
+        public string Key;
+        [ProtoMember(2)]
+        public int Hp;
+        [ProtoMember(3)]
+        public int Mp;
+    }
 }

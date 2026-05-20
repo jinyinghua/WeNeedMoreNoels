@@ -593,6 +593,31 @@ namespace WeNeedMoreNoels
             SendMagicToAllPeers(LocalID, mg);
         }
 
+        public static void UpdateEnemyInfo(UpdateEnemyInfo info)
+        {
+            //Plugin.Logger.LogWarning($"Updating {info.Key}");
+            foreach (var enemy in DB.CurEnemies)
+            {
+                if (enemy.key == info.Key)  // Todo: Performance?
+                {
+                    enemy.GetComponent<EnemySynchronizerClient>()?.UpdateEnemyInfo(info);
+                    break;
+                }
+            }
+        }
+
+        public static void DamageEnemy(NotifyEnemyDamage dmg)
+        {
+            foreach (var enemy in DB.CurEnemies)
+            {
+                if (enemy.key == dmg.Key)  // Todo: Performance?
+                {
+                    enemy.GetComponent<EnemySynchronizerHost>()?.DamageEnemy(dmg.Hp, dmg.Mp);
+                    break;
+                }
+            }
+        }
+
         public class NetworkConfig
         {
             public NetWorkType Type;

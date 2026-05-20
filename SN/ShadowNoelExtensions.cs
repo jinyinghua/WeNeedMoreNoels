@@ -302,6 +302,7 @@ namespace WeNeedMoreNoels.SN
 
         public static void StartCurMapBattle()
         {
+            Plugin.Logger.LogWarning($"StartCurMapBattle, {M2LpSummon.NearLpSmn?.ToString() ?? "null"}");
             if (M2LpSummon.NearLpSmn is not null)
             {
                 DB.CurSummoner = M2LpSummon.NearLpSmn;
