@@ -104,7 +104,7 @@ namespace WeNeedMoreNoels.Patch
                 __instance.OTab["MP"] = designer;
                 
             }
-            __instance.fineTabVisibility("MAIN", false, true);  // idk but it fix some visual things
+            __instance.fineTabVisibility("MAIN", false, true);  // idk but it fixes some visual things
         }
     }
 }

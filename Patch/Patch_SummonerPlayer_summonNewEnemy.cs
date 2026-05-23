@@ -11,6 +11,17 @@ namespace WeNeedMoreNoels.Patch
         static void Postfix(ref NelEnemy __result)
         {
             DB.CurEnemies.Add(__result);
+            if (DB.IsMultiplayer)
+            {
+                if (WNMNTools.Type == NetWorkType.Host)
+                {
+                    __result.gameObject.AddComponent<EnemySynchronizerHost>();
+                }
+                else
+                {
+                    __result.gameObject.AddComponent<EnemySynchronizerClient>();
+                }
+            }
         }
     }
 }
