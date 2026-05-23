@@ -20,7 +20,16 @@ namespace WeNeedMoreNoels
             ];
         }
 
+        public static string PreviewPrefix
+        {
+            get => "Preview_Noel_";
+        }
+
         static Dictionary<ColorNoelColor, PrPoseContainer> colorDics = [];
+
+        public static Dictionary<NoelType, MImage[]> NoelPreviews = [];
+
+        public static Dictionary<ColorNoelColor, MImage[]> ColorPreviews = [];
 
         public static string GetColorNoelName(ColorNoelColor color) => "noel_" + color.ToString().ToLower();
         public static string GetColorNoelMagicName(ColorNoelColor color) => "noel_magic_" + color.ToString().ToLower();
@@ -33,12 +42,15 @@ namespace WeNeedMoreNoels
 
         public const string LOCALIZATION_FILE_NAME = "_wnmn_localization";
 
+        static string localPicPath;
+
         public static void Load()
         {
             Plugin.Logger.LogInfo("start loading WNMN resources..");
             string assetPath = Path.GetFullPath(Application.streamingAssetsPath);
             string assetOriginPath = Path.Combine(assetPath, "WNMNResources\\");
             string localPxlPath = Path.Combine(assetOriginPath, "pxls\\");
+            string localPicPath = Path.Combine(assetOriginPath, "pics\\");
             string localLocalizationPath = Path.Combine(assetPath, "localization\\");
             string L_zhPath = Path.Combine(localLocalizationPath, "zh-cn\\");
             string L_zhtcPath = Path.Combine(localLocalizationPath, "zh-tc\\");
@@ -47,6 +59,7 @@ namespace WeNeedMoreNoels
             string pluginFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BepInEx", "plugins");
             string pluginPath = Path.Combine(pluginFolderPath, "WNMN");
             string pluginPxlPath = Path.Combine(pluginPath, "pxls\\");
+            string pluginPicPath = Path.Combine(pluginPath, "pics\\");
             string pluginResPath = Path.Combine(pluginPath, "resources\\");
             string zhPath = Path.Combine(pluginPath, "zh-cn\\");
             string zhtcPath = Path.Combine(pluginPath, "zh-tc\\");
@@ -62,10 +75,19 @@ namespace WeNeedMoreNoels
             {
                 Directory.CreateDirectory(localPxlPath);
             }
+            if (!Directory.Exists(localPicPath))
+            {
+                Directory.CreateDirectory(localPicPath);
+            }
             Plugin.Logger.LogInfo("Directory check success.");
             foreach (FileInfo file in new DirectoryInfo(pluginPxlPath).EnumerateFiles())
             {
                 string targetFile = localPxlPath + file.Name;
+                File.Copy(file.FullName, targetFile, true);
+            }
+            foreach (FileInfo file in new DirectoryInfo(pluginPicPath).EnumerateFiles())
+            {
+                string targetFile = localPicPath + file.Name;
                 File.Copy(file.FullName, targetFile, true);
             }
             foreach (FileInfo file in new DirectoryInfo(pluginResPath).EnumerateFiles())
@@ -78,15 +100,32 @@ namespace WeNeedMoreNoels
             File.Copy(enPath + $"en{LOCALIZATION_FILE_NAME}.txt", L_enPath + $"en{LOCALIZATION_FILE_NAME}.txt", true);
             File.Copy(jpPath + $"_{LOCALIZATION_FILE_NAME}.txt", L_jpPath + $"_{LOCALIZATION_FILE_NAME}.txt", true);
             Plugin.Logger.LogInfo("WNMN resources load complete!");
+            MTRExtension.localPicPath = localPicPath;
         }
 
         public static void LoadAllPxls()
         {
             PConNoelIAnim = LoadExtenalPxl(Anoel_inverse_pxls, "noel_inverse");
+            for (int i = 0; i < 2; i++)
+            {
+                NoelType type = (NoelType)i;
+                MImage[] previews = new MImage[12];
+                for (int j = 0; j < 12; j++)
+                {
+                    previews[j] = LoadImage(type, j);
+                }
+                NoelPreviews.Add(type, previews);
+            }
             for (int i = 0; i < 8; i++)
             {
                 ColorNoelColor color = (ColorNoelColor)i;
                 colorDics.Add(color, LoadExtenalPxl(GetColorNoelPxlsFull(color), GetColorNoelName(color)));
+                MImage[] previews = new MImage[12];
+                for (int j = 0; j < 12; j++)
+                {
+                    previews[j] = LoadImage(color, j);
+                }
+                ColorPreviews.Add(color, previews);
             }
         }
 
@@ -113,6 +152,32 @@ namespace WeNeedMoreNoels
                 float num4;
                 return M2PxlAnimator.getRodPosS(rCLENB, F, out num3, out num4, "rod", "ROD", 0.5f, 0f, ALIGN.LEFT, ALIGNY.MIDDLE, 2, "rodeff");
             });
+        }
+
+        public static MImage LoadImage(NoelType type, int index)
+        {
+            if (index < 0 | index > 11)
+            {
+                return null;
+            }
+            string name = PreviewPrefix + type.ToString() + index.ToString().PadLeft(2, '0');
+            name = name.ToLower();
+            if (type == NoelType.Normal)
+            {
+                name = "preview_noel" + index.ToString().PadLeft(2, '0');
+            }
+            return MTI.LoadContainerOneImage(localPicPath + name).MI;
+        }
+
+        public static MImage LoadImage(ColorNoelColor color, int index)
+        {
+            if (index < 0 | index > 11)
+            {
+                return null;
+            }
+            string name = PreviewPrefix + color.ToString() + index.ToString().PadLeft(2, '0');
+            name = name.ToLower();
+            return MTI.LoadContainerOneImage(localPicPath + name).MI;
         }
     }
 }

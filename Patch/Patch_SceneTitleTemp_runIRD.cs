@@ -4,6 +4,7 @@ using nel;
 using nel.title;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UIElements;
 using WeNeedMoreNoels.DataStruct;
 using XX;
 
@@ -39,6 +40,10 @@ namespace WeNeedMoreNoels.Patch
         {
             client?.PollEvents();
             stt = (SceneTitleTemp)__instance;
+            if (BxCmd == null && stt.BxCon != null)
+            {
+                BxCmd = stt.BxCon.Create("ColN", 0f, 0f, 200f, 200f, 0, 0f, UiBoxDesignerFamily.MASKTYPE.BOX);
+            }
             if (DB.WNMNHostClosed)
             {
                 if (stt.BxCon is null)
@@ -99,6 +104,7 @@ namespace WeNeedMoreNoels.Patch
                     stt.remakeSumitCancelButton(true, true);
                     stt.SubmitBtn.addClickFn(b =>
                     {
+                        BxCmd?.deactivate();
                         WNMNTools.NetworkConfig config = new()
                         {
                             Type = NetWorkType.Host,
@@ -126,6 +132,10 @@ namespace WeNeedMoreNoels.Patch
                     });
                     stt.DsBlack.alpha = 1;
                 }
+            }
+            else if (stt.state == SceneTitleTemp.STATE.TOP)
+            {
+                BxCmd?.deactivate();
             }
             if (BxHCI is not null || BxCC is not null || DB.WNMNClientTransferNotComplete)
             {
@@ -164,6 +174,7 @@ namespace WeNeedMoreNoels.Patch
                         client = new(listener);
                         listener.NetworkReceiveEvent += (peer, reader, deliveryMethod) =>
                         {
+                            BxCmd?.deactivate();
                             WNMNTools.NetworkConfig config = new()
                             {
                                 Type = NetWorkType.Client,
@@ -270,7 +281,7 @@ namespace WeNeedMoreNoels.Patch
                 size = 20f,
                 text = TX.Get("multiplayer_noel")
             });
-            designer.addSlider(new()
+            var slider = designer.addSlider(new()
             {
                 mn = 0,
                 mx = 9,
@@ -309,6 +320,8 @@ namespace WeNeedMoreNoels.Patch
                             b.text_content = TX.Get("multiplayer_noel_magenta");
                             break;
                     }
+                    Preview.GetComponent<NoelPreview>().noelType = c_v == 0 ? NoelType.Normal : (c_v == 1 ? NoelType.Inverse : NoelType.ColorNoel);
+                    Preview.GetComponent<NoelPreview>().color = (ColorNoelColor)(c_v - 2);
                     if (c_v > 1)
                     {
                         type = NoelType.ColorNoel;
@@ -340,6 +353,28 @@ namespace WeNeedMoreNoels.Patch
                     return true;
                 }
             });
+            Plugin.Logger.LogInfo("aaa");
+            BxCmd.activate();
+            BxCmd.Clear();
+            BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+            BxCmd.WH(150f, 300f);
+            BxCmd.margin_in_lr = 10f;
+            BxCmd.margin_in_tb = 10f;
+            BxCmd.init();
+            Preview = new();
+            Preview.AddComponent<SpriteRenderer>();
+            Preview.AddComponent<NoelPreview>();
+            Preview.SetActive(false);
+            BxCmd.addGameObject(Preview, "preview");
+            Preview.SetActive(true);
+            Preview.transform.position = BxCmd.transform.position;
+            Preview.transform.position += new Vector3(-0.6f, -1.6f);
+            Preview.transform.localScale *= 2;
+            Vector3 btnPos = slider.transform.position;
+            float targetX = btnPos.x * 64f + 400f;
+            float targetY = btnPos.y * 64f;
+            BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+            BxCmd.Focusable(false, false);
         }
 
         static void CreateUIClient(UiBoxDesigner designer)
@@ -412,7 +447,7 @@ namespace WeNeedMoreNoels.Patch
                 size = 20f,
                 text = TX.Get("multiplayer_noel")
             });
-            designer.addSlider(new()
+            var slider = designer.addSlider(new()
             {
                 mn = 0,
                 mx = 9,
@@ -451,6 +486,8 @@ namespace WeNeedMoreNoels.Patch
                             b.text_content = TX.Get("multiplayer_noel_magenta");
                             break;
                     }
+                    Preview.GetComponent<NoelPreview>().noelType = c_v == 0 ? NoelType.Normal : (c_v == 1 ? NoelType.Inverse : NoelType.ColorNoel);
+                    Preview.GetComponent<NoelPreview>().color = (ColorNoelColor)(c_v - 2);
                     if (c_v > 1)
                     {
                         type = NoelType.ColorNoel;
@@ -482,9 +519,34 @@ namespace WeNeedMoreNoels.Patch
                     return true;
                 }
             });
+            BxCmd.activate();
+            BxCmd.Clear();
+            BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+            BxCmd.WH(150f, 300f);
+            BxCmd.margin_in_lr = 10f;
+            BxCmd.margin_in_tb = 10f;
+            BxCmd.init();
+            Preview = new();
+            Preview.AddComponent<SpriteRenderer>();
+            Preview.AddComponent<NoelPreview>();
+            Preview.SetActive(false);
+            BxCmd.addGameObject(Preview, "preview");
+            Preview.SetActive(true);
+            Preview.transform.position = BxCmd.transform.position;
+            Preview.transform.position += new Vector3(-0.6f, -1.6f);
+            Preview.transform.localScale *= 2;
+            Vector3 btnPos = slider.transform.position;
+            float targetX = btnPos.x * 64f + 400f;
+            float targetY = btnPos.y * 64f;
+            BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+            BxCmd.Focusable(false, false);
         }
 
         static Color ColorDefault => Color.HSVToRGB(0, 0, 0.219f);
+
+        static UiBoxDesigner BxCmd;
+
+        static GameObject Preview;
     }
 
     public enum MultiPlayerSTATE
