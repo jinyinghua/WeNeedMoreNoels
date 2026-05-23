@@ -32,6 +32,21 @@
 &&multiplayer_unstable Unstable
 &&multiplayer_experimental Experimental
 
+&&multiplayer_enemy_title Enemy summon mode
+&&multiplayer_enemy_starter Starter only
+&&multiplayer_enemy_smart Smart average
+&&multiplayer_enemy_independent Client independent
+
+/* ___ Desc_multiplayer_enemy ___ */
+Enemy summon mode is the synchronization methods multiplayer battle
+Starter only: Only the battle starter spawns enemies; other players synchronize with their enemies.
+Smart Average: Dynamically adjusts the total number of monsters using an algorithm to create a more relaxed monster-fighting environment.
+Independent Spawn: Completely independent spawning, go ahead and fight freely!  *May cause lag when too many players
+*Cannot be changed after the battle starts
+
+/* ___ Desc_multiplayer_enemy_inbattle ___ */
+<font color=#e80c0c>*当前处于战斗中，无法更改同步模式
+
 &&multiplayer_cata Multiplayer
 
 &&multiplayer_menu_title Multiplayer Menu
@@ -63,7 +78,6 @@ Select the multiplayer mode
 
 /* ___ Title_multiplayer_desc_host ___ */ 
 Start a host and let other player connect.
-(Need strong computer)
 
 /* ___ Title_multiplayer_desc_client ___ */ 
 Connect to existed host.

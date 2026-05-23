@@ -35,6 +35,7 @@ namespace WeNeedMoreNoels
         public static Dictionary<int, NetPeer> PeerDic = [];
 
         public static bool EnablePVP;
+        public static EnemySyncType SyncType;
 
         static int _unique_id;
         public static int Unique_ID
@@ -440,7 +441,8 @@ namespace WeNeedMoreNoels
                 PeerId = LocalID,
                 NotifyRoomUpdate = new()
                 {
-                    EnablePVP = EnablePVP
+                    EnablePVP = EnablePVP,
+                    SyncType = SyncType
                 }
             };
             using MemoryStream stream = new();
@@ -452,6 +454,7 @@ namespace WeNeedMoreNoels
         public static void UpdateRoomConfig(NotifyRoomUpdate update)
         {
             EnablePVP = update.EnablePVP;
+            SyncType = update.SyncType;
         }
 
         public static void CleanUpClient(int id)
@@ -650,5 +653,12 @@ namespace WeNeedMoreNoels
     {
         Host,
         Client
+    }
+    
+    public enum EnemySyncType
+    {
+        HostOnly,
+        SmartAverage,
+        Independent
     }
 }

@@ -148,6 +148,8 @@ namespace WeNeedMoreNoels.DataStruct
     {
         [ProtoMember(1)]
         public bool EnablePVP;
+        [ProtoMember(2)]
+        public EnemySyncType SyncType;
     }
 
     [ProtoContract]

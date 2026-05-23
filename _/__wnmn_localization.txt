@@ -4,6 +4,7 @@
 &&multiplayer_client_title 客人の配置
 
 &&multiplayer_host_port 主人のポート：
+&&multiplayer_host_kicked 主机将你踢出
 &&multiplayer_host_closed ポートが消えた
 
 &&multiplayer_nickname ニックネーム：
@@ -25,28 +26,44 @@
 
 &&multiplayer_noel_nickname ノエル＃
 
-&&multiplayer_reset 重置
+&&multiplayer_reset 初期化
 
-&&multiplayer_recommend 推荐
-&&multiplayer_unstable 不稳定
-&&multiplayer_experimental 实验性的
+&&multiplayer_recommend おすすめ
+&&multiplayer_unstable 不穏的
+&&multiplayer_experimental 試験性的
+
+&&multiplayer_enemy_title 刷怪模式
+&&multiplayer_enemy_host 主机刷怪
+&&multiplayer_enemy_smart 智能平均
+&&multiplayer_enemy_independent 独立刷新
+
+/* ___ Desc_multiplayer_enemy ___ */
+刷怪模式为多人模式进入战斗后同步的方式
+仅发起者：只有战斗发起者会刷怪，其余玩家均同步
+智能平均：用算法动态调整怪物总数，尽量营造轻松的打怪环境
+独立刷新：完全独立刷新，尽情打怪吧！ *当人多时可能会造成卡顿
+*战斗开始后无法更改
+
+/* ___ Desc_multiplayer_enemy_inbattle ___ */
+*当前处于战斗中，无法更改同步模式
 
 &&multiplayer_cata 複数プレーヤー
 
-&&multiplayer_menu_title 多人游戏菜单
-&&multiplayer_menu_utilities 常用功能
-&&multiplayer_menu_modify_nickname 修改昵称
-&&multiplayer_menu_modify_party 更改阵营
-&&multiplayer_menu_teleport 传送至...
-&&multiplayer_menu_syncbackpackandmony 手动同步背包&金钱
-&&multiplayer_menu_syncbackpackandmony_warn *同步将导致当前背包物品丢失，继续？
-&&multiplayer_menu_sendmsg 发送短语
-&&multiplayer_menu_mute *你已被禁言
-&&multiplayer_menu_host_utilities 房主功能
-&&multiplayer_menu_host_kick 踢出...
-&&multiplayer_menu_host_mute 禁言...
+&&multiplayer_menu_title 複数プレーヤーのメニュー
+&&multiplayer_menu_utilities 共通働き
+&&multiplayer_menu_modify_nickname ニックネームを入力
+&&multiplayer_menu_modify_party チームを切り替える
+&&multiplayer_menu_teleport ファストトラベル
+&&multiplayer_menu_syncbackpackandmony お金やアイテムを同期化
+&&multiplayer_menu_syncbackpackandmony_warn *今のアイテム状態を捨てますが、本当にしますか？
+&&multiplayer_menu_sendmsg 短いメッセージを送る
+&&multiplayer_menu_mute *黙らせられた...
+&&multiplayer_menu_host_utilities 主人の働き
+&&multiplayer_menu_host_kick 客人を追放
+&&multiplayer_menu_host_mute 客人を黙らせる
 &&multiplayer_menu_host_teleportallself 集合玩家
-&&multiplayer_menu_host_modifyroomconfig 修改房间设置
+&&multiplayer_menu_host_teleportallself 全ての客人をここに召喚
+&&multiplayer_menu_host_modifyroomconfig ルームを設定
 
 // ========================================================
 // MARK : Multiplayer Options
@@ -61,42 +78,41 @@
 
 /* ___ Title_multiplayer_desc_host ___ */ 
 ホストを始めに、他のプレーヤーを招待します。
-（強いパソコンが必要です）
 
 /* ___ Title_multiplayer_desc_client ___ */ 
 存在するホストを連絡します。
 ダブルかわいそうをエンジョイして！
 
 // ========================================================
-// MARK : 多人模式设置菜单
+// MARK : 複数プレーヤーの設定メニュー
 // ========================================================
 
-&&Config_mpconfig_show_nicknames 显示玩家昵称
-&&Config_desc_mpconfig_show_nicknames 设置在游戏内是否显示玩家昵称
+&&Config_mpconfig_show_nicknames ニックネームを表示
+&&Config_desc_mpconfig_show_nicknames プレーヤーのニックネームを表示するかどうかを設定します
 
 /* ___ Config_mpconfig_cure_all_players_on_bench ___ */
-长椅指令对所有玩家起效
+ベンチのコマンドは全てのプレーヤーに有効
 /* ___ Config_desc_mpconfig_cure_all_players_on_bench ___ */ 
-设置坐在长椅上时，「恢复HP」等
-指令是否对所有玩家同时起效
+ベンチで、「HP回復」などコマンドは全ての
+プレーヤーに有効するかどうかを設定します
 
 // ========================================================
-// MARK : 多人房间设置菜单
+// MARK : Multiplayer Room Options
 // ========================================================
 
-&&multiplayer_room_maxplayercount 最大玩家数量
-&&multiplayer_room_enablepvp 启用PVP
+&&multiplayer_room_maxplayercount 最大プレーヤー数
+&&multiplayer_room_enablepvp プレーヤーの間にダメージは有効
 
 // ========================================================
-// MARK : 短消息
+// MARK : 短いメッセージ
 // ========================================================
 
-&&multiplayer_msg_greeting 你好！
-&&multiplayer_msg_come_here 来这里！
-&&multiplayer_msg_pve_start 一起战斗吧！
-&&multiplayer_msg_pve_warn 小心躲避！
-&&multiplayer_msg_pve_help 救命！
-&&multiplayer_msg_pvp_start 来比试吧！
-&&multiplayer_msg_pvp_greeting 请多指教！
-&&multiplayer_msg_sitting 休息一下吧！
-&&multiplayer_msg_goodbye 再见！
+&&multiplayer_msg_greeting こんにちは！
+&&multiplayer_msg_come_here ここに来て！
+&&multiplayer_msg_pve_start 一緒に戦闘しよう！
+&&multiplayer_msg_pve_warn 気をつけて！
+&&multiplayer_msg_pve_help 誰か助けて！
+&&multiplayer_msg_pvp_start 余興試合をして！
+&&multiplayer_msg_pvp_greeting よろしくね！
+&&multiplayer_msg_sitting ベンチで休もう！
+&&multiplayer_msg_goodbye バイバイ！

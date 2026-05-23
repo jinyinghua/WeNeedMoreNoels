@@ -4,7 +4,6 @@ using ProtoBuf;
 using System.IO;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
-using WeNeedMoreNoels.SN;
 using XX;
 
 namespace WeNeedMoreNoels
@@ -103,10 +102,7 @@ namespace WeNeedMoreNoels
             MoverEnemy.Phy.killSpeedForce(true, true, true, true, true);
 
             var anim = MoverEnemy.getAnimator();
-            //if (anim.poseIs(info.Pose))
-            //{
             anim.setPose(info.Pose);
-            //}
 
             MoverEnemy.setAim((AIM)info.Aim);
             MoverEnemy.hp = info.Hp;

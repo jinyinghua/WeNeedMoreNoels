@@ -7,6 +7,12 @@ namespace WeNeedMoreNoels.Patch
     [HarmonyPatch(typeof(SummonerPlayer), nameof(SummonerPlayer.summonNewEnemy))]
     public class Patch_SummonerPlayer_summonNewEnemy
     {
+        [HarmonyPrefix]
+        static void Prefix()
+        {
+
+        }
+
         [HarmonyPostfix]
         static void Postfix(ref NelEnemy __result)
         {

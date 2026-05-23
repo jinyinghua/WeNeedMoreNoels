@@ -12,6 +12,7 @@ namespace WeNeedMoreNoels.Patch
             if (defeated)
             {
                 WNMNTools.SendBattleEndToAllPeers(WNMNTools.LocalID);
+                DB.IsInBattle = false;
             }
         }
     }

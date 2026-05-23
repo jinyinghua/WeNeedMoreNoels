@@ -32,6 +32,21 @@
 &&multiplayer_unstable 不稳定
 &&multiplayer_experimental 实验性的
 
+&&multiplayer_enemy_title 刷怪模式
+&&multiplayer_enemy_starter 仅发起者
+&&multiplayer_enemy_smart 智能平均
+&&multiplayer_enemy_independent 独立刷新
+
+/* ___ Desc_multiplayer_enemy ___ */
+刷怪模式为多人模式进入战斗后同步的方式
+仅发起者：只有战斗发起者会刷怪，其余玩家均同步
+智能平均：用算法动态调整怪物总数，尽量营造轻松的打怪环境
+独立刷新：完全独立刷新，尽情打怪吧！ *当人多时可能会造成卡顿
+*战斗开始后无法更改
+
+/* ___ Desc_multiplayer_enemy_inbattle ___ */
+*当前处于战斗中，无法更改同步模式
+
 &&multiplayer_cata 多人
 
 &&multiplayer_menu_title 多人游戏菜单
@@ -63,7 +78,6 @@
 
 /* ___ Title_multiplayer_desc_host ___ */ 
 作为主机启动，让其他玩家连接
-（需要强劲的电脑）
 
 /* ___ Title_multiplayer_desc_client ___ */ 
 连接到一个已有的主机

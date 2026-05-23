@@ -10,6 +10,7 @@ namespace WeNeedMoreNoels.Patch
         static void Postfix()
         {
             WNMNTools.SendBattleStartToAllPeers(WNMNTools.LocalID);
+            DB.IsInBattle = true;
         }
     }
 }

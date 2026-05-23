@@ -11,6 +11,7 @@ namespace WeNeedMoreNoels.Patch
         static void Postfix(UiGameMenu __instance)
         {
             UiMenuMul.BxP = __instance.Create("mulP", 0f, 0f, 200f, 200f, 0, 0f, UiBoxDesignerFamily.MASKTYPE.BOX);
+            UiMenuMul.BxPD = __instance.Create("mulPD", 0f, 0f, 200f, 200f, 0, 0f, UiBoxDesignerFamily.MASKTYPE.BOX);
         }
     }
 }

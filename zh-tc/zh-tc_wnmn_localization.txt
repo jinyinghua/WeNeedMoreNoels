@@ -32,6 +32,18 @@
 &&multiplayer_unstable 不穩定
 &&multiplayer_experimental 實驗性的
 
+&&multiplayer_enemy_title 刷怪模式
+&&multiplayer_enemy_starter 僅發起者
+&&multiplayer_enemy_smart 智能平均
+&&multiplayer_enemy_independent 獨立刷新
+
+/* ___ Desc_multiplayer_enemy ___ */
+刷怪模式為多人模式進入戰鬥後同步的方式
+僅發起者：只有戰鬥發起者會刷怪，其餘玩家均同步
+智能平均：用算法動態調整怪物總數，儘量營造輕鬆的打怪環境
+獨立刷新：完全獨立刷新，盡情打怪吧！ *當人多時可能會造成卡頓
+*戰鬥開始後無法更改
+
 &&multiplayer_cata 多人
 
 &&multiplayer_menu_title 多人遊戲菜單
@@ -63,7 +75,6 @@
 
 /* ___ Title_multiplayer_desc_host ___ */ 
 作爲主機啓動，讓其他玩家連接
-（需要強勁的電腦）
 
 /* ___ Title_multiplayer_desc_client ___ */ 
 連接到一個已有的主機

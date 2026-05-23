@@ -87,5 +87,7 @@ namespace WeNeedMoreNoels
         public static M2LpSummon CurSummoner;
 
         public static bool Mute;
+
+        public static bool IsInBattle;
     }
 }

@@ -351,14 +351,30 @@ namespace WeNeedMoreNoels
                     fnClick = B =>
                     {
                         UiBoxDesigner BxCmd = UiMenuMul.BxP;
+                        UiBoxDesigner BxCmdDesc = UiMenuMul.BxPD;
                         BxCmd.activate();
                         IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
                         BxCmd.Clear();
                         BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
-                        BxCmd.WH(600f, 400f);
+                        BxCmd.WH(500f, 300f);
                         BxCmd.margin_in_lr = 10f;
                         BxCmd.margin_in_tb = 10f;
                         BxCmd.init();
+                        BxCmdDesc.activate();
+                        IN.setZ(BxCmdDesc.transform, BxR.transform.position.z - 1f);
+                        BxCmdDesc.Clear();
+                        BxCmdDesc.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
+                        BxCmdDesc.WH(600f, 300f);
+                        BxCmdDesc.margin_in_lr = 10f;
+                        BxCmdDesc.margin_in_tb = 10f;
+                        BxCmdDesc.init();
+                        BxCmdDesc.alignx = ALIGN.CENTER;
+                        BxCmdDesc.addP(new()
+                        {
+                            TxCol = ColorDefault,
+                            size = 20f,
+                            text = TX.Get("Desc_multiplayer_enemy")
+                        });
                         BxCmd.alignx = ALIGN.CENTER;
                         BxCmd.addP(new()
                         {
@@ -432,6 +448,40 @@ namespace WeNeedMoreNoels
                             }
                         });
                         BxCmd.Br();
+                        BxCmd.addP(new()
+                        {
+                            TxCol = ColorDefault,
+                            size = 20f,
+                            alignx = ALIGN.LEFT,
+                            text = TX.Get("multiplayer_enemy_title"),
+                        });
+                        if (DB.IsInBattle)
+                        {
+                            BxCmd.Br();
+                            BxCmd.addP(new()
+                            {
+                                text = TX.Get("Desc_multiplayer_enemy")
+                            });
+                        }
+                        else
+                        {
+                            BxCmd.addSliderCT(new()
+                            {
+                                name = "EnemyMode",
+                                skin_title = "",
+                                title = TX.Get("multiplayer_enemy_title"),
+                                mn = 0,
+                                mx = 2,
+                                def = (int)WNMNTools.SyncType,
+                                Adesc_keys = TX.GetArray("multiplayer_enemy_host", "multiplayer_enemy_smart", "multiplayer_enemy_independent"),
+                                fnChanged = (_, _, i) =>
+                                {
+                                    WNMNTools.SyncType = (EnemySyncType)i;
+                                    return true;
+                                }
+                            });
+                        }
+                        BxCmd.Br();
                         BxCmd.addButton(new()
                         {
                             title = TX.Get("Submit"),
@@ -443,9 +493,10 @@ namespace WeNeedMoreNoels
                             }
                         });
                         Vector3 btnPos = B.transform.position;
-                        float targetX = btnPos.x * 64f + 300f;
+                        float targetX = btnPos.x * 64f + 450f;
                         float targetY = btnPos.y * 64f;
                         BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
+                        BxCmdDesc.posSetDA(targetX - 550f, targetY, 0, 20f, true);
                         BxCmd.Focusable(true, true);
                         BxCmd.Focus();
                         return true;
@@ -455,6 +506,7 @@ namespace WeNeedMoreNoels
             BxR.addFocusFn(_B =>
             {
                 UiMenuMul.BxP.deactivate();
+                UiMenuMul.BxPD.deactivate();
                 return true;
             });
             BxR.AddSelectableItems(btns, false);
