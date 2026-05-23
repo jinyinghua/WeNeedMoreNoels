@@ -353,7 +353,6 @@ namespace WeNeedMoreNoels.Patch
                     return true;
                 }
             });
-            Plugin.Logger.LogInfo("aaa");
             BxCmd.activate();
             BxCmd.Clear();
             BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;

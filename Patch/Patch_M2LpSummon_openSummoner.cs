@@ -9,8 +9,13 @@ namespace WeNeedMoreNoels.Patch
         [HarmonyPostfix]
         static void Postfix()
         {
-            WNMNTools.SendBattleStartToAllPeers(WNMNTools.LocalID);
+            if (WNMNTools.BattleStarterID == -1)
+            {
+                WNMNTools.BattleStarterID = WNMNTools.LocalID;
+                WNMNTools.SendBattleStartToAllPeers(WNMNTools.LocalID);
+            }
             DB.IsInBattle = true;
+            DB.CurEnemies.Clear();
         }
     }
 }

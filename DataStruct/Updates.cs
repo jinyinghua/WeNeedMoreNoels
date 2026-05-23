@@ -153,36 +153,52 @@ namespace WeNeedMoreNoels.DataStruct
     }
 
     [ProtoContract]
+    public class NotifyEnemyUpdate
+    {
+        [ProtoMember(1)]
+        public int SyncID;
+        [ProtoMember(2)]
+        public NotifyEnemyType Type;
+        [ProtoMember(3)]
+        public UpdateEnemyInfo Info;
+        [ProtoMember(4)]
+        public NotifyEnemySummon Summon;
+    }
+
+    [ProtoContract]
     public class UpdateEnemyInfo
     {
         [ProtoMember(1)]
-        public string Key;
-        [ProtoMember(2)]
         public float PositionX;
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public float PositionY;
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public string Pose;
-        [ProtoMember(5)]
+        [ProtoMember(4)]
         public int Aim;
-        [ProtoMember(6)]
+        [ProtoMember(5)]
         public int Hp;
-        [ProtoMember(7)]
+        [ProtoMember(6)]
         public int Mp;
-        [ProtoMember(8)]
+        [ProtoMember(7)]
         public int State;
-        [ProtoMember(9)]
+        [ProtoMember(8)]
         public float T;
     }
 
     [ProtoContract]
-    public class NotifyEnemyDamage
+    public class NotifyEnemySummon
     {
         [ProtoMember(1)]
         public string Key;
-        [ProtoMember(2)]
-        public int Hp;
-        [ProtoMember(3)]
-        public int Mp;
+    }
+
+    [ProtoContract]
+    public enum NotifyEnemyType
+    {
+        [ProtoEnum]
+        Summon,
+        InfoUpdate,
+        Dead
     }
 }

@@ -12,9 +12,7 @@ namespace WeNeedMoreNoels
     {
         public NelEnemy MoverEnemy;
 
-        public int Id => MoverEnemy.index;
-
-        public string Key => MoverEnemy.key;
+        public int SyncID;
 
         public void Awake()
         {
@@ -42,7 +40,6 @@ namespace WeNeedMoreNoels
 
             return new UpdateEnemyInfo
             {
-                Key = MoverEnemy.key,
                 PositionX = x,
                 PositionY = y,
                 Pose = pose,
@@ -70,9 +67,21 @@ namespace WeNeedMoreNoels
             };
             MoverEnemy.applyDamage(Atk, true);
         }
+
+
+        public static int Unique_Sync_ID
+        {
+            get
+            {
+                _unique_id++;
+                return _unique_id;
+            }
+        }
+
+        static int _unique_id = -1;
     }
 
-    public class EnemySynchronizerHost : EnemySynchronizer
+    public class EnemySynchronizerSyncHost : EnemySynchronizer
     {
         public void Update()
         {
@@ -83,9 +92,32 @@ namespace WeNeedMoreNoels
         {
             WNMNPeerMessage messageSend = new()
             {
-                Type = WNMNPeerMessageType.UpdateEnemyInfo,
+                Type = WNMNPeerMessageType.NotifyEnemyUpdate,
                 PeerId = WNMNTools.LocalID,
-                UpdateEnemyInfo = GetEnemyInfo()
+                NotifyEnemyUpdate = new()
+                {
+                    SyncID = SyncID,
+                    Type = NotifyEnemyType.InfoUpdate,
+                    Info = GetEnemyInfo()
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.Unreliable);
+        }
+
+        public void OnDestroy()
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyEnemyUpdate,
+                PeerId = WNMNTools.LocalID,
+                NotifyEnemyUpdate = new()
+                {
+                    SyncID = SyncID,
+                    Type = NotifyEnemyType.Dead
+                }
             };
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
@@ -94,7 +126,7 @@ namespace WeNeedMoreNoels
         }
     }
 
-    public class EnemySynchronizerClient : EnemySynchronizer
+    public class EnemySynchronizerSyncClient : EnemySynchronizer
     {
         public void UpdateEnemyInfo(UpdateEnemyInfo info)
         {
@@ -103,11 +135,11 @@ namespace WeNeedMoreNoels
 
             var anim = MoverEnemy.getAnimator();
             anim.setPose(info.Pose);
-
             MoverEnemy.setAim((AIM)info.Aim);
+
             MoverEnemy.hp = info.Hp;
             MoverEnemy.mp = info.Mp;
-            MoverEnemy.state = (NelEnemy.STATE)info.State;
+            MoverEnemy.changeState((NelEnemy.STATE)info.State);
             MoverEnemy.t = info.T;
         }
     }

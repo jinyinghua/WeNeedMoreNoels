@@ -89,5 +89,7 @@ namespace WeNeedMoreNoels
         public static bool Mute;
 
         public static bool IsInBattle;
+
+        public static Dictionary<int, EnemySynchronizerSyncClient> SyncClients = [];
     }
 }

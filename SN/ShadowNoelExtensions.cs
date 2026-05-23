@@ -299,9 +299,10 @@ namespace WeNeedMoreNoels.SN
             }
         }
 
-        public static void StartCurMapBattle()
+        public static void StartCurMapBattle(int starterID)
         {
-            Plugin.Logger.LogWarning($"StartCurMapBattle, {M2LpSummon.NearLpSmn?.ToString() ?? "null"}");
+            WNMNTools.BattleStarterID = starterID;
+            Plugin.Logger.LogWarning($"Starter : {starterID}StartCurMapBattle, {M2LpSummon.NearLpSmn?.ToString() ?? "null"}");
             if (M2LpSummon.NearLpSmn is not null)
             {
                 DB.CurSummoner = M2LpSummon.NearLpSmn;

@@ -1,20 +1,18 @@
-﻿using evt;
-using LiteNetLib;
+﻿using LiteNetLib;
 using LiteNetLib.Utils;
 using m2d;
 using nel;
 using ProtoBuf;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
 using UnityEngine;
 using WeNeedMoreNoels.CSNetworking;
 using WeNeedMoreNoels.DataStruct;
 using WeNeedMoreNoels.Networking;
 using WeNeedMoreNoels.SN;
 using XX;
+using static evt.ManpuDrawer;
 
 namespace WeNeedMoreNoels
 {
@@ -36,6 +34,8 @@ namespace WeNeedMoreNoels
 
         public static bool EnablePVP;
         public static EnemySyncType SyncType;
+
+        public static int BattleStarterID = -1;
 
         static int _unique_id;
         public static int Unique_ID
@@ -433,6 +433,28 @@ namespace WeNeedMoreNoels
             peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
+        public static void SendNotifyEnemySummonToAllPeers(string enm_id, int sync_id)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyEnemyUpdate,
+                PeerId = LocalID,
+                NotifyEnemyUpdate = new()
+                {
+                    SyncID = sync_id,
+                    Type = NotifyEnemyType.Summon,
+                    Summon = new()
+                    {
+                        Key = enm_id
+                    }
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
+        }
+
         public static void UpdateRoomConfigToAllPeers()
         {
             WNMNPeerMessage messageSend = new()
@@ -596,29 +618,44 @@ namespace WeNeedMoreNoels
             SendMagicToAllPeers(LocalID, mg);
         }
 
-        public static void UpdateEnemyInfo(UpdateEnemyInfo info)
+        public static void NotifyEnemyUpdate(NotifyEnemyUpdate update)
         {
-            //Plugin.Logger.LogWarning($"Updating {info.Key}");
-            foreach (var enemy in DB.CurEnemies)
+            switch (update.Type)
             {
-                if (enemy.key == info.Key)  // Todo: Performance?
-                {
-                    enemy.GetComponent<EnemySynchronizerClient>()?.UpdateEnemyInfo(info);
+                case NotifyEnemyType.Summon:
+                    NotifySummonEnemy(update.Summon.Key, update.SyncID);
                     break;
-                }
+                case NotifyEnemyType.InfoUpdate:
+                    UpdateEnemyInfo(update.SyncID, update.Info);
+                    break;
+                case NotifyEnemyType.Dead:
+                    CleanUpEnemy(update.SyncID);
+                    break;
             }
         }
 
-        public static void DamageEnemy(NotifyEnemyDamage dmg)
+        public static void NotifySummonEnemy(string key, int sync_id)
         {
-            foreach (var enemy in DB.CurEnemies)
-            {
-                if (enemy.key == dmg.Key)  // Todo: Performance?
-                {
-                    enemy.GetComponent<EnemySynchronizerHost>()?.DamageEnemy(dmg.Hp, dmg.Mp);
-                    break;
-                }
-            }
+            NelEnemy nelEnemy = NDAT.createByKey(DB.MainPR.Mp, key, "-Summonned-" + DB.MainPR.Mp.key + "-{sync}" + sync_id.ToString());
+            nelEnemy.appear(DB.MainPR.Mp);
+            nelEnemy.Anm.alpha = 0.5f;
+            var client = nelEnemy.gameObject.AddComponent<EnemySynchronizerSyncClient>();
+            DB.SyncClients.Add(sync_id, client);
+            DB.CurEnemies.Add(nelEnemy);
+        }
+
+        public static void UpdateEnemyInfo(int syncID, UpdateEnemyInfo info)
+        {
+            DB.SyncClients[syncID].UpdateEnemyInfo(info);
+        }
+
+        public static void CleanUpEnemy(int syncID)
+        {
+            EnemySynchronizerSyncClient client = DB.SyncClients[syncID];
+            DB.SyncClients.Remove(syncID);
+            NelEnemy enemy = client.GetComponent<NelEnemy>();
+            DB.MainPR.Mp.removeMover(enemy);
+            enemy.destruct();
         }
 
         public class NetworkConfig
@@ -657,7 +694,7 @@ namespace WeNeedMoreNoels
     
     public enum EnemySyncType
     {
-        HostOnly,
+        StarterOnly,
         SmartAverage,
         Independent
     }

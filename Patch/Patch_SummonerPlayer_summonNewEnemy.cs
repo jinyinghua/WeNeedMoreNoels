@@ -8,25 +8,28 @@ namespace WeNeedMoreNoels.Patch
     public class Patch_SummonerPlayer_summonNewEnemy
     {
         [HarmonyPrefix]
-        static void Prefix()
+        static bool Prefix(ref NelEnemy __result, out bool __state)
         {
-
+            if (WNMNTools.SyncType == EnemySyncType.StarterOnly && WNMNTools.BattleStarterID != WNMNTools.LocalID)
+            {
+                __result = null;
+                __state = false;
+                return false;
+            }
+            __state = true;
+            return true;
         }
 
         [HarmonyPostfix]
-        static void Postfix(ref NelEnemy __result)
+        static void Postfix(ref NelEnemy __result, SmnEnemyKind K, bool __state)
         {
-            DB.CurEnemies.Add(__result);
-            if (DB.IsMultiplayer)
+            if (DB.IsMultiplayer && __state)
             {
-                if (WNMNTools.Type == NetWorkType.Host)
-                {
-                    __result.gameObject.AddComponent<EnemySynchronizerHost>();
-                }
-                else
-                {
-                    __result.gameObject.AddComponent<EnemySynchronizerClient>();
-                }
+                DB.CurEnemies.Add(__result);
+                int syncID = EnemySynchronizer.Unique_Sync_ID;
+                WNMNTools.SendNotifyEnemySummonToAllPeers(K.enemyid, syncID);
+                var host = __result.gameObject.AddComponent<EnemySynchronizerSyncHost>();
+                host.SyncID = syncID;
             }
         }
     }
