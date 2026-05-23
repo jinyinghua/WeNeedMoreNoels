@@ -364,17 +364,29 @@ namespace WeNeedMoreNoels
                         IN.setZ(BxCmdDesc.transform, BxR.transform.position.z - 1f);
                         BxCmdDesc.Clear();
                         BxCmdDesc.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
-                        BxCmdDesc.WH(600f, 300f);
+                        BxCmdDesc.WH(600f, 150f);
                         BxCmdDesc.margin_in_lr = 10f;
                         BxCmdDesc.margin_in_tb = 10f;
                         BxCmdDesc.init();
                         BxCmdDesc.alignx = ALIGN.CENTER;
-                        BxCmdDesc.addP(new()
+                        if (DB.IsInBattle)
                         {
-                            TxCol = ColorDefault,
-                            size = 20f,
-                            text = TX.Get("Desc_multiplayer_enemy")
-                        });
+                            BxCmdDesc.addP(new()
+                            {
+                                TxCol = ColorDefault,
+                                size = 8f,
+                                text = TX.Get("Desc_multiplayer_enemy_inbattle")
+                            });
+                        }
+                        else
+                        {
+                            BxCmdDesc.addP(new()
+                            {
+                                TxCol = ColorDefault,
+                                size = 8f,
+                                text = TX.Get("Desc_multiplayer_enemy")
+                            });
+                        }
                         BxCmd.alignx = ALIGN.CENTER;
                         BxCmd.addP(new()
                         {
@@ -447,24 +459,16 @@ namespace WeNeedMoreNoels
                                 return true;
                             }
                         });
-                        BxCmd.Br();
-                        BxCmd.addP(new()
-                        {
-                            TxCol = ColorDefault,
-                            size = 20f,
-                            alignx = ALIGN.LEFT,
-                            text = TX.Get("multiplayer_enemy_title"),
-                        });
-                        if (DB.IsInBattle)
+                        if (!DB.IsInBattle)
                         {
                             BxCmd.Br();
                             BxCmd.addP(new()
                             {
-                                text = TX.Get("Desc_multiplayer_enemy")
+                                TxCol = ColorDefault,
+                                size = 20f,
+                                alignx = ALIGN.LEFT,
+                                text = TX.Get("multiplayer_enemy_title"),
                             });
-                        }
-                        else
-                        {
                             BxCmd.addSliderCT(new()
                             {
                                 name = "EnemyMode",
@@ -473,7 +477,7 @@ namespace WeNeedMoreNoels
                                 mn = 0,
                                 mx = 2,
                                 def = (int)WNMNTools.SyncType,
-                                Adesc_keys = TX.GetArray("multiplayer_enemy_host", "multiplayer_enemy_smart", "multiplayer_enemy_independent"),
+                                Adesc_keys = TX.GetArray("multiplayer_enemy_starter", "multiplayer_enemy_smart", "multiplayer_enemy_independent"),
                                 fnChanged = (_, _, i) =>
                                 {
                                     WNMNTools.SyncType = (EnemySyncType)i;

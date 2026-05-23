@@ -33,7 +33,7 @@
 &&multiplayer_experimental 試験性的
 
 &&multiplayer_enemy_title 刷怪模式
-&&multiplayer_enemy_host 主机刷怪
+&&multiplayer_enemy_starter 仅发起者
 &&multiplayer_enemy_smart 智能平均
 &&multiplayer_enemy_independent 独立刷新
 

@@ -45,7 +45,7 @@ Independent Spawn: Completely independent spawning, go ahead and fight freely!  
 *Cannot be changed after the battle starts
 
 /* ___ Desc_multiplayer_enemy_inbattle ___ */
-<font color=#e80c0c>*当前处于战斗中，无法更改同步模式
+*In battle currently, Can't change enemy summon mode
 
 &&multiplayer_cata Multiplayer
 

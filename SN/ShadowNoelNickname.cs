@@ -158,18 +158,15 @@ namespace WeNeedMoreNoels.SN
             this.Tx.Align(this.txAlign).AlignY(this.txAlignY);
             IN.setZ(this.GobTx.transform, -1f);
             var bg = IN.CreateGob(gameObject, "bg", false);
-            //█
             bg.layer = 25;
             this.TxBg = bg.AddComponent<TextRenderer>();
-            this.TxBg.setText(new STB("█"));
+            this.TxBg.setText(new STB("|"));
             this.TxBg.Col(this.bgColor);
             this.TxBg.BorderCol(new Color(0, 0, 0, 0));
             this.TxBg.Size(40);
             this.TxBg.Alpha(0.4f);
-            this.TxBg.transform.localPosition += new Vector3(0, -0.56f);
-            float width = this.currentText.Length * 12f;
-            this.TxBg.transform.localScale = new(width / 30f, 1, 1);
-            this.TxBg.transform.localPosition -= new Vector3((this.currentText.Length / 2f) * 0.25f, 0, 0);
+            this.TxBg.transform.localPosition += new Vector3(currentText.Length * -0.42f, -0.43f);
+            this.TxBg.transform.localScale = new Vector3(currentText.Length * 4, 1.2f, 1);
             IN.setZ(this.TxBg.transform, -0.9f);
         }
         private void UpdateTextPosition()
