@@ -14,14 +14,14 @@
 
 &&multiplayer_noel ノエル（通常）
 &&multiplayer_noel_inverse ノエル（逆）
-&&multiplayer_noel_blue ノエル（青）
-&&multiplayer_noel_cyan ノエル（空色）
-&&multiplayer_noel_green ノエル（緑）
-&&multiplayer_noel_orange ノエル（オレンジ）
-&&multiplayer_noel_pink ノエル（ピンク）
-&&multiplayer_noel_purple ノエル（紫）
 &&multiplayer_noel_red ノエル（赤）
+&&multiplayer_noel_orange ノエル（オレンジ）
 &&multiplayer_noel_yellow ノエル（黄）
+&&multiplayer_noel_green ノエル（緑）
+&&multiplayer_noel_cyan ノエル（空色）
+&&multiplayer_noel_blue ノエル（青）
+&&multiplayer_noel_purple ノエル（紫）
+&&multiplayer_noel_magenta ノエル（マゼンタ）
 
 &&multiplayer_noel_nickname ノエル＃
 

@@ -15,14 +15,14 @@
 
 &&multiplayer_noel Normal noel
 &&multiplayer_noel_inverse Inversed noel
-&&multiplayer_noel_blue Noel in blue
-&&multiplayer_noel_cyan Noel in cyan
-&&multiplayer_noel_green Noel in green
-&&multiplayer_noel_orange Noel in orange
-&&multiplayer_noel_pink Noel in pink
-&&multiplayer_noel_purple Noel in purple
 &&multiplayer_noel_red Noel in red
+&&multiplayer_noel_orange Noel in orange
 &&multiplayer_noel_yellow Noel in yellow
+&&multiplayer_noel_green Noel in green
+&&multiplayer_noel_cyan Noel in cyan
+&&multiplayer_noel_blue Noel in blue
+&&multiplayer_noel_purple Noel in purple
+&&multiplayer_noel_magenta Noel in magenta
 
 &&multiplayer_noel_nickname Noel#
 

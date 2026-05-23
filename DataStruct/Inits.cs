@@ -58,20 +58,20 @@ namespace WeNeedMoreNoels.DataStruct
     public enum ColorNoelColor
     {
         [ProtoEnum]
-        Blue,
-        [ProtoEnum]
-        Cyan,
-        [ProtoEnum]
-        Green,
+        Red,
         [ProtoEnum]
         Orange,
         [ProtoEnum]
-        Pink,
+        Yellow,
+        [ProtoEnum]
+        Green,
+        [ProtoEnum]
+        Cyan,
+        [ProtoEnum]
+        Blue,
         [ProtoEnum]
         Purple,
         [ProtoEnum]
-        Red,
-        [ProtoEnum]
-        Yellow
+        Magenta
     }
 }

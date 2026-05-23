@@ -15,14 +15,14 @@
 
 &&multiplayer_noel 普通诺艾儿
 &&multiplayer_noel_inverse 反转诺艾儿
-&&multiplayer_noel_blue 蓝衣诺艾儿
-&&multiplayer_noel_cyan 青衣诺艾儿
-&&multiplayer_noel_green 绿衣诺艾儿
-&&multiplayer_noel_orange 橙衣诺艾儿
-&&multiplayer_noel_pink 粉衣诺艾儿
-&&multiplayer_noel_purple 紫衣诺艾儿
-&&multiplayer_noel_red 红衣诺艾儿
-&&multiplayer_noel_yellow 黄衣诺艾儿
+&&multiplayer_noel_red 红色诺艾儿
+&&multiplayer_noel_orange 橙色诺艾儿
+&&multiplayer_noel_yellow 黄色诺艾儿
+&&multiplayer_noel_green 绿色诺艾儿
+&&multiplayer_noel_cyan 青色诺艾儿
+&&multiplayer_noel_blue 蓝色诺艾儿
+&&multiplayer_noel_purple 紫色诺艾儿
+&&multiplayer_noel_magenta 品红色诺艾儿
 
 &&multiplayer_noel_nickname 诺艾儿#
 

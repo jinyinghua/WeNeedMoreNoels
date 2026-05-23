@@ -3,6 +3,8 @@ using nel;
 using System;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
+using XX;
+using static m2d.M2MoverPr;
 
 namespace WeNeedMoreNoels.SN
 {
@@ -18,7 +20,6 @@ namespace WeNeedMoreNoels.SN
         public STATE CurState;
         public int MagicHoldAim;
 
-        public bool IsEvadePD;
         public bool IsEvadeO;
 
         public Action<int, NotifyNoelDamage> OnNoelDamage;
@@ -109,7 +110,7 @@ namespace WeNeedMoreNoels.SN
                         case NoelType.ColorNoel:
                             m2PxlAnimatorRT = this.Mp.M2D.createBasicPxlAnimatorForRenderTicket(this, MTRExtension.GetColorNoelName(InitConfig.NoelColor), "stand", false, M2Mover.DRAW_ORDER.PR1);
                             container = MTRExtension.GetPrPoseContainer(InitConfig.NoelColor);
-                            container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTRExtension.GetColorNoelPxls(InitConfig.NoelColor), 56f, CaneManager.DefaultCane);
+                            container.iniPxlResourcesASync<PRNoel.OUTFIT>(MTRExtension.GetColorNoelPxlsFull(InitConfig.NoelColor), 56f, CaneManager.DefaultCane);
                             break;
                         default:
                             return;
@@ -150,6 +151,15 @@ namespace WeNeedMoreNoels.SN
             {
                 base.changeState(CurState, state);
             }
+            if (IsEvadeO)
+            {
+                Skill.ShE.Shield.activate(true, false);
+            }
+            else
+            {
+                Skill.ShE.Shield.deactivate(true, false);
+            }
+            Skill.ShE.Shield.run(TS);
             try
             {
                 base.runPre();

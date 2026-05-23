@@ -148,7 +148,6 @@ namespace WeNeedMoreNoels.SN
             noel.Skill.mp_hold = info.MagicHold;
             noel.MagicT = info.MagicT;
             noel.MagicHoldAim = info.MagicHoldAim;
-            noel.IsEvadePD = info.IsEvadePD;
             noel.IsEvadeO = info.IsEvadeO;
         }
 
@@ -363,7 +362,6 @@ namespace WeNeedMoreNoels.SN
                 MagicHold = skill.mp_hold,
                 MagicT = skill.magic_t,
                 MagicHoldAim = skill.Cursor.pre_hold_aim,
-                IsEvadePD = DB.MainPR.isEvadePD(30),
                 IsEvadeO = DB.MainPR.isEvadeO()
             };
         }

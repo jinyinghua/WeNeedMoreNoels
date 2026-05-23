@@ -273,7 +273,7 @@ namespace WeNeedMoreNoels.Patch
             designer.addSlider(new()
             {
                 mn = 0,
-                mx = 1,
+                mx = 9,
                 fnChanged = (_b, p_v, c_v) =>
                 {
                     switch (c_v)
@@ -285,28 +285,28 @@ namespace WeNeedMoreNoels.Patch
                             b.text_content = TX.Get("multiplayer_noel_inverse");
                             break;
                         case 2:
-                            b.text_content = TX.Get("multiplayer_noel_blue");
-                            break;
-                        case 3:
-                            b.text_content = TX.Get("multiplayer_noel_cyan");
-                            break;
-                        case 4:
-                            b.text_content = TX.Get("multiplayer_noel_green");
-                            break;
-                        case 5:
-                            b.text_content = TX.Get("multiplayer_noel_orange");
-                            break;
-                        case 6:
-                            b.text_content = TX.Get("multiplayer_noel_pink");
-                            break;
-                        case 7:
-                            b.text_content = TX.Get("multiplayer_noel_purple");
-                            break;
-                        case 8:
                             b.text_content = TX.Get("multiplayer_noel_red");
                             break;
-                        case 9:
+                        case 3:
+                            b.text_content = TX.Get("multiplayer_noel_orange");
+                            break;
+                        case 4:
                             b.text_content = TX.Get("multiplayer_noel_yellow");
+                            break;
+                        case 5:
+                            b.text_content = TX.Get("multiplayer_noel_green");
+                            break;
+                        case 6:
+                            b.text_content = TX.Get("multiplayer_noel_cyan");
+                            break;
+                        case 7:
+                            b.text_content = TX.Get("multiplayer_noel_blue");
+                            break;
+                        case 8:
+                            b.text_content = TX.Get("multiplayer_noel_purple");
+                            break;
+                        case 9:
+                            b.text_content = TX.Get("multiplayer_noel_magenta");
                             break;
                     }
                     if (c_v > 1)
@@ -415,7 +415,7 @@ namespace WeNeedMoreNoels.Patch
             designer.addSlider(new()
             {
                 mn = 0,
-                mx = 1,
+                mx = 9,
                 fnChanged = (_b, p_v, c_v) =>
                 {
                     switch (c_v)
@@ -427,28 +427,28 @@ namespace WeNeedMoreNoels.Patch
                             b.text_content = TX.Get("multiplayer_noel_inverse");
                             break;
                         case 2:
-                            b.text_content = TX.Get("multiplayer_noel_blue");
-                            break;
-                        case 3:
-                            b.text_content = TX.Get("multiplayer_noel_cyan");
-                            break;
-                        case 4:
-                            b.text_content = TX.Get("multiplayer_noel_green");
-                            break;
-                        case 5:
-                            b.text_content = TX.Get("multiplayer_noel_orange");
-                            break;
-                        case 6:
-                            b.text_content = TX.Get("multiplayer_noel_pink");
-                            break;
-                        case 7:
-                            b.text_content = TX.Get("multiplayer_noel_purple");
-                            break;
-                        case 8:
                             b.text_content = TX.Get("multiplayer_noel_red");
                             break;
-                        case 9:
+                        case 3:
+                            b.text_content = TX.Get("multiplayer_noel_orange");
+                            break;
+                        case 4:
                             b.text_content = TX.Get("multiplayer_noel_yellow");
+                            break;
+                        case 5:
+                            b.text_content = TX.Get("multiplayer_noel_green");
+                            break;
+                        case 6:
+                            b.text_content = TX.Get("multiplayer_noel_cyan");
+                            break;
+                        case 7:
+                            b.text_content = TX.Get("multiplayer_noel_blue");
+                            break;
+                        case 8:
+                            b.text_content = TX.Get("multiplayer_noel_purple");
+                            break;
+                        case 9:
+                            b.text_content = TX.Get("multiplayer_noel_magenta");
                             break;
                     }
                     if (c_v > 1)

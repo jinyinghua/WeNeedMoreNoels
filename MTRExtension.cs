@@ -22,11 +22,10 @@ namespace WeNeedMoreNoels
 
         static Dictionary<ColorNoelColor, PrPoseContainer> colorDics = [];
 
-        public static string GetColorNoelName(ColorNoelColor color) => "noel_magic_" + color.ToString().ToLower();
+        public static string GetColorNoelName(ColorNoelColor color) => "noel_" + color.ToString().ToLower();
+        public static string GetColorNoelMagicName(ColorNoelColor color) => "noel_magic_" + color.ToString().ToLower();
 
-        public static string[][] GetColorNoelPxlsFull(ColorNoelColor color) => [["noel", GetColorNoelName(color), "noel_r18"]];
-
-        public static string[][] GetColorNoelPxls(ColorNoelColor color) => [[GetColorNoelName(color)]];
+        public static string[][] GetColorNoelPxlsFull(ColorNoelColor color) => [[GetColorNoelName(color), GetColorNoelMagicName(color)]];
 
         public static PrPoseContainer GetPrPoseContainer(ColorNoelColor color) => colorDics[color];
 
@@ -87,7 +86,7 @@ namespace WeNeedMoreNoels
             for (int i = 0; i < 8; i++)
             {
                 ColorNoelColor color = (ColorNoelColor)i;
-                colorDics.Add(color, LoadExtenalPxl(GetColorNoelPxls(color), GetColorNoelName(color)));
+                colorDics.Add(color, LoadExtenalPxl(GetColorNoelPxlsFull(color), GetColorNoelName(color)));
             }
         }
 

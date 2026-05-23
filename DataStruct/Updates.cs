@@ -41,9 +41,9 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoMember(17)]
         public int MagicHoldAim;
         [ProtoMember(18)]
-        public bool IsEvadePD;
-        [ProtoMember(19)]
         public bool IsEvadeO;
+        [ProtoMember(19)]
+        public bool IsShildBroke;
     }
 
     [ProtoContract] 
