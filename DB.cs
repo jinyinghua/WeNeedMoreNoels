@@ -91,5 +91,7 @@ namespace WeNeedMoreNoels
         public static bool IsInBattle;
 
         public static Dictionary<int, EnemySynchronizerSyncClient> SyncClients = [];
+
+        public static Dictionary<int, EnemySynchronizerSyncHost> SyncHosts = [];
     }
 }

@@ -163,6 +163,8 @@ namespace WeNeedMoreNoels.DataStruct
         public UpdateEnemyInfo Info;
         [ProtoMember(4)]
         public NotifyEnemySummon Summon;
+        [ProtoMember(5)]
+        public NotifyEnemyDamage Damage;
     }
 
     [ProtoContract]
@@ -194,11 +196,24 @@ namespace WeNeedMoreNoels.DataStruct
     }
 
     [ProtoContract]
+    public class NotifyEnemyDamage
+    {
+        [ProtoMember(1)]
+        public int hp;
+        [ProtoMember(2)]
+        public int mp;
+    }
+
+    [ProtoContract]
     public enum NotifyEnemyType
     {
         [ProtoEnum]
         Summon,
+        [ProtoEnum]
         InfoUpdate,
-        Dead
+        [ProtoEnum]
+        Dead,
+        [ProtoEnum]
+        NotifyDamage
     }
 }

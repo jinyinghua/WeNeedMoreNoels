@@ -1,6 +1,7 @@
 ﻿using m2d;
 using nel;
 using ProtoBuf;
+using System;
 using System.IO;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
@@ -10,20 +11,22 @@ namespace WeNeedMoreNoels
 {
     public abstract class EnemySynchronizer : MonoBehaviour
     {
-        public NelEnemy MoverEnemy;
+        public NelEnemy Enemy;
 
         public int SyncID;
 
+        public bool Alive => Enemy != null && Enemy.is_alive;
+
         public void Awake()
         {
-            MoverEnemy = gameObject.GetComponent<NelEnemy>();
+            Enemy = GetComponent<NelEnemy>();
         }
 
         protected UpdateEnemyInfo GetEnemyInfo()
         {
-            MoverEnemy.getPosition(out float x, out float y);
+            Enemy.getPosition(out float x, out float y);
 
-            var anim = MoverEnemy.getAnimator();
+            var anim = Enemy.getAnimator();
             string pose;
             if (anim is EnemyAnimatorPxl animPxl)
             {
@@ -43,11 +46,11 @@ namespace WeNeedMoreNoels
                 PositionX = x,
                 PositionY = y,
                 Pose = pose,
-                Aim = (int)MoverEnemy.aim,
-                Hp = MoverEnemy.hp,
-                Mp = MoverEnemy.mp,
-                State = (int)MoverEnemy.state,
-                T = MoverEnemy.t,
+                Aim = (int)Enemy.aim,
+                Hp = Enemy.hp,
+                Mp = Enemy.mp,
+                State = (int)Enemy.state,
+                T = Enemy.t,
             };
         }
 
@@ -65,7 +68,7 @@ namespace WeNeedMoreNoels
                 ignore_nodamage_time = true,
                 nodamage_time = 0,
             };
-            MoverEnemy.applyDamage(Atk, true);
+            Enemy.applyDamage(Atk, true);
         }
 
 
@@ -107,7 +110,7 @@ namespace WeNeedMoreNoels
             WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.Unreliable);
         }
 
-        public void OnDestroy()
+        void OnDestroy()
         {
             WNMNPeerMessage messageSend = new()
             {
@@ -128,19 +131,51 @@ namespace WeNeedMoreNoels
 
     public class EnemySynchronizerSyncClient : EnemySynchronizer
     {
+        void Update()
+        {
+            Enemy.Anm.alpha = 0.4f;
+        }
+
         public void UpdateEnemyInfo(UpdateEnemyInfo info)
         {
-            MoverEnemy.setTo(info.PositionX, info.PositionY);
-            MoverEnemy.Phy.killSpeedForce(true, true, true, true, true);
+            if (Enemy == null || Enemy.Phy == null || Enemy.Anm == null)
+            {
+                return;
+            }
+            Enemy.setTo(info.PositionX, info.PositionY);
+            Enemy.Phy.killSpeedForce(true, true, true, true, true);
 
-            var anim = MoverEnemy.getAnimator();
+            var anim = Enemy.getAnimator();
             anim.setPose(info.Pose);
-            MoverEnemy.setAim((AIM)info.Aim);
+            Enemy.setAim((AIM)info.Aim);
 
-            MoverEnemy.hp = info.Hp;
-            MoverEnemy.mp = info.Mp;
-            MoverEnemy.changeState((NelEnemy.STATE)info.State);
-            MoverEnemy.t = info.T;
+            Enemy.hp = info.Hp;
+            Enemy.mp = info.Mp;
+            Enemy.changeState((NelEnemy.STATE)info.State);
+            Enemy.t = info.T;
+        }
+
+        public void NotifyDamage(int hp, int mp)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyEnemyUpdate,
+                PeerId = WNMNTools.LocalID,
+                NotifyEnemyUpdate = new()
+                {
+                    SyncID = SyncID,
+                    Type = NotifyEnemyType.NotifyDamage,
+                    Damage = new()
+                    {
+                        hp = hp,
+                        mp = mp
+                    }
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.Unreliable);
         }
     }
 }

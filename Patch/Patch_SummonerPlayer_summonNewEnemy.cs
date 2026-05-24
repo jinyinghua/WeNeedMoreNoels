@@ -30,6 +30,7 @@ namespace WeNeedMoreNoels.Patch
                 WNMNTools.SendNotifyEnemySummonToAllPeers(K.enemyid, syncID);
                 var host = __result.gameObject.AddComponent<EnemySynchronizerSyncHost>();
                 host.SyncID = syncID;
+                DB.SyncHosts.Add(syncID, host);
             }
         }
     }

@@ -12,7 +12,6 @@ using WeNeedMoreNoels.DataStruct;
 using WeNeedMoreNoels.Networking;
 using WeNeedMoreNoels.SN;
 using XX;
-using static evt.ManpuDrawer;
 
 namespace WeNeedMoreNoels
 {
@@ -631,17 +630,20 @@ namespace WeNeedMoreNoels
                 case NotifyEnemyType.Dead:
                     CleanUpEnemy(update.SyncID);
                     break;
+                case NotifyEnemyType.NotifyDamage:
+                    NotifyEnemyDamage(update.SyncID, update.Damage);
+                    break;
             }
         }
 
         public static void NotifySummonEnemy(string key, int sync_id)
         {
             NelEnemy nelEnemy = NDAT.createByKey(DB.MainPR.Mp, key, "-Summonned-" + DB.MainPR.Mp.key + "-{sync}" + sync_id.ToString());
-            nelEnemy.appear(DB.MainPR.Mp);
-            nelEnemy.Anm.alpha = 0.5f;
-            var client = nelEnemy.gameObject.AddComponent<EnemySynchronizerSyncClient>();
-            DB.SyncClients.Add(sync_id, client);
+            DB.MainPR.Mp.assignMover(nelEnemy);
             DB.CurEnemies.Add(nelEnemy);
+            var client = nelEnemy.gameObject.AddComponent<EnemySynchronizerSyncClient>();
+            client.SyncID = sync_id;
+            DB.SyncClients.Add(sync_id, client);
         }
 
         public static void UpdateEnemyInfo(int syncID, UpdateEnemyInfo info)
@@ -652,10 +654,22 @@ namespace WeNeedMoreNoels
         public static void CleanUpEnemy(int syncID)
         {
             EnemySynchronizerSyncClient client = DB.SyncClients[syncID];
-            DB.SyncClients.Remove(syncID);
-            NelEnemy enemy = client.GetComponent<NelEnemy>();
-            DB.MainPR.Mp.removeMover(enemy);
-            enemy.destruct();
+            if (client.Alive)
+            {
+                NelEnemy enemy = client.GetComponent<NelEnemy>();
+                DB.MainPR.Mp.removeMover(enemy);
+                enemy.destruct();
+            }
+        }
+
+        public static void NotifyEnemyDamage(int syncID, NotifyEnemyDamage damage)
+        {
+            DB.SyncHosts[syncID].DamageEnemy(damage.hp, damage.mp);
+        }
+
+        public static bool HasSyncEnemy()
+        {
+            return DB.SyncClients.Select(x => x.Value != null).Any(x => x == true) || DB.SyncHosts.Select(x => x.Value != null).Any(x => x == true);
         }
 
         public class NetworkConfig
