@@ -97,5 +97,7 @@ namespace WeNeedMoreNoels
         public static Dictionary<int, EnemySynchronizerSyncHost> SyncHosts = [];
 
         public static HashSet<string> StartedBattleSummonerKeys = [];
+
+        public static Dictionary<int, int> peerDelays = [];
     }
 }

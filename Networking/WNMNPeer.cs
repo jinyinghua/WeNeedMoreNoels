@@ -58,6 +58,11 @@ namespace WeNeedMoreNoels.Networking
                     receive.ReceiveMessage(message);
                 }
             }
+            if (!DB.peerDelays.ContainsKey(message.PeerId))
+            {
+                DB.peerDelays.Add(message.PeerId, 0);
+            }
+            DB.peerDelays[message.PeerId] = peer.Ping;
         }
 
         private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
@@ -109,6 +114,7 @@ namespace WeNeedMoreNoels.Networking
             DB.partyInfos.Clear();
             DB.peerInfos.Clear();
             DB.peerConfigs.Clear();
+            DB.peerDelays.Clear();
         }
     }
 }

@@ -72,19 +72,6 @@ namespace WeNeedMoreNoels.Patch
                 .MatchStartBackwards(new CodeMatch(OpCodes.Break))
                 .Set(OpCodes.Brfalse, label);
 
-                //.MatchStartForward(
-                //    new CodeMatch(OpCodes.Ldarg_0),
-                //    new CodeMatch(OpCodes.Ldstr, "MAIN"),
-                //    new CodeMatch(OpCodes.Ldc_I4_0),
-                //    new CodeMatch(OpCodes.Ldc_I4_1),
-                //    new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(UiCFG), nameof(UiCFG.fineTabVisibility)))
-                //)
-                //.Advance(1)
-                //.SetInstructionAndAdvance(new CodeInstruction(OpCodes.Pop))
-                //.SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
-                //.SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
-                //.SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop));
-
             return matcher.InstructionEnumeration();
         }
 

@@ -44,6 +44,8 @@ namespace WeNeedMoreNoels.DataStruct
         public bool IsEvadeO;
         [ProtoMember(19)]
         public bool IsShildBroke;
+        [ProtoMember(20)]
+        public float GameT;
     }
 
     [ProtoContract] 

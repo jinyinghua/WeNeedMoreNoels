@@ -28,25 +28,6 @@
 
 &&multiplayer_reset Reset
 
-&&multiplayer_recommend Recommend
-&&multiplayer_unstable Unstable
-&&multiplayer_experimental Experimental
-
-&&multiplayer_enemy_title Enemy summon mode
-&&multiplayer_enemy_starter Starter only
-&&multiplayer_enemy_smart Smart average
-&&multiplayer_enemy_independent Client independent
-
-/* ___ Desc_multiplayer_enemy ___ */
-Enemy summon mode is the synchronization methods multiplayer battle
-Starter only: Only the battle starter spawns enemies; other players synchronize with their enemies.
-Smart Average: Dynamically adjusts the total number of monsters using an algorithm to create a more relaxed monster-fighting environment.
-Independent Spawn: Completely independent spawning, go ahead and fight freely!  *May cause lag when too many players
-*Cannot be changed after the battle starts
-
-/* ___ Desc_multiplayer_enemy_inbattle ___ */
-*In battle currently, Can't change enemy summon mode
-
 &&multiplayer_cata Multiplayer
 
 &&multiplayer_menu_title Multiplayer Menu
@@ -89,12 +70,8 @@ Enjoy multi-"KAWAISOU"!
 
 &&Config_mpconfig_show_nicknames Show nicknames
 &&Config_desc_mpconfig_show_nicknames Set whether to display the player's nickname in the game.
-
-/* ___ Config_mpconfig_cure_all_players_on_bench ___ */
-The bench command affects all players
-/* ___ Config_desc_mpconfig_cure_all_players_on_bench ___ */ 
-When setting to sit on the bench, do commands
-like 'Restore HP' affect all players at the same time.
+&&Config_mpconfig_show_delay Show delay
+&&Config_desc_mpconfig_show_delay Set whether to display the player's delay in the game.
 
 // ========================================================
 // MARK : 多人房间设置菜单
@@ -102,6 +79,25 @@ like 'Restore HP' affect all players at the same time.
 
 &&multiplayer_room_maxplayercount Maximum player count
 &&multiplayer_room_enablepvp Enable PVP
+
+&&multiplayer_recommend Recommend
+&&multiplayer_unstable Unstable
+&&multiplayer_experimental Experimental
+
+&&multiplayer_enemy_title Enemy summon mode
+&&multiplayer_enemy_starter Starter only
+&&multiplayer_enemy_smart Smart average
+&&multiplayer_enemy_independent Client independent
+
+/* ___ Desc_multiplayer_enemy ___ */
+Enemy summon mode is the synchronization methods multiplayer battle
+Starter only: Only the battle starter spawns enemies; other players synchronize with their enemies.
+Smart Average: Dynamically adjusts the total number of monsters using an algorithm to create a more relaxed monster-fighting environment.
+Independent Spawn: Completely independent spawning, go ahead and fight freely!  *May cause lag when too many players
+*Cannot be changed after the battle starts
+
+/* ___ Desc_multiplayer_enemy_inbattle ___ */
+*In battle currently, Can't change enemy summon mode
 
 // ========================================================
 // MARK : 短消息

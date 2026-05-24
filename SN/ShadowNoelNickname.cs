@@ -25,18 +25,22 @@ namespace WeNeedMoreNoels.SN
         private ALIGNY txAlignY = ALIGNY.MIDDLE;
         private float txOffsetPixelX = 0f;
         private float txOffsetPixelY = -40f;
+
         public override HITTYPE getHitType(M2Ray Ray)
         {
             return HITTYPE.NONE;
         }
+        
         public override RAYHIT can_hit(M2Ray Ray)
         {
             return RAYHIT.NONE;
         }
+        
         public override bool isDamagingOrKo()
         {
             return false;
         }
+
         public override void appear(Map2d Mp)
         {
             base.appear(Mp);
@@ -45,6 +49,7 @@ namespace WeNeedMoreNoels.SN
             base.gameObject.layer = 2;
             base.carryable_other_object = false;
         }
+
         public void SetFollowTarget(PRMain target, Vector2? offset = null)
         {
             this.followTarget = target;
@@ -60,14 +65,17 @@ namespace WeNeedMoreNoels.SN
                 );
             }
         }
+
         public PRMain GetFollowTarget()
         {
             return this.followTarget;
         }
+
         public bool HasTarget()
         {
             return this.followTarget != null && !this.followTarget.destructed;
         }
+
         public void SetText(string text)
         {
             if (this.currentText == text) return;
@@ -85,6 +93,7 @@ namespace WeNeedMoreNoels.SN
                 this.GobTx.SetActive(true);
             }
         }
+
         public void ShowText()
         {
             this.textVisible = true;
@@ -93,57 +102,69 @@ namespace WeNeedMoreNoels.SN
                 this.GobTx.SetActive(true);
             }
         }
+
         public void HideText()
         {
             this.textVisible = false;
             this.GobTx?.SetActive(false);
         }
+
         public void SetTextColor(Color32 color)
         {
             this.txColor = color;
             this.Tx?.Col(color);
         }
+
         public void SetTextColor(uint color)
         {
             this.SetTextColor(C32.d2c(color));
         }
+
         public void SetBorderColor(Color32 color)
         {
             this.borderColor = color;
             this.Tx?.BorderCol(color);
         }
+
         public void SetBorderColor(uint color)
         {
             this.SetBorderColor(C32.d2c(color));
         }
+
         public void SetTextSize(float size)
         {
             this.txSize = size;
             this.Tx?.Size(size);
         }
+
         public void SetTextAlign(ALIGN ax, ALIGNY ay)
         {
             this.txAlign = ax;
             this.txAlignY = ay;
             this.Tx?.Align(ax).AlignY(ay);
         }
+
         public void SetTextOffset(float pixelX, float pixelY)
         {
             this.txOffsetPixelX = pixelX;
             this.txOffsetPixelY = pixelY;
         }
+
         public void SetAlpha(float alpha)
         {
             this.Tx?.Alpha(alpha);
         }
+
         public string GetCurrentText()
         {
             return this.currentText;
         }
+
         public bool IsTextShowing()
         {
             return this.GobTx != null && this.GobTx.activeSelf && this.textVisible;
         }
+
         private void EnsureTextRenderer()
         {
             if (this.Tx != null) return;
@@ -169,6 +190,7 @@ namespace WeNeedMoreNoels.SN
             this.TxBg.transform.localScale = new Vector3(currentText.Length * 4, 1.2f, 1);
             IN.setZ(this.TxBg.transform, -0.9f);
         }
+
         private void UpdateTextPosition()
         {
             if (this.Tx == null || this.Mp == null) return;
@@ -179,6 +201,7 @@ namespace WeNeedMoreNoels.SN
             pos.y = py;
             this.GobTx.transform.localPosition = pos;
         }
+
         public override void runPre()
         {
             base.runPre();
@@ -215,6 +238,7 @@ namespace WeNeedMoreNoels.SN
                 }
             }
         }
+
         public override void runPost()
         {
             base.runPost();
@@ -223,7 +247,27 @@ namespace WeNeedMoreNoels.SN
             {
                 UpdateTextPosition();
             }
+            if (CFGMultiplayer.showNicknames)
+            {
+                ShowText();
+            }
+            else
+            {
+                HideText();
+            }
+            if (followTarget is ShadowNoel noel && Tx != null)
+            {
+                if (CFGMultiplayer.showDelay)
+                {
+                    this.Tx.Txt(this.currentText + " - " + DB.peerDelays[noel.ID] + "ms");
+                }
+                else
+                {
+                    this.Tx.Txt(this.currentText);
+                }
+            }
         }
+
         public override void destruct()
         {
             if (base.destructed) return;
@@ -255,6 +299,7 @@ namespace WeNeedMoreNoels.SN
             }
             Msg = StartCoroutine(OnMsg(txtID));
         }
+
         public IEnumerator OnMsg(string txtID)
         {
             string text = TX.Get(txtID);

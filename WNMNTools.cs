@@ -496,6 +496,7 @@ namespace WeNeedMoreNoels
             DB.partyInfos.Remove(id);
             DB.peerInfos.Remove(id);
             DB.peerConfigs.Remove(id);
+            DB.peerDelays.Remove(id);
             CleanUpPeerEnemy(id);
         }
 

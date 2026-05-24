@@ -6,7 +6,7 @@ namespace WeNeedMoreNoels
     public static class CFGMultiplayer
     {
         public static bool showNicknames = true;
-        public static bool cureAllPlayersOnBench = true;
+        public static bool showDelay = true;
 
         public static bool OnConfigValueChanged(aBtnMeter _B, float pre_value, float cur_value)
             => !_B.isLocked() && ChangeConfigValue(_B.title, pre_value, cur_value);
@@ -14,29 +14,21 @@ namespace WeNeedMoreNoels
         public static void CreateBoxDesignerContentSp(UiCFG cfg, UiBoxDesigner container, Designer tab)
         {
             cfg.AddToggleSwitch("mpconfig_show_nicknames", showNicknames);
-            cfg.AddToggleSwitch("mpconfig_cure_all_players_on_bench", cureAllPlayersOnBench);
+            cfg.AddToggleSwitch("mpconfig_show_delay", showDelay);
 
-            cfg.FnDesignerCreateAfter?.Invoke(container, "MP"); // useless
+            cfg.FnDesignerCreateAfter?.Invoke(container, "MP");
         }
 
         private static bool ChangeConfigValue(string name, float pre_value, float cur_value)
         {
-            Plugin.Logger.LogInfo($"ConfigValueChanged: {name} from {pre_value} to {cur_value}");
             switch (name)
             {
                 case "mpconfig_show_nicknames":
                     showNicknames = cur_value != 0;
-                    DB.MainPRNickname.gameObject.SetActive(showNicknames);  // TODO: if the config is persistent...
-                    foreach (var noel in DB.noelIns.Values)
-                    {
-                        noel.NicknameIns.gameObject.SetActive(showNicknames);
-                    }
                     return true;
-
-                case "mpconfig_cure_all_players_on_bench":
-                    cureAllPlayersOnBench = cur_value != 0;
+                case "mpconfig_show_delay":
+                    showDelay = cur_value != 0;
                     return true;
-
                 default:
                     return false;
             }

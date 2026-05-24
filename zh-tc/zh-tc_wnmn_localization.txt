@@ -28,22 +28,6 @@
 
 &&multiplayer_reset 重置
 
-&&multiplayer_recommend 推薦
-&&multiplayer_unstable 不穩定
-&&multiplayer_experimental 實驗性的
-
-&&multiplayer_enemy_title 刷怪模式
-&&multiplayer_enemy_starter 僅發起者
-&&multiplayer_enemy_smart 智能平均
-&&multiplayer_enemy_independent 獨立刷新
-
-/* ___ Desc_multiplayer_enemy ___ */
-刷怪模式為多人模式進入戰鬥後同步的方式
-僅發起者：只有戰鬥發起者會刷怪，其餘玩家均同步
-智能平均：用算法動態調整怪物總數，儘量營造輕鬆的打怪環境
-獨立刷新：完全獨立刷新，盡情打怪吧！ *當人多時可能會造成卡頓
-*戰鬥開始後無法更改
-
 &&multiplayer_cata 多人
 
 &&multiplayer_menu_title 多人遊戲菜單
@@ -86,12 +70,8 @@
 
 &&Config_mpconfig_show_nicknames 顯示玩家暱稱
 &&Config_desc_mpconfig_show_nicknames 設置在遊戲內是否顯示玩家暱稱
-
-/* ___ Config_mpconfig_cure_all_players_on_bench ___ */
-長椅指令對所有玩家起效
-/* ___ Config_desc_mpconfig_cure_all_players_on_bench ___ */ 
-設置坐在長椅上時，「恢復HP」等
-指令是否對所有玩家同時起效
+&&Config_mpconfig_show_delay 顯示玩家延遲
+&&Config_desc_mpconfig_show_delay 設置在遊戲內是否顯示玩家延遲
 
 // ========================================================
 // MARK : 多人房间设置菜单
@@ -99,6 +79,25 @@
 
 &&multiplayer_room_maxplayercount 最大玩家数量
 &&multiplayer_room_enablepvp 啟用PVP
+
+&&multiplayer_recommend 推薦
+&&multiplayer_unstable 不穩定
+&&multiplayer_experimental 實驗性的
+
+&&multiplayer_enemy_title 刷怪模式
+&&multiplayer_enemy_starter 僅發起者
+&&multiplayer_enemy_smart 智能平均
+&&multiplayer_enemy_independent 獨立刷新
+
+/* ___ Desc_multiplayer_enemy ___ */
+刷怪模式為多人模式進入戰鬥後同步的方式
+僅發起者：只有戰鬥發起者會刷怪，其餘玩家均同步
+智能平均：用算法動態調整怪物總數，儘量營造輕鬆的打怪環境
+獨立刷新：完全獨立刷新，盡情打怪吧！ *當人多時可能會造成卡頓
+*戰鬥開始後無法更改
+
+/* ___ Desc_multiplayer_enemy_inbattle ___ */
+*當前處於戰鬥中，無法更改同步模式
 
 // ========================================================
 // MARK : 短消息
