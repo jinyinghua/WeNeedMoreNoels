@@ -14,6 +14,7 @@ namespace WeNeedMoreNoels.Patch
                 WNMNTools.SendBattleEndToAllPeers(WNMNTools.LocalID);
                 DB.IsInBattle = false;
             }
+            DB.SyncHosts.Clear();
             DB.SyncClients.Clear();
         }
     }

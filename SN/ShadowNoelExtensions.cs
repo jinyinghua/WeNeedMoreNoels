@@ -302,7 +302,6 @@ namespace WeNeedMoreNoels.SN
         public static void StartCurMapBattle(int starterID)
         {
             WNMNTools.BattleStarterID = starterID;
-            Plugin.Logger.LogWarning($"Starter : {starterID}StartCurMapBattle, {M2LpSummon.NearLpSmn?.ToString() ?? "null"}");
             if (M2LpSummon.NearLpSmn is not null)
             {
                 DB.CurSummoner = M2LpSummon.NearLpSmn;
@@ -336,6 +335,33 @@ namespace WeNeedMoreNoels.SN
         {
             noel.gameObject.tag = "MoverEn";
             noel.gameObject.layer = 23; //23 is EmenyLayer
+        }
+
+        public static bool IsNearLpSummon(this ShadowNoel noel, M2LpSummon summon)
+        {
+            bool is_quest_rescue = summon.is_quest_rescue;
+            float mapfocx = summon.mapfocx;
+            float num = X.Mn((float)(summon.mapy + summon.maph - 3), summon.mapfocy);
+            float num2 = (is_quest_rescue ? ((float)(summon.mapy + 2)) : (summon.mapfocy - 0.5f));
+            bool flag2;
+            if (summon.is_sudden == M2LpSummon.SUDDEN.NORMAL)
+            {
+                flag2 = X.BTW(mapfocx - 3.3f, noel.x, mapfocx + 3.3f) && !summon.nM2D.NightCon.isUiActive();
+            }
+            else
+            {
+                flag2 = (noel.vx != 0f || noel.vy != 0f) && X.BTW((float)summon.mapx + summon.sudden_margin_x, noel.x, (float)(summon.mapx + summon.mapw) - summon.sudden_margin_x);
+            }
+            if (flag2 && X.BTW(num2, noel.y, (float)(summon.mapy + summon.maph) + 0.5f))
+            {
+                float num3 = X.Mn((float)(summon.mapy + summon.maph), summon.Mp.getFootableY(summon.mapfocx, (int)summon.mapfocy, 14, false, -1f, false, true, true, 0f)) + 0.5f;
+                flag2 = X.BTW(num, noel.mbottom, num3);
+            }
+            else
+            {
+                flag2 = false;
+            }
+            return flag2;
         }
 
         public static UpdateNoelInfo GetSendInfo()

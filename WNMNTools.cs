@@ -35,6 +35,7 @@ namespace WeNeedMoreNoels
         public static EnemySyncType SyncType;
 
         public static int BattleStarterID = -1;
+        public static int TotalBattleNoelCount;
 
         static int _unique_id;
         public static int Unique_ID
@@ -670,6 +671,11 @@ namespace WeNeedMoreNoels
         public static bool HasSyncEnemy()
         {
             return DB.SyncClients.Select(x => x.Value != null).Any(x => x == true) || DB.SyncHosts.Select(x => x.Value != null).Any(x => x == true);
+        }
+
+        public static int GetBattleNoelCounts(M2LpSummon summon)
+        {
+            return DB.noelIns.Where(x => x.Value.Enabled).Select(x => x.Value.Noel.IsNearLpSummon(summon)).Count(x => x) + 1;
         }
 
         public class NetworkConfig
