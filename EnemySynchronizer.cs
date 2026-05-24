@@ -1,7 +1,6 @@
 ﻿using m2d;
 using nel;
 using ProtoBuf;
-using System;
 using System.IO;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
@@ -131,6 +130,8 @@ namespace WeNeedMoreNoels
 
     public class EnemySynchronizerSyncClient : EnemySynchronizer
     {
+        public int PeerID;
+
         void Update()
         {
             Enemy.Anm.alpha = 0.4f;

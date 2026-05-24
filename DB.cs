@@ -92,6 +92,10 @@ namespace WeNeedMoreNoels
 
         public static Dictionary<int, EnemySynchronizerSyncClient> SyncClients = [];
 
+        public static Dictionary<int, List<EnemySynchronizerSyncClient>> peerClients = [];
+
         public static Dictionary<int, EnemySynchronizerSyncHost> SyncHosts = [];
+
+        public static HashSet<string> StartedBattleSummonerKeys = [];
     }
 }

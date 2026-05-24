@@ -31,6 +31,8 @@ namespace WeNeedMoreNoels.DataStruct
         public NotifyRoomUpdate NotifyRoomUpdate;
         [ProtoMember(13)]
         public NotifyEnemyUpdate NotifyEnemyUpdate;
+        [ProtoMember(14)]
+        public BattleInfo Battle;
     }
 
     [ProtoContract]

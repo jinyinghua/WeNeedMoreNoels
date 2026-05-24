@@ -48,11 +48,6 @@ namespace WeNeedMoreNoels.CSNetworking
             string json = reader.GetString();
             WNMNHostMessage message = JsonConvert.DeserializeObject<WNMNHostMessage>(json);
             reader.Recycle();
-            if (message.KickPlayer)
-            {
-                WNMNTools.CleanUpClient(message.PlayerID);
-                return;
-            }
             if (message.MutePlayer)
             {
                 WNMNTools.ToggleMute();
@@ -99,19 +94,6 @@ namespace WeNeedMoreNoels.CSNetworking
             }
             DB.WNMNHostClosed = true;
             ((NelM2DBase)DB.MainPR.M2D).quitGame("SceneTitle");
-        }
-
-        private void OnDestroy()
-        {
-            NetDataWriter writer = new();
-            writer.Put(peerID);
-            client.DisconnectPeer(hostPeer, writer);
-            client.Stop();
-            DB.InitConfig = null;
-            DB.noelIns.Clear();
-            DB.partyInfos.Clear();
-            DB.peerInfos.Clear();
-            DB.peerConfigs.Clear();
         }
     }
 }

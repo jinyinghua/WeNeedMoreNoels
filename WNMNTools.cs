@@ -37,6 +37,8 @@ namespace WeNeedMoreNoels
         public static int BattleStarterID = -1;
         public static int TotalBattleNoelCount;
 
+        public static float BattleStartT;
+
         static int _unique_id;
         public static int Unique_ID
         {
@@ -247,7 +249,7 @@ namespace WeNeedMoreNoels
             peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
-        public static void SendBattleStartToAllPeers(int id)
+        public static void SendBattleStartToAllPeers(string key, int id)
         {
             if (DB.InitConfig is null)
             {
@@ -256,7 +258,11 @@ namespace WeNeedMoreNoels
             WNMNPeerMessage messageSend = new()
             {
                 Type = WNMNPeerMessageType.NotifyNoelStartBattle,
-                PeerId = id
+                PeerId = id,
+                Battle = new()
+                {
+                    key = key
+                }
             };
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
@@ -264,7 +270,7 @@ namespace WeNeedMoreNoels
             peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
-        public static void SendBattleEndToAllPeers(int id)
+        public static void SendBattleEndToAllPeers(string key, int id)
         {
             if (DB.InitConfig is null)
             {
@@ -273,7 +279,11 @@ namespace WeNeedMoreNoels
             WNMNPeerMessage messageSend = new()
             {
                 Type = WNMNPeerMessageType.NotifyNoelEndBattle,
-                PeerId = id
+                PeerId = id,
+                Battle = new()
+                {
+                    key = key
+                }
             };
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
@@ -486,6 +496,7 @@ namespace WeNeedMoreNoels
             DB.partyInfos.Remove(id);
             DB.peerInfos.Remove(id);
             DB.peerConfigs.Remove(id);
+            CleanUpPeerEnemy(id);
         }
 
         public static void SetAllNickNameBgs()
@@ -524,12 +535,10 @@ namespace WeNeedMoreNoels
 
         public static void Kick(int id)
         {
-            host.SendKick(id);
             NetDataWriter writer = new();
             writer.Put(true);
             PeerDic[id].Disconnect(writer);
             PeerDic.Remove(id);
-            CleanUpClient(id);
         }
 
         public static void Mute(int id)
@@ -618,12 +627,12 @@ namespace WeNeedMoreNoels
             SendMagicToAllPeers(LocalID, mg);
         }
 
-        public static void NotifyEnemyUpdate(NotifyEnemyUpdate update)
+        public static void NotifyEnemyUpdate(NotifyEnemyUpdate update, int peerID)
         {
             switch (update.Type)
             {
                 case NotifyEnemyType.Summon:
-                    NotifySummonEnemy(update.Summon.Key, update.SyncID);
+                    NotifySummonEnemy(update.Summon.Key, update.SyncID, peerID);
                     break;
                 case NotifyEnemyType.InfoUpdate:
                     UpdateEnemyInfo(update.SyncID, update.Info);
@@ -637,18 +646,28 @@ namespace WeNeedMoreNoels
             }
         }
 
-        public static void NotifySummonEnemy(string key, int sync_id)
+        public static void NotifySummonEnemy(string key, int sync_id, int peer_id)
         {
             NelEnemy nelEnemy = NDAT.createByKey(DB.MainPR.Mp, key, "-Summonned-" + DB.MainPR.Mp.key + "-{sync}" + sync_id.ToString());
             DB.MainPR.Mp.assignMover(nelEnemy);
             DB.CurEnemies.Add(nelEnemy);
             var client = nelEnemy.gameObject.AddComponent<EnemySynchronizerSyncClient>();
             client.SyncID = sync_id;
+            client.PeerID = peer_id;
             DB.SyncClients.Add(sync_id, client);
+            if (!DB.peerClients.ContainsKey(peer_id))
+            {
+                DB.peerClients.Add(peer_id, []);
+            }
+            DB.peerClients[peer_id].Add(client);
         }
 
         public static void UpdateEnemyInfo(int syncID, UpdateEnemyInfo info)
         {
+            if (!DB.SyncClients.ContainsKey(syncID))
+            {
+                return;
+            }
             DB.SyncClients[syncID].UpdateEnemyInfo(info);
         }
 
@@ -660,6 +679,7 @@ namespace WeNeedMoreNoels
                 NelEnemy enemy = client.GetComponent<NelEnemy>();
                 DB.MainPR.Mp.removeMover(enemy);
                 enemy.destruct();
+                Object.DestroyImmediate(enemy);
             }
         }
 
@@ -670,12 +690,35 @@ namespace WeNeedMoreNoels
 
         public static bool HasSyncEnemy()
         {
-            return DB.SyncClients.Select(x => x.Value != null).Any(x => x == true) || DB.SyncHosts.Select(x => x.Value != null).Any(x => x == true);
+            return DB.SyncClients.Select(x => x.Value != null).Any(x => x == true);
         }
 
         public static int GetBattleNoelCounts(M2LpSummon summon)
         {
             return DB.noelIns.Where(x => x.Value.Enabled).Select(x => x.Value.Noel.IsNearLpSummon(summon)).Count(x => x) + 1;
+        }
+
+        public static void CleanUpPeerEnemy(int peerID)
+        {
+            if (!DB.peerClients.ContainsKey(peerID))
+            {
+                return;
+            }
+            List<EnemySynchronizerSyncClient> list = DB.peerClients[peerID];
+            foreach (EnemySynchronizerSyncClient client in list)
+            {
+                CleanUpEnemy(client.SyncID);
+            }
+            list.Clear();
+            DB.peerClients.Remove(peerID);
+        }
+
+        public static void CheckEnemyEmptyAndEndBattle()
+        {
+            if (DB.IsInBattle && !HasSyncEnemy() && BattleStartT - Time.time > 1f)
+            {
+                ShadowNoelExtensions.EndCurMapBattle();
+            }
         }
 
         public class NetworkConfig

@@ -12,7 +12,7 @@ namespace WeNeedMoreNoels.Networking.ReceiveEvent
 
         public override void ReceiveMessage(WNMNPeerMessage message)
         {
-            WNMNTools.NotifyEnemyUpdate(message.NotifyEnemyUpdate);
+            WNMNTools.NotifyEnemyUpdate(message.NotifyEnemyUpdate, message.PeerId);
         }
 
         public override string ToMessageString(WNMNPeerMessage message)

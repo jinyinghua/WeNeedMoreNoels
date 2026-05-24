@@ -299,14 +299,18 @@ namespace WeNeedMoreNoels.SN
             }
         }
 
-        public static void StartCurMapBattle(int starterID)
+        public static void StartCurMapBattle(string key, int starterID)
         {
             WNMNTools.BattleStarterID = starterID;
-            if (M2LpSummon.NearLpSmn is not null)
+            if (M2LpSummon.NearLpSmn is not null && M2LpSummon.NearLpSmn.key == key)
             {
                 DB.CurSummoner = M2LpSummon.NearLpSmn;
                 DB.CurEnemies.Clear();
                 M2LpSummon.NearLpSmn.openSummoner(DB.MainPR);
+            }
+            else
+            {
+                DB.StartedBattleSummonerKeys.Add(key);
             }
         }
 

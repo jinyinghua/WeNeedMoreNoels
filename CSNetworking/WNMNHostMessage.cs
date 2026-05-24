@@ -16,8 +16,6 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public int InitID;
 
-        public bool KickPlayer;
-
         public bool MutePlayer;
 
         public int PlayerID;

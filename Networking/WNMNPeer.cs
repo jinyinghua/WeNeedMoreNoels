@@ -17,6 +17,7 @@ namespace WeNeedMoreNoels.Networking
             localPeer = new(listener);
             listener.ConnectionRequestEvent += Listener_ConnectionRequestEvent;
             listener.NetworkReceiveEvent += Listener_NetworkReceiveEvent;
+            listener.PeerDisconnectedEvent += Listener_PeerDisconnectedEvent;
         }
 
         private void Update()
@@ -33,6 +34,7 @@ namespace WeNeedMoreNoels.Networking
             localPeer?.PollEvents();
             WNMNTools.UpdateAllNoels();
             WNMNTools.SetAllNickNameBgs();
+            WNMNTools.CheckEnemyEmptyAndEndBattle();
         }
 
         private void Listener_ConnectionRequestEvent(ConnectionRequest request)
@@ -58,6 +60,16 @@ namespace WeNeedMoreNoels.Networking
             }
         }
 
+        private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
+        {
+            if (disconnectInfo.AdditionalData.AvailableBytes == 0)
+            {
+                return;
+            }
+            int id = disconnectInfo.AdditionalData.GetInt();
+            WNMNTools.CleanUpClient(id);
+        }
+
         public void SendToAll(byte[] content, DeliveryMethod delivery)
         {
             NetDataWriter writer = new();
@@ -81,6 +93,22 @@ namespace WeNeedMoreNoels.Networking
         public int GetPeerPort()
         {
             return localPeer.LocalPort;
+        }
+
+        private void OnDestroy()
+        {
+            NetDataWriter writer = new();
+            writer.Put(WNMNTools.LocalID);
+            foreach (NetPeer peer in localPeer)
+            {
+                localPeer.DisconnectPeer(peer, writer);
+            }
+            localPeer.Stop();
+            DB.InitConfig = null;
+            DB.noelIns.Clear();
+            DB.partyInfos.Clear();
+            DB.peerInfos.Clear();
+            DB.peerConfigs.Clear();
         }
     }
 }

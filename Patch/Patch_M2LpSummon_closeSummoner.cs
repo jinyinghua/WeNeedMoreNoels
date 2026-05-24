@@ -7,15 +7,17 @@ namespace WeNeedMoreNoels.Patch
     public class Patch_M2LpSummon_closeSummoner
     {
         [HarmonyPostfix]
-        static void Postfix(bool defeated)
+        static void Postfix(M2LpSummon __instance, bool defeated)
         {
             if (defeated)
             {
-                WNMNTools.SendBattleEndToAllPeers(WNMNTools.LocalID);
+                WNMNTools.SendBattleEndToAllPeers(__instance.key, WNMNTools.LocalID);
                 DB.IsInBattle = false;
             }
             DB.SyncHosts.Clear();
             DB.SyncClients.Clear();
+            DB.peerClients.Clear();
+            DB.StartedBattleSummonerKeys.Remove(__instance.key);
         }
     }
 }

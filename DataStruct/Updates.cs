@@ -205,6 +205,13 @@ namespace WeNeedMoreNoels.DataStruct
     }
 
     [ProtoContract]
+    public class BattleInfo
+    {
+        [ProtoMember(1)]
+        public string key;
+    }
+
+    [ProtoContract]
     public enum NotifyEnemyType
     {
         [ProtoEnum]

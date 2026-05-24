@@ -21,7 +21,6 @@ namespace WeNeedMoreNoels.CSNetworking
             listener.ConnectionRequestEvent += Listener_ConnectionRequestEvent;
             listener.PeerConnectedEvent += Listener_PeerConnectedEvent;
             listener.NetworkReceiveEvent += Listener_NetworkReceiveEvent;
-            listener.PeerDisconnectedEvent += Listener_PeerDisconnectedEvent;
             EventBasedNetListener transferListener = new();
             transferHost = new(transferListener);
             transferListener.ConnectionRequestEvent += TransferListener_ConnectionRequestEvent;
@@ -62,18 +61,6 @@ namespace WeNeedMoreNoels.CSNetworking
             Plugin.Logger.LogInfo($"WNMNHost started, port:{port}");
             transferHost.Start(port + 1);
             Plugin.Logger.LogInfo($"WNMN Sync transfer host started, port:{port + 1}");
-        }
-
-        public void SendKick(int id)
-        {
-            WNMNHostMessage message = new()
-            {
-                KickPlayer = true,
-                PlayerID = id
-            };
-            NetDataWriter writer = new();
-            writer.Put(JsonConvert.SerializeObject(message));
-            host.SendToAll(writer, DeliveryMethod.ReliableOrdered);
         }
 
         public void SendMute(int id)
@@ -160,27 +147,6 @@ namespace WeNeedMoreNoels.CSNetworking
                 NoelColor = message.NoelColor
             };
             DB.peerConfigs.Add(message.ID, config);
-        }
-
-        private void Listener_PeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
-        {
-            if (disconnectInfo.AdditionalData.AvailableBytes == 0)
-            {
-                return;
-            }
-            int id = disconnectInfo.AdditionalData.GetInt();
-            WNMNTools.CleanUpClient(id);
-        }
-
-        private void OnDestroy()
-        {
-            host.DisconnectAll();
-            host.Stop();
-            DB.InitConfig = null;
-            DB.noelIns.Clear();
-            DB.partyInfos.Clear();
-            DB.peerInfos.Clear();
-            DB.peerConfigs.Clear();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using nel;
+using UnityEngine;
 
 namespace WeNeedMoreNoels.Patch
 {
@@ -7,9 +8,14 @@ namespace WeNeedMoreNoels.Patch
     public class Patch_M2LpSummon_openSummoner
     {
         [HarmonyPrefix]
-        static void Prefix(M2LpSummon __instance)
+        static bool Prefix(M2LpSummon __instance)
         {
             WNMNTools.TotalBattleNoelCount = WNMNTools.GetBattleNoelCounts(__instance);
+            if (DB.StartedBattleSummonerKeys.Contains(__instance.key))
+            {
+                return false;
+            }
+            return true;
         }
 
         [HarmonyPostfix]
@@ -18,10 +24,12 @@ namespace WeNeedMoreNoels.Patch
             if (WNMNTools.BattleStarterID == -1)
             {
                 WNMNTools.BattleStarterID = WNMNTools.LocalID;
-                WNMNTools.SendBattleStartToAllPeers(WNMNTools.LocalID);
+                WNMNTools.SendBattleStartToAllPeers(__instance.key, WNMNTools.LocalID);
             }
+            WNMNTools.BattleStartT = Time.time;
             DB.IsInBattle = true;
             DB.CurEnemies.Clear();
+            DB.StartedBattleSummonerKeys.Add(__instance.key);
         }
     }
 }
