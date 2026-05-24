@@ -19,7 +19,7 @@ namespace WeNeedMoreNoels.SN
         private bool textVisible = true;
         private Color32 txColor = MTRX.ColWhite;
         private Color32 borderColor = C32.d2c(4278190080U);
-        private Color32 bgColor = MTRX.ColWhite;
+        private Color32 bgColor = new(0, 0, 0, 1);
         private float txSize = 18f;
         private ALIGN txAlign = ALIGN.CENTER;
         private ALIGNY txAlignY = ALIGNY.MIDDLE;
@@ -188,6 +188,7 @@ namespace WeNeedMoreNoels.SN
             this.TxBg.Alpha(0.4f);
             this.TxBg.transform.localPosition += new Vector3(currentText.Length * -0.42f, -0.43f);
             this.TxBg.transform.localScale = new Vector3(currentText.Length * 4, 1.2f, 1);
+            TxBg.setAlpha(0);
             IN.setZ(this.TxBg.transform, -0.9f);
         }
 
@@ -257,6 +258,7 @@ namespace WeNeedMoreNoels.SN
             }
             if (followTarget is ShadowNoel noel && Tx != null)
             {
+                SetTextColor((Color)DB.partyInfos[noel.PartyID].Color);
                 if (CFGMultiplayer.showDelay)
                 {
                     this.Tx.Txt(this.currentText + " - " + DB.peerDelays[noel.ID] + "ms");
@@ -265,6 +267,10 @@ namespace WeNeedMoreNoels.SN
                 {
                     this.Tx.Txt(this.currentText);
                 }
+            }
+            else if (followTarget is PRNoel)
+            {
+                SetTextColor((Color)DB.partyInfos[WNMNTools.LocalID].Color);
             }
         }
 

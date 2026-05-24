@@ -3,8 +3,6 @@ using nel;
 using System;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
-using XX;
-using static m2d.M2MoverPr;
 
 namespace WeNeedMoreNoels.SN
 {
