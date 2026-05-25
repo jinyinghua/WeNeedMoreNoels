@@ -13,7 +13,14 @@ namespace WeNeedMoreNoels.Networking.ReceiveEvent
 
         public override void ReceiveMessage(WNMNPeerMessage message)
         {
-            ShadowNoelExtensions.StartCurMapBattle(message.Battle.key, message.PeerId);
+            if (message.Battle.isSim)
+            {
+                ShadowNoelExtensions.StartSimBattle(message.PeerId);
+            }
+            else
+            {
+                ShadowNoelExtensions.StartCurMapBattle(message.Battle.key, message.PeerId);
+            }
         }
 
         public override string ToMessageString(WNMNPeerMessage message)

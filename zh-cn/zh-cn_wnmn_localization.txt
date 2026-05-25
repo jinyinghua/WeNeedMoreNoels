@@ -113,3 +113,10 @@
 &&multiplayer_msg_pvp_greeting 请多指教！
 &&multiplayer_msg_sitting 休息一下吧！
 &&multiplayer_msg_goodbye 再见！
+
+// ========================================================
+// MARK : 模拟战
+// ========================================================
+
+&&multiplayer_simbattle_btn 加入模拟
+&&multiplayer_simbattle_title 进行多人模拟

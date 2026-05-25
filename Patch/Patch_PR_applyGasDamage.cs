@@ -4,7 +4,7 @@ using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels.Patch
 {
-    [HarmonyPatch(typeof(PR), nameof(PR.applyGasDamage))]
+    [HarmonyPatch(typeof(PR), nameof(PR.applyGasDamage), [typeof(MistManager.MistKind), typeof(float)])]
     public class Patch_PR_applyGasDamage
     {
         [HarmonyPrefix]

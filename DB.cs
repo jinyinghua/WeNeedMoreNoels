@@ -42,6 +42,8 @@ namespace WeNeedMoreNoels
 
         public static byte[] SyncSaveContentBuffer;
 
+        public static byte[] SyncSmnContentBuffer;
+
         public static int LocalNoelParty;
 
         public static Dictionary<int, ShadowNoelInstance> noelIns = [];
@@ -97,6 +99,8 @@ namespace WeNeedMoreNoels
         public static Dictionary<int, EnemySynchronizerSyncHost> SyncHosts = [];
 
         public static HashSet<string> StartedBattleSummonerKeys = [];
+
+        public static bool StartedSimBattle;
 
         public static Dictionary<int, int> peerDelays = [];
     }

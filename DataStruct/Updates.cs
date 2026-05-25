@@ -213,6 +213,8 @@ namespace WeNeedMoreNoels.DataStruct
     {
         [ProtoMember(1)]
         public string key;
+        [ProtoMember(2)]
+        public bool isSim;
     }
 
     [ProtoContract]

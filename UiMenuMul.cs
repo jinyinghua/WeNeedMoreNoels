@@ -11,5 +11,7 @@ namespace WeNeedMoreNoels
         public static UiBoxDesigner BxPD;
 
         public static aBtn SendMsgButton;
+
+        public static UiBoxDesigner BxSB;
     }
 }

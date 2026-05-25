@@ -9,6 +9,10 @@ namespace WeNeedMoreNoels.Patch
         [HarmonyPostfix]
         static void Postfix(NelItem Itm, int count, int grade)
         {
+            if (!DB.IsMultiplayer)
+            {
+                return;
+            }
             string id = Itm.key;
             WNMNTools.SendGetItemToAllPeers(id, count, grade);
         }

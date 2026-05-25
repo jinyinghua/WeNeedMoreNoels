@@ -9,6 +9,10 @@ namespace WeNeedMoreNoels.Patch
         [HarmonyPostfix]
         static void Postfix(int v, CoinStorage.CTYPE ctype)
         {
+            if (!DB.IsMultiplayer)
+            {
+                return;
+            }
             WNMNTools.SendLoseCoinToAllPeers(ctype, v);
         }
     }

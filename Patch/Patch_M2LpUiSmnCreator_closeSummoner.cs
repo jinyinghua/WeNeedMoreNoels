@@ -1,13 +1,13 @@
 ﻿using HarmonyLib;
-using nel;
+using nel.mgm.smncr;
 
 namespace WeNeedMoreNoels.Patch
 {
-    [HarmonyPatch(typeof(M2LpSummon), nameof(M2LpSummon.closeSummoner))]
-    public class Patch_M2LpSummon_closeSummoner
+    [HarmonyPatch(typeof(M2LpUiSmnCreator), nameof(M2LpUiSmnCreator.closeSummoner))]
+    public class Patch_M2LpUiSmnCreator_closeSummoner
     {
         [HarmonyPostfix]
-        static void Postfix(M2LpSummon __instance, bool defeated)
+        static void Postfix(M2LpUiSmnCreator __instance, bool defeated)
         {
             if (defeated)
             {
@@ -18,7 +18,6 @@ namespace WeNeedMoreNoels.Patch
             DB.SyncClients.Clear();
             DB.peerClients.Clear();
             DB.StartedBattleSummonerKeys.Remove(__instance.key);
-            WNMNTools.BattleStarterID = -1;
         }
     }
 }

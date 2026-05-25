@@ -261,7 +261,30 @@ namespace WeNeedMoreNoels
                 PeerId = id,
                 Battle = new()
                 {
-                    key = key
+                    key = key,
+                    isSim = false
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
+        }
+        
+
+        public static void SendSimBattleStartToAllPeers(int id)
+        {
+            if (DB.InitConfig is null)
+            {
+                return;
+            }
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyNoelStartBattle,
+                PeerId = id,
+                Battle = new()
+                {
+                    isSim = true
                 }
             };
             using MemoryStream stream = new();
@@ -282,7 +305,8 @@ namespace WeNeedMoreNoels
                 PeerId = id,
                 Battle = new()
                 {
-                    key = key
+                    key = key,
+                    isSim = false
                 }
             };
             using MemoryStream stream = new();

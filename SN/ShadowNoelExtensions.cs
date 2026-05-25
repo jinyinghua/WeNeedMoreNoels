@@ -300,9 +300,9 @@ namespace WeNeedMoreNoels.SN
 
         public static void StartCurMapBattle(string key, int starterID)
         {
-            WNMNTools.BattleStarterID = starterID;
             if (M2LpSummon.NearLpSmn is not null && M2LpSummon.NearLpSmn.key == key)
             {
+                WNMNTools.BattleStarterID = starterID;
                 DB.CurSummoner = M2LpSummon.NearLpSmn;
                 DB.CurEnemies.Clear();
                 M2LpSummon.NearLpSmn.openSummoner(DB.MainPR);
@@ -310,6 +310,20 @@ namespace WeNeedMoreNoels.SN
             else
             {
                 DB.StartedBattleSummonerKeys.Add(key);
+            }
+        }
+
+        public static void StartSimBattle(int starterID)
+        {
+            if (DB.MainPR.Mp.key != "school_in_garage")
+            {
+                WNMNTools.BattleStarterID = starterID;
+                DB.CurEnemies.Clear();
+                M2LpSummon.NearLpSmn.openSummoner(DB.MainPR);
+            }
+            else
+            {
+                DB.StartedSimBattle = true;
             }
         }
 
