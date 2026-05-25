@@ -90,7 +90,7 @@ namespace WeNeedMoreNoels
             SendUpdateToAllPeers();
         }
 
-        public void SendUpdateToAllPeers()
+        public virtual void SendUpdateToAllPeers()
         {
             WNMNPeerMessage messageSend = new()
             {
@@ -128,6 +128,32 @@ namespace WeNeedMoreNoels
         }
     }
 
+    public class EnemySynchronizerBossHost : EnemySynchronizerSyncHost
+    {
+        public override void SendUpdateToAllPeers()
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifyEnemyUpdate,
+                PeerId = WNMNTools.LocalID,
+                NotifyEnemyUpdate = new()
+                {
+                    SyncID = SyncID,
+                    Type = NotifyEnemyType.InfoUpdate,
+                    Info = new()
+                    {
+                        Hp = Enemy.hp,
+                        Mp = Enemy.mp
+                    }
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.Unreliable);
+        }
+    }
+
     public class EnemySynchronizerSyncClient : EnemySynchronizer
     {
         public int PeerID;
@@ -137,7 +163,7 @@ namespace WeNeedMoreNoels
             Enemy.Anm.alpha = 0.4f;
         }
 
-        public void UpdateEnemyInfo(UpdateEnemyInfo info)
+        public virtual void UpdateEnemyInfo(UpdateEnemyInfo info)
         {
             if (Enemy == null || Enemy.Phy == null || Enemy.Anm == null)
             {
@@ -177,6 +203,15 @@ namespace WeNeedMoreNoels
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
             WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.Unreliable);
+        }
+    }
+
+    public class EnemySynchronizerBossClient : EnemySynchronizerSyncClient
+    {
+        public override void UpdateEnemyInfo(UpdateEnemyInfo info)
+        {
+            Enemy.hp = info.Hp;
+            Enemy.mp = info.Mp;
         }
     }
 }

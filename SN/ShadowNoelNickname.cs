@@ -270,7 +270,7 @@ namespace WeNeedMoreNoels.SN
             }
             else if (followTarget is PRNoel)
             {
-                SetTextColor((Color)DB.partyInfos[WNMNTools.LocalID].Color);
+                SetTextColor((Color)DB.partyInfos[DB.LocalNoelParty].Color);
             }
         }
 

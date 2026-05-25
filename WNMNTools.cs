@@ -443,7 +443,7 @@ namespace WeNeedMoreNoels
             peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
-        public static void SendNotifyEnemySummonToAllPeers(string enm_id, int sync_id)
+        public static void SendNotifyEnemySummonToAllPeers(string enm_id, int sync_id, bool isBoss = false)
         {
             WNMNPeerMessage messageSend = new()
             {
@@ -455,7 +455,8 @@ namespace WeNeedMoreNoels
                     Type = NotifyEnemyType.Summon,
                     Summon = new()
                     {
-                        Key = enm_id
+                        Key = enm_id,
+                        isBoss = isBoss
                     }
                 }
             };
@@ -633,7 +634,7 @@ namespace WeNeedMoreNoels
             switch (update.Type)
             {
                 case NotifyEnemyType.Summon:
-                    NotifySummonEnemy(update.Summon.Key, update.SyncID, peerID);
+                    NotifySummonEnemy(update.Summon.Key, update.SyncID, peerID, update.Summon.isBoss);
                     break;
                 case NotifyEnemyType.InfoUpdate:
                     UpdateEnemyInfo(update.SyncID, update.Info);
@@ -647,20 +648,33 @@ namespace WeNeedMoreNoels
             }
         }
 
-        public static void NotifySummonEnemy(string key, int sync_id, int peer_id)
+        public static void NotifySummonEnemy(string key, int sync_id, int peer_id, bool isBoss)
         {
-            NelEnemy nelEnemy = NDAT.createByKey(DB.MainPR.Mp, key, "-Summonned-" + DB.MainPR.Mp.key + "-{sync}" + sync_id.ToString());
-            DB.MainPR.Mp.assignMover(nelEnemy);
-            DB.CurEnemies.Add(nelEnemy);
-            var client = nelEnemy.gameObject.AddComponent<EnemySynchronizerSyncClient>();
-            client.SyncID = sync_id;
-            client.PeerID = peer_id;
-            DB.SyncClients.Add(sync_id, client);
-            if (!DB.peerClients.ContainsKey(peer_id))
+            if (isBoss)
             {
-                DB.peerClients.Add(peer_id, []);
+                if (BattleStarterID != LocalID)
+                {
+                    GameObject gameObject = new();
+                    var sideCar = gameObject.AddComponent<AddSyncSideCar>();
+                    sideCar.syncID = sync_id;
+                    sideCar.peerID = peer_id;
+                }
             }
-            DB.peerClients[peer_id].Add(client);
+            else
+            {
+                NelEnemy nelEnemy = NDAT.createByKey(DB.MainPR.Mp, key, "-Summonned-" + DB.MainPR.Mp.key + "-{sync}" + sync_id.ToString());
+                DB.MainPR.Mp.assignMover(nelEnemy);
+                DB.CurEnemies.Add(nelEnemy);
+                EnemySynchronizerSyncClient client = nelEnemy.gameObject.AddComponent<EnemySynchronizerSyncClient>();
+                client.SyncID = sync_id;
+                client.PeerID = peer_id;
+                DB.SyncClients.Add(sync_id, client);
+                if (!DB.peerClients.ContainsKey(peer_id))
+                {
+                    DB.peerClients.Add(peer_id, []);
+                }
+                DB.peerClients[peer_id].Add(client);
+            }
         }
 
         public static void UpdateEnemyInfo(int syncID, UpdateEnemyInfo info)

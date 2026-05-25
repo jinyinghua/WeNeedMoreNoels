@@ -195,6 +195,8 @@ namespace WeNeedMoreNoels.DataStruct
     {
         [ProtoMember(1)]
         public string Key;
+        [ProtoMember(2)]
+        public bool isBoss;
     }
 
     [ProtoContract]
