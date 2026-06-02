@@ -62,7 +62,7 @@ namespace WeNeedMoreNoels.Patch
                 {
                     TxCol = ColorDefault,
                     size = 30,
-                    text = "暂无模拟战房间可加入"
+                    text = TX.Get("multiplayer_simbattle_noroom")
                 });
                 BxCmd.deactivate();
                 return;
@@ -72,7 +72,7 @@ namespace WeNeedMoreNoels.Patch
             {
                 TxCol = ColorDefault,
                 size = 30,
-                text = WNMNTools.SimBattleSyncHost == WNMNTools.LocalID ? $"主持房间中（{WNMNTools.SimBattleSyncList.Count + 1}/{DB.noelIns.Count + 1} 已连接） 等待中" : $"处于房间中（{WNMNTools.SimBattleSyncList.Count + 1}/{DB.noelIns.Count + 1} 已连接） 等待中"
+                text = WNMNTools.SimBattleSyncHost == WNMNTools.LocalID ? TX.GetA("multiplayer_simbattle_hostsubtitle", (WNMNTools.SimBattleSyncList.Count + 1).ToString(), (DB.noelIns.Count + 1).ToString()) : TX.GetA("multiplayer_simbattle_clientsubtitle", (WNMNTools.SimBattleSyncList.Count + 1).ToString(), (DB.noelIns.Count + 1).ToString())
             });
             var block1 = BxCmd.addP(new()
             {
@@ -98,7 +98,7 @@ namespace WeNeedMoreNoels.Patch
             {
                 TxCol = ColorDefault,
                 size = 20,
-                text = $"{WNMNTools.GetNickname(WNMNTools.SimBattleSyncHost)}的模拟战"
+                text = TX.GetA("multiplayer_simbattle_name", (WNMNTools.GetNickname(WNMNTools.SimBattleSyncHost)).ToString())
             });
             if (WNMNTools.SimBattleSyncHost != WNMNTools.LocalID)
             {
@@ -108,13 +108,13 @@ namespace WeNeedMoreNoels.Patch
                 {
                     TxCol = ColorDefault,
                     size = 20,
-                    text = "当前模拟战地图状态："
+                    text = TX.Get("multiplayer_simbattle_simstate")
                 });
                 var fill = BxCmd.addP(new()
                 {
                     TxCol = ColorDefault,
                     size = 20,
-                    text = WNMNTools.SimBattleSynced ? "已同步" : "未同步"
+                    text = WNMNTools.SimBattleSynced ? TX.Get("multiplayer_simbattle_synced") : TX.Get("multiplayer_simbattle_unsynced")
                 });
                 BxCmd.Br();
                 BxCmd.alignx = ALIGN.CENTER;
@@ -122,13 +122,13 @@ namespace WeNeedMoreNoels.Patch
                 {
                     TxCol = ColorDefault,
                     size = 15,
-                    text = "可点击下方按钮同步模拟战地图"
+                    text = TX.Get("multiplayer_simbattle_synchint")
                 });
                 BxCmd.Br();
                 BxCmd.alignx = ALIGN.CENTER;
                 BxCmd.addButton(new()
                 {
-                    title = "同步模拟战地图",
+                    title = TX.Get("multiplayer_simbattle_syncmap"),
                     fnClick = B =>
                     {
                         WNMNTools.SendSimBattleSync(WNMNTools.SimBattleSyncHost);
@@ -146,7 +146,7 @@ namespace WeNeedMoreNoels.Patch
             {
                 TxCol = ColorDefault,
                 size = 15,
-                text = $"当前已准备人数（{WNMNTools.SimBattleReadyList.Count + (WNMNTools.SimBattleSyncHost == WNMNTools.LocalID ? 1 : (WNMNTools.SimBattleReady ? 1 : 0))}/{WNMNTools.SimBattleSyncList.Count + 1}）"
+                text = TX.GetA("multiplayer_simbattle_readytitle", (WNMNTools.SimBattleReadyList.Count + (WNMNTools.SimBattleSyncHost == WNMNTools.LocalID ? 1 : (WNMNTools.SimBattleReady ? 1 : 0))).ToString(), (WNMNTools.SimBattleSyncList.Count + 1).ToString())
             });
             BxCmd.Br();
             BxCmd.alignx = ALIGN.CENTER;
@@ -156,13 +156,13 @@ namespace WeNeedMoreNoels.Patch
                 {
                     TxCol = ColorDefault,
                     size = 10,
-                    text = "当所有玩家均准备完毕后即可开始多人模拟战"
+                    text = TX.Get("multiplayer_simbattle_readyhint")
                 });
                 BxCmd.Br();
                 BxCmd.alignx = ALIGN.CENTER;
                 aBtn b = BxCmd.addButton(new()
                 {
-                    title = "开始战斗！",
+                    title = "&&Smnc_start_battle_submit",
                     fnClick = B =>
                     {
                         WNMNTools.OpenSmncBattle(true);
@@ -182,13 +182,13 @@ namespace WeNeedMoreNoels.Patch
                     {
                         TxCol = ColorDefault,
                         size = 15,
-                        text = "请点击下方按钮进行准备"
+                        text = TX.Get("multiplayer_simbattle_readyhint1")
                     });
                     BxCmd.Br();
                     BxCmd.alignx = ALIGN.CENTER;
                     BxCmd.addButton(new()
                     {
-                        title = WNMNTools.SimBattleReady ? "已准备" : "准备",
+                        title = WNMNTools.SimBattleReady ? TX.Get("multiplayer_simbattle_ready") : TX.Get("multiplayer_simbattle_unready"),
                         fnClick = B =>
                         {
                             WNMNTools.SimBattleReady = !WNMNTools.SimBattleReady;
@@ -219,7 +219,7 @@ namespace WeNeedMoreNoels.Patch
                     {
                         TxCol = ColorDefault,
                         size = 20,
-                        text = "请先同步模拟战地图"
+                        text = TX.Get("multiplayer_simbattle_syncfirst")
                     });
                 }
             }

@@ -11,7 +11,7 @@ namespace WeNeedMoreNoels.Patch
         [HarmonyPostfix]
         static void Postfix(UiSmnCreator __instance)
         {
-            UiMenuMul.BxSB = __instance.DsFam.Create("BxSB", 0f, 0f, IN.w * 0.6f, IN.h * 0.7f, 1, 40f, UiBoxDesignerFamily.MASKTYPE.BOX);
+            UiMenuMul.BxSB = __instance.DsFam.Create("BxSB", 0f, 0f, IN.w * 0.7f, IN.h * 0.7f, 1, 40f, UiBoxDesignerFamily.MASKTYPE.BOX);
             UiBoxDesigner BxCmd = UiMenuMul.BxSB;
             BxCmd.Focusable(true, true, null);
             BxCmd.init();

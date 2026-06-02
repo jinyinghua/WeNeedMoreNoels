@@ -12,6 +12,11 @@ namespace WeNeedMoreNoels.Patch
         [HarmonyPrefix]
         static bool Prefix(ref NelEnemy __result, SmnEnemyKind K, out SyncState __state)
         {
+            if (!DB.IsMultiplayer)
+            {
+                __state = null;
+                return true;
+            }
             if (CheckBoss(K.enemyid))
             {
                 __state = new()
