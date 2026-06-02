@@ -113,3 +113,25 @@ Independent Spawn: Completely independent spawning, go ahead and fight freely!  
 &&multiplayer_msg_pvp_greeting Please be kind!
 &&multiplayer_msg_sitting Let's break!
 &&multiplayer_msg_goodbye Goodbye!
+
+// ========================================================
+// MARK : 模拟战
+// ========================================================
+
+&&multiplayer_simbattle_btn Join simulation
+&&multiplayer_simbattle_title Start multiplayer-simulation
+&&multiplayer_simbattle_noroom No simulation found
+&&multiplayer_simbattle_hostsubtitle Hosting simulation (&1/&2 Connected) Waiting
+&&multiplayer_simbattle_clientsubtitle In simulation (&1/&2 Connected) Waiting
+&&multiplayer_simbattle_name &1's simulation
+&&multiplayer_simbattle_simstate Current simulation's map state:
+&&multiplayer_simbattle_synced Synchronized
+&&multiplayer_simbattle_unsynced Not synced
+&&multiplayer_simbattle_synchint You can hit the button below to synchronize map
+&&multiplayer_simbattle_syncmap Synchronize map
+&&multiplayer_simbattle_readytitle Current ready count (&1/&2)
+&&multiplayer_simbattle_readyhint You can start simulation when everyone's ready
+&&multiplayer_simbattle_readyhint1 Please hit the button below to ready
+&&multiplayer_simbattle_ready Ready
+&&multiplayer_simbattle_unready Not Ready
+&&multiplayer_simbattle_syncfirst Please synchronize map first

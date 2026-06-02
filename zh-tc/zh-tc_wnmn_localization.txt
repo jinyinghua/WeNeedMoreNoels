@@ -113,3 +113,25 @@
 &&multiplayer_msg_pvp_greeting 請多指教！
 &&multiplayer_msg_sitting 休息一下吧！
 &&multiplayer_msg_goodbye 再見！
+
+// ========================================================
+// MARK : 模擬戰
+// ========================================================
+
+&&multiplayer_simbattle_btn 加入模擬
+&&multiplayer_simbattle_title 進行多人模擬
+&&multiplayer_simbattle_noroom 暫無模擬戰房間可加入
+&&multiplayer_simbattle_hostsubtitle 主持房間中（&1/&2 已連接） 等待中
+&&multiplayer_simbattle_clientsubtitle 處於房間中（&1/&2 已連接） 等待中
+&&multiplayer_simbattle_name &1的模擬戰
+&&multiplayer_simbattle_simstate 當前模擬戰地圖狀態：
+&&multiplayer_simbattle_synced 已同步
+&&multiplayer_simbattle_unsynced 未同步
+&&multiplayer_simbattle_synchint 可點擊下方按鈕同步模擬戰地圖
+&&multiplayer_simbattle_syncmap 同步模擬戰地圖
+&&multiplayer_simbattle_readytitle 當前已準備人數（&1/&2）
+&&multiplayer_simbattle_readyhint 當所有玩家均準備完畢後即可開始多人模擬戰
+&&multiplayer_simbattle_readyhint1 請點擊下方按鈕進行準備
+&&multiplayer_simbattle_ready 已準備
+&&multiplayer_simbattle_unready 準備
+&&multiplayer_simbattle_syncfirst 請先同步模擬戰地圖
