@@ -33,6 +33,10 @@ namespace WeNeedMoreNoels.DataStruct
         public NotifyEnemyUpdate NotifyEnemyUpdate;
         [ProtoMember(14)]
         public BattleInfo Battle;
+        [ProtoMember(15)]
+        public SimBattle SimBattle;
+        [ProtoMember(16)]
+        public SimBattleSync SyncSimBattle;
     }
 
     [ProtoContract]
@@ -67,6 +71,10 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoEnum]
         NotifyRoomUpdate,
         [ProtoEnum]
-        NotifyEnemyUpdate
+        NotifyEnemyUpdate,
+        [ProtoEnum]
+        NotifySimBattle,
+        [ProtoEnum]
+        NotifySimBattleSync
     }
 }

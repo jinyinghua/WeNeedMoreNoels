@@ -218,6 +218,39 @@ namespace WeNeedMoreNoels.DataStruct
     }
 
     [ProtoContract]
+    public class SimBattle
+    {
+        [ProtoMember(1)]
+        public NotifySimBattleType Type;
+    }
+
+    [ProtoContract]
+    public class SimBattleSync
+    {
+        [ProtoMember(1)]
+        public int SyncID;
+        [ProtoMember(2)]
+        public byte[] SyncSimBattleData;
+    }
+
+    [ProtoContract]
+    public enum NotifySimBattleType
+    {
+        [ProtoEnum]
+        StartHost,
+        [ProtoEnum]
+        CloseHost,
+        [ProtoEnum]
+        ConnectHost,
+        [ProtoEnum]
+        DisconnectHost,
+        [ProtoEnum]
+        ReadyHost,
+        [ProtoEnum]
+        UnreadyHost
+    }
+
+    [ProtoContract]
     public enum NotifyEnemyType
     {
         [ProtoEnum]

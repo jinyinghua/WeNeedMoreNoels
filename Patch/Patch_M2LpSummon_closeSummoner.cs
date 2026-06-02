@@ -19,6 +19,10 @@ namespace WeNeedMoreNoels.Patch
             DB.peerClients.Clear();
             DB.StartedBattleSummonerKeys.Remove(__instance.key);
             WNMNTools.BattleStarterID = -1;
+            WNMNTools.SimBattleSyncList.Clear();
+            WNMNTools.SimBattleReadyList.Clear();
+            WNMNTools.SimBattleSyncHost = -1;
+            WNMNTools.SimBattleReady = false;
         }
     }
 }

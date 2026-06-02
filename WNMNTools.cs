@@ -2,6 +2,8 @@
 using LiteNetLib.Utils;
 using m2d;
 using nel;
+using nel.mgm.smncr;
+using PixelLiner.PixelLinerLib;
 using ProtoBuf;
 using System.Collections.Generic;
 using System.IO;
@@ -38,6 +40,25 @@ namespace WeNeedMoreNoels
         public static int TotalBattleNoelCount;
 
         public static float BattleStartT;
+
+        public static int SimBattleSyncHost = -1;
+        public static List<int> SimBattleSyncList = [];
+        public static bool SimBattleSynced;
+
+        public static bool SimBattleReady;
+        public static List<int> SimBattleReadyList = [];
+
+        public static System.Action UpdateSimUI;
+
+        public static UiSmnCreator USC;
+        public static UiSmncBattleConfirm USBC;
+
+        public static SmncFile CurSimFile;
+
+        public static string GetNickname(int id)
+        {
+            return id == LocalID ? DB.MainPRNickname.GetCurrentText() : DB.noelIns[id].NicknameIns.GetCurrentText();
+        }
 
         static int _unique_id;
         public static int Unique_ID
@@ -305,8 +326,7 @@ namespace WeNeedMoreNoels
                 PeerId = id,
                 Battle = new()
                 {
-                    key = key,
-                    isSim = false
+                    key = key
                 }
             };
             using MemoryStream stream = new();
@@ -489,6 +509,61 @@ namespace WeNeedMoreNoels
             byte[] buffer = stream.ToArray();
             peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
+
+        public static void SendNotifySimBattleToAllPeers(SimBattle battle)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifySimBattle,
+                PeerId = LocalID,
+                SimBattle = battle
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendSimBattleSync(int id)
+        {
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifySimBattleSync,
+                PeerId = id,
+                SyncSimBattle = new()
+                {
+                    SyncID = LocalID
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendBackSimBattleSyncData(int id)
+        {
+            ByteArray array = new(0U);
+            array.writeMultiByte("tigrina chan no hutomomo tyokkei 440m by hashinomizuha", "utf-8");
+            array.writeByte(13);
+            USC.CurFile.writeBinaryTo(array);
+            WNMNPeerMessage messageSend = new()
+            {
+                Type = WNMNPeerMessageType.NotifySimBattleSync,
+                PeerId = id,
+                SyncSimBattle = new()
+                {
+                    SyncID = -1,
+                    SyncSimBattleData = array.bytes
+                }
+            };
+            using MemoryStream stream = new();
+            Serializer.Serialize(stream, messageSend);
+            byte[] buffer = stream.ToArray();
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
+            Plugin.Logger.LogInfo($"Transfered sync smncFile to peer:{id}");
+        }
+
 
         public static void UpdateRoomConfigToAllPeers()
         {
@@ -701,6 +776,43 @@ namespace WeNeedMoreNoels
             }
         }
 
+        public static void NotifySimBattle(int id, SimBattle sim)
+        {
+            switch (sim.Type)
+            {
+                case NotifySimBattleType.StartHost:
+                    SimBattleSyncHost = id;
+                    break;
+                case NotifySimBattleType.CloseHost:
+                    UiMenuMul.BxSB?.deactivate();
+                    SimBattleSyncHost = -1;
+                    if ((int)USC.state == 9)
+                    {
+                        USC.changeState(UiSmnCreator.STATE.FILESEL);
+                    }
+                    SimBattleSyncList.Clear();
+                    SimBattleReadyList.Clear();
+                    break;
+                case NotifySimBattleType.ConnectHost:
+                    SimBattleSyncList.Add(id);
+                    UpdateSimUI?.Invoke();
+                    break;
+                case NotifySimBattleType.DisconnectHost:
+                    SimBattleSyncList.Remove(id);
+                    SimBattleReadyList.Remove(id);
+                    UpdateSimUI?.Invoke();
+                    break;
+                case NotifySimBattleType.ReadyHost:
+                    SimBattleReadyList.Add(id);
+                    UpdateSimUI?.Invoke();
+                    break;
+                case NotifySimBattleType.UnreadyHost:
+                    SimBattleReadyList.Remove(id);
+                    UpdateSimUI?.Invoke();
+                    break;
+            }
+        }
+
         public static void UpdateEnemyInfo(int syncID, UpdateEnemyInfo info)
         {
             if (!DB.SyncClients.ContainsKey(syncID))
@@ -757,6 +869,72 @@ namespace WeNeedMoreNoels
             if (DB.IsInBattle && !HasSyncEnemy() && BattleStartT - Time.time > 1f)
             {
                 ShadowNoelExtensions.EndCurMapBattle();
+            }
+        }
+
+        public static void OpenSmncBattle(bool mkFile = false)
+        {
+            if (mkFile)
+            {
+                CurSimFile = USC.CurFile;
+            }
+            if (USBC is null)
+            {
+                USC.changeState(UiSmnCreator.STATE.BATTLE_CONFIRM);
+                USBC = USC.BattleConfirm;
+                USC.changeState((UiSmnCreator.STATE)9);
+            }
+            USBC.CurFile = CurSimFile;
+			USBC.Record();
+			uint num;
+			int num2;
+			if (USBC.UiDg != null)
+			{
+				num = USBC.CurFile.weather_bits;
+				num2 = (int)USBC.CurFile.dangerousness;
+			}
+			else
+			{
+				num = 0U;
+				num2 = 0;
+				USBC.CurFile.fix_nattr = false;
+			}
+            if (USBC.LpArea.summoner_openable)
+            {
+                USBC.CurFile.use_seed = (USBC.decline_manage_danger ? 0U : USBC.CurFile.rand_seed);
+                if (USBC.CurFile.use_seed != 0U)
+                {
+                    USBC.CurFile.pre_seed = USBC.CurFile.use_seed;
+                    USBC.CurFile.use_seed ^= 3413251945U;
+                }
+                else
+                {
+                    USBC.CurFile.use_seed = X.xors();
+                    USBC.CurFile.pre_seed = USBC.CurFile.use_seed ^ 3413251945U;
+                }
+                SND.Ui.play("enter", false);
+                if (USBC.LpArea.auto_save_on_opening_summoner && CFG.autosave_on_scenario)
+                {
+                    COOK.autoSave(USBC.LpArea.nM2D, false, false);
+                }
+                if (USBC.BChkRestore != null && USBC.LpArea.restore_items > 0)
+                {
+                    SmncFileContainer filesVector = USBC.Con.getFilesVector();
+                    if (USBC.BChkRestore.isChecked())
+                    {
+                        filesVector.restore_items = true;
+                        GF.setB("SMNC_RESTORE_ITEMS", true);
+                    }
+                    else
+                    {
+                        filesVector.restore_items = false;
+                    }
+                }
+                USBC.LpArea.openSummoner(num2, num);
+                DB.CurSummoner = USBC.LpArea;
+                if (USBC.FD_BattleConfirm != null && USBC.FD_BattleConfirm(num2, num))
+                {
+                }
             }
         }
 

@@ -259,7 +259,7 @@ namespace WeNeedMoreNoels.SN
             if (followTarget is ShadowNoel noel && Tx != null)
             {
                 SetTextColor((Color)DB.partyInfos[noel.PartyID].Color);
-                if (CFGMultiplayer.showDelay)
+                if (CFGMultiplayer.showDelay && DB.peerDelays.ContainsKey(noel.ID))
                 {
                     this.Tx.Txt(this.currentText + " - " + DB.peerDelays[noel.ID] + "ms");
                 }

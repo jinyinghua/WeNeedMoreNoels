@@ -6,6 +6,7 @@ namespace WeNeedMoreNoels.Patch
     [HarmonyPatch(typeof(UiGameMenu), nameof(UiGameMenu.appearCategory))]
     internal class Patch_UiGameMenu_appearCategory
     {
+        [HarmonyPrefix]
         private static bool Prefix(UiGameMenu __instance, CATEG ct)
         {
             UiMenuMul.BxP.deactivate();

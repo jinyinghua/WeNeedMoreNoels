@@ -315,11 +315,11 @@ namespace WeNeedMoreNoels.SN
 
         public static void StartSimBattle(int starterID)
         {
-            if (DB.MainPR.Mp.key != "school_in_garage")
+            if (WNMNTools.SimBattleReady)
             {
                 WNMNTools.BattleStarterID = starterID;
                 DB.CurEnemies.Clear();
-                M2LpSummon.NearLpSmn.openSummoner(DB.MainPR);
+                WNMNTools.OpenSmncBattle();
             }
             else
             {
@@ -333,6 +333,10 @@ namespace WeNeedMoreNoels.SN
             {
                 foreach (NelEnemy enemy in DB.CurEnemies)
                 {
+                    if (enemy == null)
+                    {
+                        continue;
+                    }
                     DB.MainPR.Mp.removeMover(enemy);
                     enemy.destruct();
                 }

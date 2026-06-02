@@ -112,9 +112,11 @@ namespace WeNeedMoreNoels.CSNetworking
                 ClientIP = peer.EndPoint.Address.ToString(),
                 HostPort = WNMNTools.peer.GetPeerPort(),
                 InitID = id,
-                PeerInfos = [..DB.peerInfos],
+                PeerInfos = [.. DB.peerInfos],
                 PeerConfigs = [.. DB.peerConfigs],
-                PeerParties = [.. DB.partyInfos]
+                PeerParties = [.. DB.partyInfos],
+                SyncHost = WNMNTools.SimBattleSyncHost,
+                SyncConnectedList = WNMNTools.SimBattleSyncList
             };
             writer.Put(JsonConvert.SerializeObject(message));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);

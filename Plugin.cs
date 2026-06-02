@@ -10,6 +10,7 @@ namespace WeNeedMoreNoels
     [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
     public class Plugin : BaseUnityPlugin
     {
+        public static Plugin PluginInstance;
         internal static new ManualLogSource Logger;
         private Harmony _harmony;
 
@@ -25,6 +26,8 @@ namespace WeNeedMoreNoels
             MTRExtension.Load();
             ReceiveMessageManager.Init();
             WNMNConsole.Init();
+
+            PluginInstance = this;
         }
 
         public const string LOGO_PLUGIN =
@@ -39,6 +42,7 @@ namespace WeNeedMoreNoels
 
         private void OnDestroy()
         {
+            StopAllCoroutines();
             _harmony?.UnpatchSelf();
         }
     }

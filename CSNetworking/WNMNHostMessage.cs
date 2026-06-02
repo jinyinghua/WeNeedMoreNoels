@@ -20,6 +20,10 @@ namespace WeNeedMoreNoels.CSNetworking
 
         public int PlayerID;
 
+        public int SyncHost;
+
+        public List<int> SyncConnectedList;
+
         public List<KeyValuePair<int, ConnectPeerInfo>> PeerInfos;
 
         public List<KeyValuePair<int, ClientConfig>> PeerConfigs;

@@ -54,6 +54,8 @@ namespace WeNeedMoreNoels.CSNetworking
             }
             peerID = message.InitID;
             WNMNTools.LocalID = message.InitID;
+            WNMNTools.SimBattleSyncHost = message.SyncHost;
+            WNMNTools.SimBattleSyncList.AddRange(message.SyncConnectedList);
             DB.LocalNoelParty = message.InitID;
             DB.partyInfos = message.PeerParties.Select(x => x.Value).ToDictionary(x => x.ID);
             PartyManager.Party party = PartyManager.InitNewParty(message.InitID);

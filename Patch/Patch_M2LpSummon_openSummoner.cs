@@ -24,7 +24,14 @@ namespace WeNeedMoreNoels.Patch
             if (WNMNTools.BattleStarterID == -1)
             {
                 WNMNTools.BattleStarterID = WNMNTools.LocalID;
-                WNMNTools.SendBattleStartToAllPeers(__instance.key, WNMNTools.LocalID);
+                if (WNMNTools.SimBattleReady)
+                {
+                    WNMNTools.SendSimBattleStartToAllPeers(WNMNTools.LocalID);
+                }
+                else
+                {
+                    WNMNTools.SendBattleStartToAllPeers(__instance.key, WNMNTools.LocalID);
+                }
             }
             WNMNTools.BattleStartT = Time.time;
             DB.IsInBattle = true;

@@ -42,8 +42,6 @@ namespace WeNeedMoreNoels
 
         public static byte[] SyncSaveContentBuffer;
 
-        public static byte[] SyncSmnContentBuffer;
-
         public static int LocalNoelParty;
 
         public static Dictionary<int, ShadowNoelInstance> noelIns = [];
