@@ -34,6 +34,7 @@ namespace WeNeedMoreNoels.Patch
                 DrawUI();
                 UiMenuMul.BxSB.activate();
                 UiMenuMul.BxSB.Focus();
+                __instance.BxFile.deactivate();
                 return false;
             }
             return true;
@@ -42,6 +43,7 @@ namespace WeNeedMoreNoels.Patch
         static void DrawUI()
         {
             UiBoxDesigner BxCmd = UiMenuMul.BxSB;
+            BxCmd.selectable_loop = 3;
             BxCmd.Clear();
             BxCmd.alignx = ALIGN.CENTER;
             BxCmd.addP(new()
@@ -64,7 +66,6 @@ namespace WeNeedMoreNoels.Patch
                     size = 30,
                     text = TX.Get("multiplayer_simbattle_noroom")
                 });
-                BxCmd.deactivate();
                 return;
             }
             BxCmd.alignx = ALIGN.CENTER;
@@ -126,7 +127,7 @@ namespace WeNeedMoreNoels.Patch
                 });
                 BxCmd.Br();
                 BxCmd.alignx = ALIGN.CENTER;
-                BxCmd.addButton(new()
+                var b = BxCmd.addButton(new()
                 {
                     title = TX.Get("multiplayer_simbattle_syncmap"),
                     fnClick = B =>
@@ -135,6 +136,7 @@ namespace WeNeedMoreNoels.Patch
                         return true;
                     }
                 });
+                b.Select(true);
             }
             BxCmd.addHr(new()
             {
@@ -173,6 +175,7 @@ namespace WeNeedMoreNoels.Patch
                 {
                     b.SetLocked(true);
                 }
+                b.Select(true);
             }
             else
             {
@@ -186,7 +189,7 @@ namespace WeNeedMoreNoels.Patch
                     });
                     BxCmd.Br();
                     BxCmd.alignx = ALIGN.CENTER;
-                    BxCmd.addButton(new()
+                    var b = BxCmd.addButton(new()
                     {
                         title = WNMNTools.SimBattleReady ? TX.Get("multiplayer_simbattle_ready") : TX.Get("multiplayer_simbattle_unready"),
                         fnClick = B =>
@@ -237,6 +240,10 @@ namespace WeNeedMoreNoels.Patch
 
             while (true)
             {
+                if (blocks == null)
+                {
+                    break;
+                }
                 float timer = 0;
                 float totalTime = (blocks.Length - 1) * interval + fadeDuration;
                 while (timer < totalTime)

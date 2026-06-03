@@ -17,12 +17,15 @@ namespace WeNeedMoreNoels
 
         public override bool initAppearMain()
         {
-            if (base.initAppearMain())
-            {
-                return true;
-            }
-            List<aBtn> btns = [];
+            base.initAppearMain();
+            BxR.Clear();
             BxR.init();
+            BxR.use_button_connection = true;
+            BxR.selectable_loop = 3;
+            BxR.item_margin_x_px = 60f;
+            float btnW = (BxR.use_w - BxR.item_margin_x_px) / 2f - 100f;
+            float btnH = 30f;
+            List<aBtn> btns = [];
             BxR.alignx = ALIGN.CENTER;
             BxR.addP(new()
             {
@@ -43,9 +46,11 @@ namespace WeNeedMoreNoels
                 text = TX.Get("multiplayer_menu_utilities")
             });
             BxR.Br();
-            btns.Add(BxR.addButton(new()
+            btns.Add(BxR.addButton(new()//0
             {
                 title = TX.Get("multiplayer_menu_modify_nickname"),
+                w = btnW,
+                h = btnH,
                 fnClick = B =>
                 {
                     UiBoxDesigner BxCmd = UiMenuMul.BxP;
@@ -62,6 +67,7 @@ namespace WeNeedMoreNoels
                     {
                         h = 20f
                     });
+                    nicknameInput.Select(true);
                     nicknameInput.text = DB.InitConfig.nickName;
                     BxCmd.Br();
                     BxCmd.addButton(new()
@@ -94,13 +100,11 @@ namespace WeNeedMoreNoels
                     return true;
                 }
             }));
-            BxR.addP(new()
-            {
-                text = "  "
-            });
-            btns.Add(BxR.addButton(new()
+            btns.Add(BxR.addButton(new()//1
             {
                 title = TX.Get("multiplayer_menu_modify_party"),
+                w = btnW,
+                h = btnH,
                 fnClick = B =>
                 {
                     List<KeyValuePair<int, string>> btns = [.. WNMNTools.AllNicknames, new(-1, TX.Get("multiplayer_reset")), new(0, TX.Get("Cancel"))];
@@ -113,7 +117,7 @@ namespace WeNeedMoreNoels
                     BxCmd.margin_in_lr = 10f;
                     BxCmd.margin_in_tb = 10f;
                     BxCmd.init();
-                    BxCmd.addButtonMultiT<aBtnNel>(new DsnDataButtonMulti
+                    var con = BxCmd.addButtonMultiT<aBtnNel>(new DsnDataButtonMulti
                     {
                         name = "sub_menu",
                         titles = [.. btns.Select(x => x.Value)],
@@ -141,6 +145,7 @@ namespace WeNeedMoreNoels
                             return true;
                         }
                     });
+                    con.Get(0).Select(true);
                     Vector3 btnPos = B.transform.position;
                     float targetX = btnPos.x * 64f + 300f;
                     float targetY = btnPos.y * 64f;
@@ -151,9 +156,11 @@ namespace WeNeedMoreNoels
                 }
             }));
             BxR.Br();
-            btns.Add(BxR.addButton(new()
+            btns.Add(BxR.addButton(new()//2
             {
                 title = TX.Get("multiplayer_menu_teleport"),
+                w = btnW,
+                h = btnH,
                 fnClick = B =>
                 {
                     OnPlayerSelect(B, i =>
@@ -167,10 +174,6 @@ namespace WeNeedMoreNoels
                     return true;
                 }
             }));
-            BxR.addP(new()
-            {
-                text = "  "
-            });
             //BxR.addButton(new()
             //{
             //    title = TX.Get("multiplayer_menu_syncbackpackandmony"),
@@ -229,6 +232,8 @@ namespace WeNeedMoreNoels
             UiMenuMul.SendMsgButton = BxR.addButton(new()
             {
                 title = TX.Get("multiplayer_menu_sendmsg"),
+                w = btnW,
+                h = btnH,
                 fnClick = B =>
                 {
                     string[] titles = [.. msgs.Select(x => TX.Get(x)), TX.Get("Cancel")];
@@ -283,7 +288,7 @@ namespace WeNeedMoreNoels
                     return true;
                 }
             });
-            btns.Add(UiMenuMul.SendMsgButton);
+            btns.Add(UiMenuMul.SendMsgButton);//3
             BxR.Br();
             if (WNMNTools.Type == NetWorkType.Host)
             {
@@ -300,9 +305,11 @@ namespace WeNeedMoreNoels
                     text = TX.Get("multiplayer_menu_host_utilities")
                 });
                 BxR.Br();
-                btns.Add(BxR.addButton(new()
+                btns.Add(BxR.addButton(new()//4
                 {
                     title = TX.Get("multiplayer_menu_host_kick"),
+                    w = btnW,
+                    h = btnH,
                     fnClick = B =>
                     {
                         OnPlayerSelect(B, i =>
@@ -313,13 +320,11 @@ namespace WeNeedMoreNoels
                         return true;
                     }
                 }));
-                BxR.addP(new()
-                {
-                    text = "  "
-                });
-                btns.Add(BxR.addButton(new()
+                btns.Add(BxR.addButton(new()//5
                 {
                     title = TX.Get("multiplayer_menu_host_mute"),
+                    w = btnW,
+                    h = btnH,
                     fnClick = B =>
                     {
                         OnPlayerSelect(B, i =>
@@ -331,9 +336,11 @@ namespace WeNeedMoreNoels
                     }
                 }));
                 BxR.Br();
-                btns.Add(BxR.addButton(new()
+                btns.Add(BxR.addButton(new()//6
                 {
                     title = TX.Get("multiplayer_menu_host_teleportallself"),
+                    w = btnW,
+                    h = btnH,
                     fnClick = B =>
                     {
                         WNMNTools.SendNotifyNoelTransferToAllPeers(0);
@@ -341,13 +348,11 @@ namespace WeNeedMoreNoels
                         return true;
                     }
                 }));
-                BxR.addP(new()
-                {
-                    text = "  "
-                });
-                btns.Add(BxR.addButton(new()
+                btns.Add(BxR.addButton(new()//7
                 {
                     title = TX.Get("multiplayer_menu_host_modifyroomconfig"),
+                    w = btnW,
+                    h = btnH,
                     fnClick = B =>
                     {
                         UiBoxDesigner BxCmd = UiMenuMul.BxP;
@@ -356,7 +361,7 @@ namespace WeNeedMoreNoels
                         IN.setZ(BxCmd.transform, BxR.transform.position.z - 1f);
                         BxCmd.Clear();
                         BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
-                        BxCmd.WH(500f, 300f);
+                        BxCmd.WH(600f, 300f);
                         BxCmd.margin_in_lr = 10f;
                         BxCmd.margin_in_tb = 10f;
                         BxCmd.init();
@@ -423,7 +428,7 @@ namespace WeNeedMoreNoels
                             alignx = ALIGN.LEFT,
                             text = TX.Get("multiplayer_room_maxplayercount"),
                         });
-                        BxCmd.addSliderCT(new()
+                        var slider = BxCmd.addSliderCT(new()
                         {
                             name = "maxPlayer",
                             skin_title = "",
@@ -431,13 +436,18 @@ namespace WeNeedMoreNoels
                             mn = 0f,
                             mx = counts.Count - 1,
                             Adesc_keys = [.. counts],
-                            checkbox_mode = 2,
                             fnChanged = (_, _, i) =>
                             {
                                 DB.MaxPlayerCount = (int)i + 2;
                                 return true;
-                            }
-                        });
+                            },
+                            fnBtnMeterLine = (B, index, val) =>
+                            {
+                                var count = (int)val + 2;
+                                return count / 16f;
+                            },
+                        }, 200);
+                        slider.Select(true);
                         BxCmd.Br();
                         BxCmd.addP(new()
                         {
@@ -477,13 +487,14 @@ namespace WeNeedMoreNoels
                                 mn = 0,
                                 mx = 2,
                                 def = (int)WNMNTools.SyncType,
+                                checkbox_mode = 2,
                                 Adesc_keys = TX.GetArray("multiplayer_enemy_starter", "multiplayer_enemy_smart", "multiplayer_enemy_independent"),
                                 fnChanged = (_, _, i) =>
                                 {
                                     WNMNTools.SyncType = (EnemySyncType)i;
                                     return true;
                                 }
-                            });
+                            }, 150);
                         }
                         BxCmd.Br();
                         BxCmd.addButton(new()
@@ -497,24 +508,56 @@ namespace WeNeedMoreNoels
                             }
                         });
                         Vector3 btnPos = B.transform.position;
-                        float targetX = btnPos.x * 64f + 450f;
-                        float targetY = btnPos.y * 64f;
+                        float targetX = btnPos.x * 64f + 60f;
+                        float targetY = btnPos.y * 64f + 100f;
                         BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
-                        BxCmdDesc.posSetDA(targetX - 550f, targetY, 0, 20f, true);
+                        BxCmdDesc.posSetDA(targetX, targetY - BxCmd.h / 2 - BxCmdDesc.h / 2, 0, 20f, true);
                         BxCmd.Focusable(true, true);
                         BxCmd.Focus();
                         return true;
                     }
                 }));
             }
+            BxR.Br();
             BxR.addFocusFn(_B =>
             {
                 UiMenuMul.BxP.deactivate();
                 UiMenuMul.BxPD.deactivate();
+                btns[3].Select(true);
                 return true;
             });
-            BxR.AddSelectableItems(btns, false);
+            FineNav([.. btns]);
             return true;
+        }
+
+        void FineNav(aBtn[] btns)
+        {
+            btns[0].setNaviR(btns[1], true, true);
+            btns[1].setNaviR(btns[0], true, true);
+            btns[2].setNaviR(btns[3], true, true);
+            btns[3].setNaviR(btns[2], true, true);
+            btns[0].setNaviB(btns[2], true, true);
+            btns[1].setNaviB(btns[3], true, true);
+            if (btns.Length > 4)
+            {
+                btns[4].setNaviR(btns[5], true, true);
+                btns[5].setNaviR(btns[4], true, true);
+                btns[6].setNaviR(btns[7], true, true);
+                btns[7].setNaviR(btns[6], true, true);
+
+                btns[2].setNaviB(btns[4], true, true);
+                btns[4].setNaviB(btns[6], true, true);
+                btns[3].setNaviB(btns[5], true, true);
+                btns[5].setNaviB(btns[7], true, true);
+
+                btns[0].setNaviT(btns[6], true, true);
+                btns[1].setNaviT(btns[7], true, true);
+            }
+            else
+            {
+                btns[0].setNaviT(btns[2], false, true);
+                btns[1].setNaviT(btns[3], false, true);
+            }
         }
 
         public override void initEdit()
@@ -572,7 +615,7 @@ namespace WeNeedMoreNoels
             BxCmd.margin_in_lr = 10f;
             BxCmd.margin_in_tb = 10f;
             BxCmd.init();
-            BxCmd.addButtonMultiT<aBtnNel>(new DsnDataButtonMulti
+            var con = BxCmd.addButtonMultiT<aBtnNel>(new DsnDataButtonMulti
             {
                 name = "sub_menu",
                 titles = [.. btns.Select(x => x.Value)],
@@ -592,6 +635,7 @@ namespace WeNeedMoreNoels
                     return true;
                 }
             });
+            con.Get(0).Select(true);
             Vector3 btnPos = B.transform.position;
             float targetX = btnPos.x * 64f + 300f;
             float targetY = btnPos.y * 64f;

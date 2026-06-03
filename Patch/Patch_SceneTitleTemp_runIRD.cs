@@ -93,15 +93,9 @@ namespace WeNeedMoreNoels.Patch
                     stt.EditSvd.deactivateDesigner();
                     stt.BxR.deactivate();
                     stt.BxDesc.deactivate();
-                    BxHC = stt.BxCon.Create("hostConfirm", 0f, 0f, 540f, IN.h - 360f, 0, 0f, UiBoxDesignerFamily.MASKTYPE.BOX);
+                    BxHC = stt.BxCon.Create("hostConfirm", 0f, 0f, 620f, IN.h - 360f, 0, 0f, UiBoxDesignerFamily.MASKTYPE.BOX);
                     BxHC.Clear();
-                    CreateUIHost(BxHC);
-                    BxHC.activate();
-                    BxHC.Focusable(true, false, null);
-                    BxHC.use_scroll = false;
-                    BxHC.init();
-                    stt.remakeSumitCancelButton(true, true);
-                    stt.SubmitBtn.addClickFn(b =>
+                    CreateUI(BxHC, b =>
                     {
                         BxCmd?.deactivate();
                         WNMNTools.NetworkConfig config = new()
@@ -122,21 +116,28 @@ namespace WeNeedMoreNoels.Patch
                         COOK.setLoadTarget(file, ignore_svd_cfg);
                         stt.changeState(SceneTitleTemp.STATE.START_GAME);
                         return true;
-                    });
-                    stt.CancelBtn.addClickFn(b =>
+                    }, b =>
                     {
                         BxHC.deactivate();
                         BxHC = null;
+                        stt.changeState(SceneTitleTemp.STATE.TOP);
                         return true;
-                    });
-                    stt.DsBlack.alpha = 1;
+                    }, true);
+                    BxHC.activate();
+                    BxHC.Focusable(true, true, null);
+                    BxHC.Focus();
+                    BxHC.use_scroll = false;
+                    BxHC.init();
+                    stt.DsBlack.Clear();
+                    stt.DsBlack.alpha = 0f;
+                    stt.TxOnePoint.text_content = "";
                 }
             }
             else if (stt.state == SceneTitleTemp.STATE.TOP)
             {
                 BxCmd?.deactivate();
             }
-            if (BxHCI is not null || BxCC is not null || DB.WNMNClientTransferNotComplete)
+            if (BxHC is not null || BxCC is not null || DB.WNMNClientTransferNotComplete)
             {
                 __result = true;
                 return false;
@@ -159,15 +160,9 @@ namespace WeNeedMoreNoels.Patch
                 }
                 else
                 {
-                    BxCC = stt.BxCon.Create("clientConfirm", 0f, 0f, 540f, IN.h - 360f, 0, 0f, UiBoxDesignerFamily.MASKTYPE.BOX);
+                    BxCC = stt.BxCon.Create("clientConfirm", 0f, 0f, 620f, IN.h - 360f, 0, 0f, UiBoxDesignerFamily.MASKTYPE.BOX);
                     BxCC.Clear();
-                    CreateUIClient(BxCC);
-                    BxCC.activate();
-                    BxCC.Focusable(true, false, null);
-                    BxCC.use_scroll = false;
-                    BxCC.init();
-                    stt.remakeSumitCancelButton(true, true);
-                    stt.SubmitBtn.addClickFn(b =>
+                    CreateUI(BxCC, b =>
                     {
                         EventBasedNetListener listener = new();
                         client = new(listener);
@@ -205,51 +200,84 @@ namespace WeNeedMoreNoels.Patch
                         client.Connect(IpInput.text, PortCon.cnt_val + 1, DB.TRANSFER_ACCESS_KEY);
                         Plugin.Logger.LogInfo($"Starting connect {IpInput.text}:{PortCon.cnt_val}");
                         return true;
-                    });
-                    stt.CancelBtn.addClickFn(b =>
+                    }, b =>
                     {
                         BxCC.deactivate();
                         BxCC = null;
                         return true;
-                    });
-                    stt.DsBlack.alpha = 1;
+                    }, false);
+                    BxCC.activate();
+                    BxCC.Focusable(true, true, null);
+                    BxCC.Focus();
+                    BxCC.use_scroll = false;
+                    BxCC.init();
+                    stt.DsBlack.Clear();
+                    stt.DsBlack.alpha = 0f;
+                    stt.TxOnePoint.text_content = "";
                 }
             }
         }
 
-        static void CreateUIHost(UiBoxDesigner designer)
+        static void CreateUI(UiBoxDesigner designer, FnBtnBindings submit, FnBtnBindings cancel, bool isHost)
         {
+            designer.selectable_loop = 3;
             designer.alignx = ALIGN.CENTER;
             designer.addP(new()
             {
                 TxCol = ColorDefault,
                 size = 30f,
-                text = TX.Get("multiplayer_host_title")
+                text = isHost ? TX.Get("multiplayer_host_title") : TX.Get("multiplayer_client_title")
             });
             designer.addHr(new()
             {
                 margin_t = 5f,
                 margin_b = 5f
             });
-            designer.addP(new()
+            if (isHost)
             {
-                TxCol = ColorDefault,
-                size = 30f,
-                text = TX.Get("multiplayer_host_port")
-            });
-            PortCon = designer.addNumCounterT<aBtnNumCounter>(new()
+                designer.addP(new()
+                {
+                    TxCol = ColorDefault,
+                    size = 30f,
+                    text = TX.Get("multiplayer_host_port")
+                });
+                designer.addP(new()
+                {
+                    text = " "
+                });
+                PortCon = designer.addNumCounterT<aBtnNumCounter>(new()
+                {
+                    h = 30f,
+                    digit = 5,
+                    maxval = 99999
+                });
+                PortCon.Get(0).setNaviL(NickNameInput, false, true);
+            }
+            else
             {
-                h = 30f,
-                digit = 5,
-                maxval = 99999
-            });
+                IpInput = designer.addInput(new()
+                {
+                    h = 30f,
+                    label = "IP:"
+                });
+                IpInput.text = "localhost";
+                designer.addP(new()
+                {
+                    TxCol = ColorDefault,
+                    size = 20f,
+                    text = TX.Get("multiplayer_con")
+                });
+                PortCon = designer.addNumCounterT<aBtnNumCounter>(new()
+                {
+                    h = 30f,
+                    digit = 5,
+                    maxval = 99999
+                });
+                IpInput.setNaviR(PortCon.Get(0), false, true);
+                PortCon.Get(0).setNaviL(IpInput, false, true);
+            }
             PortCon.setValue(47210);
-            designer.addHr(new()
-            {
-                margin_t = 0,
-                margin_b = 0,
-                line_height = 0
-            });
+            designer.Br();
             designer.alignx = ALIGN.CENTER;
             designer.addP(new()
             {
@@ -261,12 +289,9 @@ namespace WeNeedMoreNoels.Patch
             {
                 h = 20f
             });
-            designer.addHr(new()
-            {
-                margin_t = 0,
-                margin_b = 0,
-                line_height = 0
-            });
+            PortCon.Get(4).setNaviR(NickNameInput, false, true);
+            NickNameInput.setNaviT(PortCon.Get(0));
+            designer.Br();
             designer.alignx = ALIGN.CENTER; 
             designer.addP(new()
             {
@@ -274,51 +299,15 @@ namespace WeNeedMoreNoels.Patch
                 size = 20f,
                 text = TX.Get("multiplayer_select_noel")
             });
-            FillBlock b = designer.addP(new()
-            {
-                TxCol = ColorDefault,
-                size = 20f,
-                text = TX.Get("multiplayer_noel")
-            });
-            var slider = designer.addSlider(new()
+            string[] noels = [TX.Get("multiplayer_noel"), TX.Get("multiplayer_noel_inverse"), TX.Get("multiplayer_noel_red"), TX.Get("multiplayer_noel_orange"), TX.Get("multiplayer_noel_yellow"), TX.Get("multiplayer_noel_green"), TX.Get("multiplayer_noel_cyan"), TX.Get("multiplayer_noel_blue"), TX.Get("multiplayer_noel_purple"), TX.Get("multiplayer_noel_magenta")];
+            var slider = designer.addSliderCT(new()
             {
                 mn = 0,
                 mx = 9,
+                checkbox_mode = 2,
+                Adesc_keys = noels,
                 fnChanged = (_b, p_v, c_v) =>
                 {
-                    switch (c_v)
-                    {
-                        case 0:
-                            b.text_content = TX.Get("multiplayer_noel");
-                            break;
-                        case 1:
-                            b.text_content = TX.Get("multiplayer_noel_inverse");
-                            break;
-                        case 2:
-                            b.text_content = TX.Get("multiplayer_noel_red");
-                            break;
-                        case 3:
-                            b.text_content = TX.Get("multiplayer_noel_orange");
-                            break;
-                        case 4:
-                            b.text_content = TX.Get("multiplayer_noel_yellow");
-                            break;
-                        case 5:
-                            b.text_content = TX.Get("multiplayer_noel_green");
-                            break;
-                        case 6:
-                            b.text_content = TX.Get("multiplayer_noel_cyan");
-                            break;
-                        case 7:
-                            b.text_content = TX.Get("multiplayer_noel_blue");
-                            break;
-                        case 8:
-                            b.text_content = TX.Get("multiplayer_noel_purple");
-                            break;
-                        case 9:
-                            b.text_content = TX.Get("multiplayer_noel_magenta");
-                            break;
-                    }
                     Preview.GetComponent<NoelPreview>().noelType = c_v == 0 ? NoelType.Normal : (c_v == 1 ? NoelType.Inverse : NoelType.ColorNoel);
                     Preview.GetComponent<NoelPreview>().color = (ColorNoelColor)(c_v - 2);
                     if (c_v > 1)
@@ -330,28 +319,52 @@ namespace WeNeedMoreNoels.Patch
                     type = (NoelType)c_v;
                     return true;
                 }
-            });
-            designer.addHr(new()
-            {
-                margin_t = 0,
-                margin_b = 0,
-                line_height = 0
-            });
+            }, 180);
+            designer.Br();
             designer.addP(new()
             {
                 TxCol = ColorDefault,
                 size = 20f,
                 text = TX.Get("multiplayer_invisible_nickname")
             });
-            designer.addSlider(new()
+            string[] array = TX.GetArray("Disabled", "Enabled");
+            var slider1 = designer.addSliderCT(new()
             {
                 checkbox_mode = 1,
+                Adesc_keys = array,
                 fnChanged = (_b, p_v, c_v) =>
                 {
                     InvisibleNickname = c_v == 1;
                     return true;
                 }
             });
+            designer.Br();
+            designer.alignx = ALIGN.CENTER;
+            designer.item_margin_x_px = 0f;
+            float btnW = (designer.use_w - designer.item_margin_x_px) / 2f - 100f;
+            float btnH = 30f;
+            var submitBtn = designer.addButton(new()
+            {
+                title = "&&Submit",
+                w = btnW,
+                h = btnH,
+                fnClick = submit
+            });
+            designer.addP(new()
+            {
+                text = "   "
+            });
+            var cancelBtn = designer.addButton(new()
+            {
+                title = "&&Cancel",
+                w = btnW,
+                h = btnH,
+                fnClick = cancel
+            });
+            submitBtn.setNaviR(cancelBtn, true, true);
+            cancelBtn.setNaviR(submitBtn, true, true);
+            cancelBtn.setNaviT(slider1, false, true);
+            designer.Br();
             BxCmd.activate();
             BxCmd.Clear();
             BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
@@ -369,175 +382,11 @@ namespace WeNeedMoreNoels.Patch
             Preview.transform.position += new Vector3(-0.6f, -1.6f);
             Preview.transform.localScale *= 2;
             Vector3 btnPos = slider.transform.position;
-            float targetX = btnPos.x * 64f + 400f;
+            float targetX = btnPos.x * 64f + 430f;
             float targetY = btnPos.y * 64f;
             BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
             BxCmd.Focusable(false, false);
-        }
-
-        static void CreateUIClient(UiBoxDesigner designer)
-        {
-            designer.alignx = ALIGN.CENTER;
-            designer.addP(new()
-            {
-                TxCol = ColorDefault,
-                size = 30,
-                text = TX.Get("multiplayer_client_title")
-            });
-            designer.addHr(new()
-            {
-                margin_t = 5f,
-                margin_b = 5f
-            });
-            designer.alignx = ALIGN.CENTER;
-            IpInput = designer.addInput(new()
-            {
-                h = 30f,
-                label = "IP:"
-            });
-            IpInput.text = "localhost";
-            designer.addP(new()
-            {
-                TxCol = ColorDefault,
-                size = 20f,
-                text = TX.Get("multiplayer_con")
-            });
-            PortCon = designer.addNumCounterT<aBtnNumCounter>(new()
-            {
-                h = 30f,
-                digit = 4,
-                maxval = 99999
-            });
-            PortCon.setValue(47210);
-            designer.addHr(new()
-            {
-                margin_t = 0,
-                margin_b = 0,
-                line_height = 0
-            });
-            designer.alignx = ALIGN.CENTER;
-            designer.addP(new()
-            {
-                TxCol = ColorDefault,
-                size = 20f,
-                text = TX.Get("multiplayer_nickname")
-            });
-            NickNameInput = designer.addInput(new()
-            {
-                h = 20f
-            });
-            designer.addHr(new()
-            {
-                margin_t = 0,
-                margin_b = 0,
-                line_height = 0
-            });
-            designer.alignx = ALIGN.CENTER;
-            designer.addP(new()
-            {
-                TxCol = ColorDefault,
-                size = 20f,
-                text = TX.Get("multiplayer_select_noel")
-            });
-            var b = designer.addP(new()
-            {
-                TxCol = ColorDefault,
-                size = 20f,
-                text = TX.Get("multiplayer_noel")
-            });
-            var slider = designer.addSlider(new()
-            {
-                mn = 0,
-                mx = 9,
-                fnChanged = (_b, p_v, c_v) =>
-                {
-                    switch (c_v)
-                    {
-                        case 0:
-                            b.text_content = TX.Get("multiplayer_noel");
-                            break;
-                        case 1:
-                            b.text_content = TX.Get("multiplayer_noel_inverse");
-                            break;
-                        case 2:
-                            b.text_content = TX.Get("multiplayer_noel_red");
-                            break;
-                        case 3:
-                            b.text_content = TX.Get("multiplayer_noel_orange");
-                            break;
-                        case 4:
-                            b.text_content = TX.Get("multiplayer_noel_yellow");
-                            break;
-                        case 5:
-                            b.text_content = TX.Get("multiplayer_noel_green");
-                            break;
-                        case 6:
-                            b.text_content = TX.Get("multiplayer_noel_cyan");
-                            break;
-                        case 7:
-                            b.text_content = TX.Get("multiplayer_noel_blue");
-                            break;
-                        case 8:
-                            b.text_content = TX.Get("multiplayer_noel_purple");
-                            break;
-                        case 9:
-                            b.text_content = TX.Get("multiplayer_noel_magenta");
-                            break;
-                    }
-                    Preview.GetComponent<NoelPreview>().noelType = c_v == 0 ? NoelType.Normal : (c_v == 1 ? NoelType.Inverse : NoelType.ColorNoel);
-                    Preview.GetComponent<NoelPreview>().color = (ColorNoelColor)(c_v - 2);
-                    if (c_v > 1)
-                    {
-                        type = NoelType.ColorNoel;
-                        color = (ColorNoelColor)(c_v - 2);
-                        return true;
-                    }
-                    type = (NoelType)c_v;
-                    return true;
-                }
-            });
-            designer.addHr(new()
-            {
-                margin_t = 0,
-                margin_b = 0,
-                line_height = 0
-            });
-            designer.addP(new()
-            {
-                TxCol = ColorDefault,
-                size = 20f,
-                text = TX.Get("multiplayer_invisible_nickname")
-            });
-            designer.addSlider(new()
-            {
-                checkbox_mode = 1,
-                fnChanged = (_b, p_v, c_v) =>
-                {
-                    InvisibleNickname = c_v == 1;
-                    return true;
-                }
-            });
-            BxCmd.activate();
-            BxCmd.Clear();
-            BxCmd.getBox().frametype = UiBox.FRAMETYPE.ONELINE;
-            BxCmd.WH(150f, 300f);
-            BxCmd.margin_in_lr = 10f;
-            BxCmd.margin_in_tb = 10f;
-            BxCmd.init();
-            Preview = new();
-            Preview.AddComponent<SpriteRenderer>();
-            Preview.AddComponent<NoelPreview>();
-            Preview.SetActive(false);
-            BxCmd.addGameObject(Preview, "preview");
-            Preview.SetActive(true);
-            Preview.transform.position = BxCmd.transform.position;
-            Preview.transform.position += new Vector3(-0.6f, -1.6f);
-            Preview.transform.localScale *= 2;
-            Vector3 btnPos = slider.transform.position;
-            float targetX = btnPos.x * 64f + 400f;
-            float targetY = btnPos.y * 64f;
-            BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
-            BxCmd.Focusable(false, false);
+            submitBtn.Select(true);
         }
 
         static Color ColorDefault => Color.HSVToRGB(0, 0, 0.219f);

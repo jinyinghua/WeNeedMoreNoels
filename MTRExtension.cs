@@ -56,6 +56,8 @@ namespace WeNeedMoreNoels
             string L_zhtcPath = Path.Combine(localLocalizationPath, "zh-tc\\");
             string L_enPath = Path.Combine(localLocalizationPath, "en\\");
             string L_jpPath = Path.Combine(localLocalizationPath, "_\\");
+            string L_krPath = Path.Combine(localLocalizationPath, "ko-kr\\");
+            string L_thPath = Path.Combine(localLocalizationPath, "th\\");
             string pluginFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BepInEx", "plugins");
             string pluginPath = Path.Combine(pluginFolderPath, "WNMN");
             string pluginPxlPath = Path.Combine(pluginPath, "pxls\\");
@@ -65,6 +67,8 @@ namespace WeNeedMoreNoels
             string zhtcPath = Path.Combine(pluginPath, "zh-tc\\");
             string enPath = Path.Combine(pluginPath, "en\\");
             string jpPath = Path.Combine(pluginPath, "_\\");
+            string krPath = Path.Combine(pluginPath, "ko-kr\\");
+            string thPath = Path.Combine(pluginPath, "th\\");
             DB.Plugin_local_path = pluginPath;
             DB.Game_streaming_asset = assetOriginPath;
             if (!Directory.Exists(assetOriginPath))
@@ -99,6 +103,8 @@ namespace WeNeedMoreNoels
             File.Copy(zhtcPath + $"zh-tc{LOCALIZATION_FILE_NAME}.txt", L_zhtcPath + $"zh-tc{LOCALIZATION_FILE_NAME}.txt", true);
             File.Copy(enPath + $"en{LOCALIZATION_FILE_NAME}.txt", L_enPath + $"en{LOCALIZATION_FILE_NAME}.txt", true);
             File.Copy(jpPath + $"_{LOCALIZATION_FILE_NAME}.txt", L_jpPath + $"_{LOCALIZATION_FILE_NAME}.txt", true);
+            File.Copy(krPath + $"ko-kr{LOCALIZATION_FILE_NAME}.txt", L_krPath + $"ko-kr{LOCALIZATION_FILE_NAME}.txt", true);
+            File.Copy(thPath + $"th{LOCALIZATION_FILE_NAME}.txt", L_thPath + $"th{LOCALIZATION_FILE_NAME}.txt", true);
             Plugin.Logger.LogInfo("WNMN resources load complete!");
             MTRExtension.localPicPath = localPicPath;
         }

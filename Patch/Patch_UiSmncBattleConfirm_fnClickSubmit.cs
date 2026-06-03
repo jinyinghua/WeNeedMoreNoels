@@ -10,6 +10,10 @@ namespace WeNeedMoreNoels.Patch
     {
         static bool Prefix(UiSmncBattleConfirm __instance, aBtn B)
         {
+            if (DB.MainPR.Mp.key != "school_in_garage")
+            {
+                return true;
+            }
             if (WNMNTools.SimBattleSyncHost != -1 && B.title == "&&Smnc_start_battle_submit")
             {
                 B.SetLocked(true);

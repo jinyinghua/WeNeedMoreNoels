@@ -57,7 +57,7 @@ namespace WeNeedMoreNoels
 
         public static string GetNickname(int id)
         {
-            return id == LocalID ? DB.MainPRNickname.GetCurrentText() : DB.noelIns[id].NicknameIns.GetCurrentText();
+            return id == LocalID ? DB.MainPRNickname.GetCurrentText() : DB.noelIns[id].NickNameStr;
         }
 
         static int _unique_id;
@@ -598,6 +598,12 @@ namespace WeNeedMoreNoels
             DB.peerConfigs.Remove(id);
             DB.peerDelays.Remove(id);
             CleanUpPeerEnemy(id);
+            SimBattleSyncList.Remove(id);
+            SimBattleReadyList.Remove(id);
+            if (USC != null)
+            {
+                UpdateSimUI?.Invoke();
+            }
         }
 
         public static void SetAllNickNameBgs()
@@ -786,7 +792,7 @@ namespace WeNeedMoreNoels
                 case NotifySimBattleType.CloseHost:
                     UiMenuMul.BxSB?.deactivate();
                     SimBattleSyncHost = -1;
-                    if ((int)USC.state == 9)
+                    if (USC != null && (int)USC.state == 9)
                     {
                         USC.changeState(UiSmnCreator.STATE.FILESEL);
                     }

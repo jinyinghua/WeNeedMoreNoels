@@ -74,6 +74,9 @@
     <None Update="en\en_wnmn_localization.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="ko-kr\ko-kr_wnmn_localization.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="pics\preview_noel00.dat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -1365,6 +1368,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="resources\multiplayer.manifest">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="th\th_wnmn_localization.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="zh-cn\zh-cn_wnmn_localization.txt">
