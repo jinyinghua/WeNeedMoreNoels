@@ -137,7 +137,7 @@ namespace WeNeedMoreNoels.Patch
             {
                 BxCmd?.deactivate();
             }
-            if (BxHC is not null || BxCC is not null || DB.WNMNClientTransferNotComplete)
+            if (BxHCI is not null || BxHC is not null || BxCC is not null || DB.WNMNClientTransferNotComplete)
             {
                 __result = true;
                 return false;

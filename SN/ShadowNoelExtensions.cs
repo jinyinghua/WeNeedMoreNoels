@@ -148,6 +148,7 @@ namespace WeNeedMoreNoels.SN
             noel.MagicT = info.MagicT;
             noel.MagicHoldAim = info.MagicHoldAim;
             noel.IsEvadeO = info.IsEvadeO;
+            noel.Skill.ShE.evade_t = info.EvadeT;
         }
 
         public static void DisableShadowNoel(int id)
@@ -411,7 +412,8 @@ namespace WeNeedMoreNoels.SN
                 MagicHold = skill.mp_hold,
                 MagicT = skill.magic_t,
                 MagicHoldAim = skill.Cursor.pre_hold_aim,
-                IsEvadeO = DB.MainPR.isEvadeO()
+                IsEvadeO = DB.MainPR.isEvadeO(),
+                EvadeT = DB.MainPR.Skill.ShE.evade_t
             };
         }
     }

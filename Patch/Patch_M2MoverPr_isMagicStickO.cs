@@ -4,7 +4,7 @@ using WeNeedMoreNoels.SN;
 
 namespace WeNeedMoreNoels.Patch
 {
-    [HarmonyPatch(typeof(M2MoverPr), nameof(M2MoverPr.isMagicO))]
+    [HarmonyPatch(typeof(M2MoverPr), nameof(M2MoverPr.isMagicStickO))]
     public class Patch_M2MoverPr_isMagicStickO
     {
         [HarmonyPrefix]

@@ -149,7 +149,7 @@ namespace WeNeedMoreNoels.SN
             {
                 base.changeState(CurState, state);
             }
-            if (IsEvadeO)
+            if (IsEvadeO && state != STATE.SHIELD_BUSH)
             {
                 Skill.ShE.Shield.activate(true, false);
             }
