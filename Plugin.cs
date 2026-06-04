@@ -25,7 +25,6 @@ namespace WeNeedMoreNoels
             Logger.LogMessage("Created by Alon_, Created at 2026-4-13, Happy birthday to myself");
             MTRExtension.Load();
             ReceiveMessageManager.Init();
-            WNMNConsole.Init();
 
             PluginInstance = this;
         }

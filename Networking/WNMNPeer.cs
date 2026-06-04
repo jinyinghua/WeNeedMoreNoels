@@ -115,6 +115,8 @@ namespace WeNeedMoreNoels.Networking
             DB.peerInfos.Clear();
             DB.peerConfigs.Clear();
             DB.peerDelays.Clear();
+            DB.CleanUp();
+            WNMNTools.CleanUp();
         }
     }
 }

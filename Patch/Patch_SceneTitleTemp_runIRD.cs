@@ -4,9 +4,12 @@ using nel;
 using nel.title;
 using System.Collections;
 using System.IO;
+using System.Linq;
+using System.Net.NetworkInformation;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
 using XX;
+using static nel.UseItemSelector;
 
 namespace WeNeedMoreNoels.Patch
 {
@@ -14,6 +17,8 @@ namespace WeNeedMoreNoels.Patch
     public class Patch_SceneTitleTemp_runIRD
     {
         static UiBoxDesigner BxHC;
+
+        static UiBoxDesigner BxHBP;
 
         static UiBoxDesigner BxCC;
 
@@ -104,8 +109,41 @@ namespace WeNeedMoreNoels.Patch
                     stt.BxDesc.deactivate();
                     BxHC = stt.BxCon.Create("hostConfirm", 0f, 0f, 620f, IN.h - 360f, 0, 0f, UiBoxDesignerFamily.MASKTYPE.BOX);
                     BxHC.Clear();
+                    BxHBP = stt.BxCon.Create("hostBusyPort", 0f, 0f, 380f, (IN.h - 620f) * 1.5f, 0, 0f, UiBoxDesignerFamily.MASKTYPE.BOX);
+                    IN.setZ(BxHBP.transform, BxHC.transform.position.z - 1f);
+                    BxHBP.alignx = ALIGN.CENTER;
+                    BxHBP.addP(new()
+                    {
+                        TxCol = ColorDefault,
+                        size = 40,
+                        text = "端口被占用"
+                    });
+                    BxHBP.Br();
+                    BxHBP.alignx = ALIGN.CENTER;
+                    BxHBP.addButton(new()
+                    {
+                        title = TX.Get("Submit"),
+                        fnClick = B =>
+                        {
+                            BxHBP.deactivate();
+                            submit.Select(true);
+                            return true;
+                        }
+                    });
+                    BxHBP.Focusable(true, true);
+                    BxHBP.deactivate();
                     CreateUI(BxHC, b =>
                     {
+                        //端口检查
+                        IPGlobalProperties properties = IPGlobalProperties.GetIPGlobalProperties();
+                        var busyPort = properties.GetActiveTcpListeners().Any(x => x.Port == PortCon.cnt_val);
+                        busyPort |= properties.GetActiveUdpListeners().Any(x => x.Port == PortCon.cnt_val);
+                        if (busyPort)
+                        {
+                            BxHBP.Focus();
+                            BxHBP.activate();
+                            return true;
+                        }
                         BxCmd?.deactivate();
                         WNMNTools.NetworkConfig config = new()
                         {
@@ -131,7 +169,7 @@ namespace WeNeedMoreNoels.Patch
                         BxHC = null;
                         stt.changeState(SceneTitleTemp.STATE.TOP);
                         return true;
-                    }, true, out _);
+                    }, true, out submit);
                     BxHC.activate();
                     BxHC.Focusable(true, true, null);
                     BxHC.Focus();

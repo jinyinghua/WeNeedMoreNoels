@@ -101,5 +101,15 @@ namespace WeNeedMoreNoels
         public static bool StartedSimBattle;
 
         public static Dictionary<int, int> peerDelays = [];
+
+        public static void CleanUp()
+        {
+            MainPR = null;
+            MainPRMsg = null;
+            MainPRNickname = null;
+            Nickname = null;
+            SyncSaveContentBuffer = null;
+            InitConfig = null;
+        }
     }
 }

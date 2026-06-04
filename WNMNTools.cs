@@ -28,6 +28,7 @@ namespace WeNeedMoreNoels
         public static int LocalID = -1;
         public static bool Inited;
         public static bool PeerInited;
+        public static bool PeerIngameInited;
 
         public static string LocalIP;
 
@@ -942,6 +943,16 @@ namespace WeNeedMoreNoels
                 {
                 }
             }
+        }
+
+        public static void CleanUp()
+        {
+            host = null;
+            client = null;
+            Inited = false;
+            LocalID = -1;
+            peer = null;
+            PeerIngameInited = false;
         }
 
         public class NetworkConfig

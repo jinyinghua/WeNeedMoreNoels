@@ -9,15 +9,13 @@ namespace WeNeedMoreNoels.Patch
     [HarmonyPatch(typeof(PRNoel), nameof(PRNoel.appear))]
     public class Patch_PRNoel_appear
     {
-        static bool Inited;
-
         [HarmonyPostfix]
         static void Postfix(Map2d Mp)
         {
-            if (!Inited && DB.InitConfig is not null)
+            if (!WNMNTools.PeerIngameInited && DB.InitConfig is not null)
             {
                 WNMNTools.InitNetworking(DB.InitConfig);
-                Inited = true;
+                WNMNTools.PeerIngameInited = true;
             }
             if (DB.InitConfig is not null && WNMNTools.LocalID != -1)
             {
