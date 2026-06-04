@@ -1,8 +1,6 @@
 ﻿using HarmonyLib;
 using nel;
 using nel.smnp;
-using UnityEngine.InputSystem;
-using XX;
 
 namespace WeNeedMoreNoels.Patch
 {

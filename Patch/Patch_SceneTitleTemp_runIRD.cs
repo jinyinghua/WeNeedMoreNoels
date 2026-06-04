@@ -9,7 +9,6 @@ using System.Net.NetworkInformation;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
 using XX;
-using static nel.UseItemSelector;
 
 namespace WeNeedMoreNoels.Patch
 {
@@ -116,7 +115,7 @@ namespace WeNeedMoreNoels.Patch
                     {
                         TxCol = ColorDefault,
                         size = 40,
-                        text = "端口被占用"
+                        text = TX.Get("multiplayer_busy_port")
                     });
                     BxHBP.Br();
                     BxHBP.alignx = ALIGN.CENTER;
@@ -218,7 +217,7 @@ namespace WeNeedMoreNoels.Patch
                         {
                             TxCol = ColorDefault,
                             size = 40,
-                            text = "连接超时"
+                            text = TX.Get("multiplayer_connect_timeout")
                         });
                         BxCTO.Br();
                         BxCTO.alignx = ALIGN.CENTER;

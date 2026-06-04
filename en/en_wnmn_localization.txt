@@ -7,6 +7,9 @@
 &&multiplayer_host_kicked Host kicked you out
 &&multiplayer_host_closed Host closed
 
+&&multiplayer_busy_port Port busy
+&&multiplayer_connect_timeout Connect timeout
+
 &&multiplayer_nickname Nickname: 
 &&multiplayer_select_noel Select character:
 &&multiplayer_invisible_nickname Streamer Mode:

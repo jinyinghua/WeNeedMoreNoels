@@ -7,6 +7,9 @@
 &&multiplayer_host_kicked 主机将你踢出
 &&multiplayer_host_closed 主机已关闭
 
+&&multiplayer_busy_port 端口被占用
+&&multiplayer_connect_timeout 连接超时
+
 &&multiplayer_nickname 昵称： 
 &&multiplayer_select_noel 选择人物：
 &&multiplayer_invisible_nickname 主播模式：

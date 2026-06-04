@@ -7,6 +7,9 @@
 &&multiplayer_host_kicked 主人に追放された
 &&multiplayer_host_closed ポートが消えた
 
+&&multiplayer_busy_port 端口被占用
+&&multiplayer_connect_timeout 连接超时
+
 &&multiplayer_nickname ニックネーム：
 &&multiplayer_select_noel キャラクターを選択：
 &&multiplayer_invisible_nickname 配信モード：

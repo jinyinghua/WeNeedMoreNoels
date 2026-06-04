@@ -155,6 +155,7 @@ namespace WeNeedMoreNoels.SN
             noel.Skill.ShE.Shield.scale = info.ShieldScale;
             noel.Skill.ShE.Shield.pow = info.ShieldPow;
             noel.CurShieldState = (M2Shield.STATE)info.ShieldState;
+            noel.Skill.Cursor.t_hold = info.HoldT;
         }
 
         public static void DisableShadowNoel(int id)
@@ -302,6 +303,8 @@ namespace WeNeedMoreNoels.SN
                     item.t = 1f;
                     item.PtcST("mg_fireball_curve", PTCThread.StFollow.NO_FOLLOW, false);
                     break;
+                case NotifyMagicTpe.UpdateWater:
+                    break;
             }
         }
 
@@ -425,7 +428,8 @@ namespace WeNeedMoreNoels.SN
                 ShieldShiftY = DB.MainPR.Skill.ShE.Shield.shifty,
                 ShieldScale = DB.MainPR.Skill.ShE.Shield.scale,
                 ShieldPow = DB.MainPR.Skill.ShE.Shield.pow,
-                ShieldState = (int)DB.MainPR.Skill.ShE.Shield.stt
+                ShieldState = (int)DB.MainPR.Skill.ShE.Shield.stt,
+                HoldT = DB.MainPR.Skill.Cursor.t_hold
             };
         }
     }

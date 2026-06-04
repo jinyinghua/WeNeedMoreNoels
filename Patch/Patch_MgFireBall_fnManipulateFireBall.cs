@@ -8,6 +8,7 @@ namespace WeNeedMoreNoels.Patch
     [HarmonyPatch(typeof(MgFireBall), nameof(MgFireBall.fnManipulateFireBall))]
     public class Patch_MgFireBall_fnManipulateFireBall
     {
+        [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var codeMatcher = new CodeMatcher(instructions);

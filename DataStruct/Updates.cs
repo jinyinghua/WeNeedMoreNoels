@@ -56,6 +56,8 @@ namespace WeNeedMoreNoels.DataStruct
         public float ShieldPow;
         [ProtoMember(25)]
         public int ShieldState;
+        [ProtoMember(26)]
+        public float HoldT;
     }
 
     [ProtoContract] 
@@ -78,6 +80,8 @@ namespace WeNeedMoreNoels.DataStruct
         public float T;
         [ProtoMember(4)]
         public float da;
+        [ProtoMember(5)]
+        public int phase;
     }
 
     [ProtoContract]
@@ -90,7 +94,9 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoEnum]
         Kill,
         [ProtoEnum]
-        Turn
+        Turn,
+        [ProtoEnum]
+        UpdateWater
     }
 
     [ProtoContract]

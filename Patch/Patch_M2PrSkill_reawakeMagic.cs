@@ -13,6 +13,10 @@ namespace WeNeedMoreNoels.Patch
             M2PrSkill skill = (M2PrSkill)__instance;
             if (skill.Pr is PRNoel)
             {
+                if (skill.CurMg == null)
+                {
+                    return;
+                }
                 NotifyNoelMagic mg = new()
                 {
                     Type = NotifyMagicTpe.Reawake,
