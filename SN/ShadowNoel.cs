@@ -19,6 +19,9 @@ namespace WeNeedMoreNoels.SN
         public int MagicHoldAim;
 
         public bool IsEvadeO;
+        public bool IsAtkO;
+
+        public M2Shield.STATE CurShieldState;
 
         public Action<int, NotifyNoelDamage> OnNoelDamage;
 
@@ -149,13 +152,17 @@ namespace WeNeedMoreNoels.SN
             {
                 base.changeState(CurState, state);
             }
-            if (IsEvadeO && state != STATE.SHIELD_BUSH)
+            Skill.ShE.Shield.stt = CurShieldState;
+            if (IsEvadeO && state != STATE.SHIELD_BUSH && state != STATE.EVADE)
             {
-                Skill.ShE.Shield.activate(true, false);
+                if (state != STATE.SHIELD_LARIAT)
+                {
+                    Skill.ShE.Shield.activate(false, false);
+                }
             }
-            else
+            else if (state != STATE.SHIELD_LARIAT)
             {
-                Skill.ShE.Shield.deactivate(true, false);
+                Skill.ShE.Shield.deactivate(false, false);
             }
             Skill.ShE.Shield.run(TS);
             try

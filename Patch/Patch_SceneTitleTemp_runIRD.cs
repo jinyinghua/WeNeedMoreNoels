@@ -2,6 +2,7 @@
 using LiteNetLib;
 using nel;
 using nel.title;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
@@ -16,7 +17,11 @@ namespace WeNeedMoreNoels.Patch
 
         static UiBoxDesigner BxCC;
 
+        static UiBoxDesigner BxCTO;
+
         static UiBoxDesigner BxHCI;
+
+        static aBtn submit;
 
         static NoelType type;
 
@@ -33,6 +38,10 @@ namespace WeNeedMoreNoels.Patch
         static SceneTitleTemp stt;
 
         static bool InvisibleNickname;
+
+        static aBtn BtnCC;
+
+        static bool Connected;
 
         [HarmonyPrefix]
         static bool Prefix(object __instance, ref bool __result)
@@ -122,7 +131,7 @@ namespace WeNeedMoreNoels.Patch
                         BxHC = null;
                         stt.changeState(SceneTitleTemp.STATE.TOP);
                         return true;
-                    }, true);
+                    }, true, out _);
                     BxHC.activate();
                     BxHC.Focusable(true, true, null);
                     BxHC.Focus();
@@ -164,6 +173,32 @@ namespace WeNeedMoreNoels.Patch
                     BxCC.Clear();
                     CreateUI(BxCC, b =>
                     {
+                        BxCTO = stt.BxCon.Create("clientTimeOut", 0f, 0f, 380f, (IN.h - 620f) * 1.5f, 0, 0f, UiBoxDesignerFamily.MASKTYPE.BOX);
+                        IN.setZ(BxCTO.transform, BxCC.transform.position.z - 1f);
+                        BxCTO.alignx = ALIGN.CENTER;
+                        BxCTO.addP(new()
+                        {
+                            TxCol = ColorDefault,
+                            size = 40,
+                            text = "连接超时"
+                        });
+                        BxCTO.Br();
+                        BxCTO.alignx = ALIGN.CENTER;
+                        BxCTO.addButton(new()
+                        {
+                            title = TX.Get("Submit"),
+                            fnClick = B =>
+                            {
+                                BxCTO.deactivate();
+                                submit.SetLocked(false);
+                                submit.Select(true);
+                                return true;
+                            }
+                        });
+                        BxCTO.Focusable(true, true);
+                        BxCTO.deactivate();
+                        BtnCC = b;
+                        b.SetLocked(true);
                         EventBasedNetListener listener = new();
                         client = new(listener);
                         listener.NetworkReceiveEvent += (peer, reader, deliveryMethod) =>
@@ -195,9 +230,11 @@ namespace WeNeedMoreNoels.Patch
                             COOK.setLoadTarget(file, true);
                             stt?.changeState(SceneTitleTemp.STATE.START_GAME);
                             reader.Recycle();
+                            Connected = true;
                         };
                         client.Start();
                         client.Connect(IpInput.text, PortCon.cnt_val + 1, DB.TRANSFER_ACCESS_KEY);
+                        Plugin.PluginInstance.StartCoroutine(CheckTimeout(5, client));
                         Plugin.Logger.LogInfo($"Starting connect {IpInput.text}:{PortCon.cnt_val}");
                         return true;
                     }, b =>
@@ -205,7 +242,7 @@ namespace WeNeedMoreNoels.Patch
                         BxCC.deactivate();
                         BxCC = null;
                         return true;
-                    }, false);
+                    }, false, out submit);
                     BxCC.activate();
                     BxCC.Focusable(true, true, null);
                     BxCC.Focus();
@@ -218,7 +255,22 @@ namespace WeNeedMoreNoels.Patch
             }
         }
 
-        static void CreateUI(UiBoxDesigner designer, FnBtnBindings submit, FnBtnBindings cancel, bool isHost)
+        static IEnumerator CheckTimeout(float t, NetManager client)
+        {
+            float curt = Time.time;
+            while (Time.time - curt < t)
+            {
+                yield return 0;
+            }
+            if (!Connected)
+            {
+                client.Stop();
+                BxCTO.activate();
+                BxCTO.Focus();
+            }
+        }
+
+        static void CreateUI(UiBoxDesigner designer, FnBtnBindings submit, FnBtnBindings cancel, bool isHost, out aBtn submitBtn)
         {
             designer.selectable_loop = 3;
             designer.alignx = ALIGN.CENTER;
@@ -343,7 +395,7 @@ namespace WeNeedMoreNoels.Patch
             designer.item_margin_x_px = 0f;
             float btnW = (designer.use_w - designer.item_margin_x_px) / 2f - 100f;
             float btnH = 30f;
-            var submitBtn = designer.addButton(new()
+            submitBtn = designer.addButton(new()
             {
                 title = "&&Submit",
                 w = btnW,

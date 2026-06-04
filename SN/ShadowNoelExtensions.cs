@@ -149,6 +149,12 @@ namespace WeNeedMoreNoels.SN
             noel.MagicHoldAim = info.MagicHoldAim;
             noel.IsEvadeO = info.IsEvadeO;
             noel.Skill.ShE.evade_t = info.EvadeT;
+            noel.IsAtkO = info.IsAtkO;
+            noel.Skill.ShE.Shield.shiftx = info.ShieldShiftX;
+            noel.Skill.ShE.Shield.shifty = info.ShieldShiftY;
+            noel.Skill.ShE.Shield.scale = info.ShieldScale;
+            noel.Skill.ShE.Shield.pow = info.ShieldPow;
+            noel.CurShieldState = (M2Shield.STATE)info.ShieldState;
         }
 
         public static void DisableShadowNoel(int id)
@@ -413,7 +419,13 @@ namespace WeNeedMoreNoels.SN
                 MagicT = skill.magic_t,
                 MagicHoldAim = skill.Cursor.pre_hold_aim,
                 IsEvadeO = DB.MainPR.isEvadeO(),
-                EvadeT = DB.MainPR.Skill.ShE.evade_t
+                EvadeT = DB.MainPR.Skill.ShE.evade_t,
+                IsAtkO = DB.MainPR.isAtkO(),
+                ShieldShiftX = DB.MainPR.Skill.ShE.Shield.shiftx,
+                ShieldShiftY = DB.MainPR.Skill.ShE.Shield.shifty,
+                ShieldScale = DB.MainPR.Skill.ShE.Shield.scale,
+                ShieldPow = DB.MainPR.Skill.ShE.Shield.pow,
+                ShieldState = (int)DB.MainPR.Skill.ShE.Shield.stt
             };
         }
     }

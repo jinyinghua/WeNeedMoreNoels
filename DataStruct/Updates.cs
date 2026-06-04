@@ -43,11 +43,19 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoMember(18)]
         public bool IsEvadeO;
         [ProtoMember(19)]
-        public bool IsShildBroke;
-        [ProtoMember(20)]
-        public float GameT;
-        [ProtoMember(21)]
         public float EvadeT;
+        [ProtoMember(20)]
+        public bool IsAtkO;
+        [ProtoMember(21)]
+        public float ShieldShiftX;
+        [ProtoMember(22)]
+        public float ShieldShiftY;
+        [ProtoMember(23)]
+        public float ShieldScale;
+        [ProtoMember(24)]
+        public float ShieldPow;
+        [ProtoMember(25)]
+        public int ShieldState;
     }
 
     [ProtoContract] 
