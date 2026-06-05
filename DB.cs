@@ -76,10 +76,6 @@ namespace WeNeedMoreNoels
 
         public static bool IsMultiplayer => InitConfig != null;
 
-        public static bool Test;
-
-        public static float Test1;
-
         public static bool IsMainPR;
 
         public static float LocalMagicAim;
@@ -104,6 +100,10 @@ namespace WeNeedMoreNoels
 
         public static void CleanUp()
         {
+            noelIns.Clear();
+            partyInfos.Clear();
+            peerInfos.Clear();
+            peerConfigs.Clear();
             MainPR = null;
             MainPRMsg = null;
             MainPRNickname = null;

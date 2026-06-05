@@ -79,9 +79,9 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoMember(3)]
         public float T;
         [ProtoMember(4)]
-        public float da;
+        public float agR;
         [ProtoMember(5)]
-        public int phase;
+        public int id;
     }
 
     [ProtoContract]
@@ -96,7 +96,7 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoEnum]
         Turn,
         [ProtoEnum]
-        UpdateWater
+        WaterShoot
     }
 
     [ProtoContract]

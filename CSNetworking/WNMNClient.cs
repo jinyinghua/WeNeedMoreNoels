@@ -96,5 +96,13 @@ namespace WeNeedMoreNoels.CSNetworking
             DB.WNMNHostClosed = true;
             ((NelM2DBase)DB.MainPR.M2D).quitGame("SceneTitle");
         }
+
+        private void OnDestroy()
+        {
+            NetDataWriter writer = new();
+            writer.Put(peerID);
+            client.DisconnectPeer(hostPeer, writer);
+            client.Stop();
+        }
     }
 }

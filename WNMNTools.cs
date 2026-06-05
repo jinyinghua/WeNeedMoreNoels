@@ -730,7 +730,7 @@ namespace WeNeedMoreNoels
             NotifyNoelMagic mg = new()
             {
                 Type = NotifyMagicTpe.Turn,
-                da = Mg.da
+                agR = Mg.da
             };
             SendMagicToAllPeers(LocalID, mg);
         }

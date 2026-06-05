@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
 using XX;
+using static nel.M2BarricadeTDDrawer;
 
 namespace WeNeedMoreNoels.SN
 {
@@ -298,12 +299,26 @@ namespace WeNeedMoreNoels.SN
                     mn._0.v0 = mn._2.v0;
                     mn._0.maxt += mn._2.time + 1f - item.t;
                     mn._0.accel_mint = accel_maxt;
-                    item.da = (item.sa = mg.da);
+                    item.da = (item.sa = mg.agR);
                     item.sz = 0f;
                     item.t = 1f;
                     item.PtcST("mg_fireball_curve", PTCThread.StFollow.NO_FOLLOW, false);
                     break;
-                case NotifyMagicTpe.UpdateWater:
+                case NotifyMagicTpe.WaterShoot:
+                    ShadowNoel noel = DB.noelIns[id].Noel;
+                    ((NelM2DBase)noel.M2D).MGC.countMg((Mg, caster) =>
+                    {
+                        MgWaterShard.IdAndPhase(Mg, out int id, out int phase);
+                        if (id == mg.id && phase != 500)
+                        {
+                            ((MgWaterShard)Mg.MGC.OHoldFD[MGKIND.WATERSHARD]).forceShotInit(Mg, 1, mg.agR);
+                        }
+                        return true;
+                    }, noel);
+                    if (((NelM2DBase)noel.M2D).MGC.AItems.All(x => x.phase >> 2 == 5))
+                    {
+                        noel.KillMagic();
+                    }
                     break;
             }
         }

@@ -156,10 +156,6 @@ namespace WeNeedMoreNoels.CSNetworking
             host.DisconnectAll();
             host.Stop();
             DB.InitConfig = null;
-            DB.noelIns.Clear();
-            DB.partyInfos.Clear();
-            DB.peerInfos.Clear();
-            DB.peerConfigs.Clear();
         }
     }
 }
