@@ -54,6 +54,8 @@ namespace WeNeedMoreNoels
 
         public static Dictionary<MagicItem, ShadowNoel> MNBridge = [];
 
+        public static Dictionary<ShadowNoel, MagicItem> BombDic = [];
+
         public static List<NelEnemy> CurEnemies = [];
 
         public static float MovementEpslion = 0.001f;

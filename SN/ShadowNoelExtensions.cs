@@ -270,6 +270,7 @@ namespace WeNeedMoreNoels.SN
 
         public static void SetNoelMagic(int id, NotifyNoelMagic mg)
         {
+            ShadowNoel noel = DB.noelIns[id].Noel;
             switch (mg.Type)
             {
                 case NotifyMagicTpe.Reawake:
@@ -305,7 +306,6 @@ namespace WeNeedMoreNoels.SN
                     item.PtcST("mg_fireball_curve", PTCThread.StFollow.NO_FOLLOW, false);
                     break;
                 case NotifyMagicTpe.WaterShoot:
-                    ShadowNoel noel = DB.noelIns[id].Noel;
                     ((NelM2DBase)noel.M2D).MGC.countMg((Mg, caster) =>
                     {
                         MgWaterShard.IdAndPhase(Mg, out int id, out int phase);
@@ -319,6 +319,25 @@ namespace WeNeedMoreNoels.SN
                     {
                         noel.KillMagic();
                     }
+                    break;
+                case NotifyMagicTpe.InitBomb:
+                    noel.Skill.initItemBomb(NelItem.GetById(mg.Key), mg.Grade, null);
+                    MagicItem bomb = noel.Skill.MhCurSkill.Mg;
+                    if (!DB.BombDic.ContainsKey(noel))
+                    {
+                        DB.BombDic.Add(noel, bomb);
+                    }
+                    DB.BombDic[noel] = bomb;
+                    break;
+                case NotifyMagicTpe.UpdateBomb:
+                    MagicItem bomb1 = DB.BombDic[noel];
+                    bomb1.phase = mg.Phase;
+                    bomb1.t = mg.T;
+                    bomb1.Dro.x = mg.BombX;
+                    bomb1.Dro.y = mg.BombY;
+                    break;
+                case NotifyMagicTpe.RemoveBomb:
+                    DB.BombDic.Remove(noel);
                     break;
             }
         }

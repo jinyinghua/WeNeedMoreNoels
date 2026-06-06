@@ -82,6 +82,16 @@ namespace WeNeedMoreNoels.DataStruct
         public float agR;
         [ProtoMember(5)]
         public int id;
+        [ProtoMember(6)]
+        public string Key;
+        [ProtoMember(7)]
+        public int Grade;
+        [ProtoMember(8)]
+        public int Phase;
+        [ProtoMember(9)]
+        public float BombX;
+        [ProtoMember(10)]
+        public float BombY;
     }
 
     [ProtoContract]
@@ -96,7 +106,13 @@ namespace WeNeedMoreNoels.DataStruct
         [ProtoEnum]
         Turn,
         [ProtoEnum]
-        WaterShoot
+        WaterShoot,
+        [ProtoEnum]
+        InitBomb,
+        [ProtoEnum]
+        UpdateBomb,
+        [ProtoEnum]
+        RemoveBomb
     }
 
     [ProtoContract]

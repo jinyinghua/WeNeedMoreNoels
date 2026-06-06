@@ -196,7 +196,7 @@ namespace WeNeedMoreNoels.SN
         }
 
         public void ReawakeMagic(MGKIND kind, float t)
-        {
+        {   
             Skill.reawakeMagic(kind);
             Skill.CurMg.castedTimeResetTo(t);
         }
