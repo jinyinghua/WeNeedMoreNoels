@@ -47,7 +47,7 @@
 &&multiplayer_menu_host_mute 客人を黙らせる
 &&multiplayer_menu_host_teleportallself 全ての客人をここに召喚
 &&multiplayer_menu_host_modifyroomconfig ルームの設定
-&&multiplayer_menu_config_title 房间设置
+&&multiplayer_menu_config_title ルームの設定
 
 // ========================================================
 // MARK : Multiplayer Options
@@ -118,23 +118,23 @@
 &&multiplayer_msg_goodbye バイバイ！
 
 // ========================================================
-// MARK : 模拟战
+// MARK : 模擬戦闘
 // ========================================================
 
-&&multiplayer_simbattle_btn 加入模拟
-&&multiplayer_simbattle_title 进行多人模拟
-&&multiplayer_simbattle_noroom 暂无模拟战房间可加入
-&&multiplayer_simbattle_hostsubtitle 主持房间中（&1/&2 已连接） 等待中
-&&multiplayer_simbattle_clientsubtitle 处于房间中（&1/&2 已连接） 等待中
-&&multiplayer_simbattle_name &1的模拟战
-&&multiplayer_simbattle_simstate 当前模拟战地图状态：
-&&multiplayer_simbattle_synced 已同步
-&&multiplayer_simbattle_unsynced 未同步
-&&multiplayer_simbattle_synchint 可点击下方按钮同步模拟战地图
-&&multiplayer_simbattle_syncmap 同步模拟战地图
-&&multiplayer_simbattle_readytitle 当前已准备人数（&1/&2）
-&&multiplayer_simbattle_readyhint 当所有玩家均准备完毕后即可开始多人模拟战
-&&multiplayer_simbattle_readyhint1 请点击下方按钮进行准备
-&&multiplayer_simbattle_ready 已准备
-&&multiplayer_simbattle_unready 准备
-&&multiplayer_simbattle_syncfirst 请先同步模拟战地图
+&&multiplayer_simbattle_btn 模擬戦闘を参加する
+&&multiplayer_simbattle_title 複数プレーヤーの模擬戦闘
+&&multiplayer_simbattle_noroom 今は可用なルームがない
+&&multiplayer_simbattle_hostsubtitle 主人として（&1／&2 接続済み）待っています
+&&multiplayer_simbattle_clientsubtitle 客人として（&1／&2 接続済み）待っています
+&&multiplayer_simbattle_name &1の模擬戦闘
+&&multiplayer_simbattle_simstate 今の模擬戦闘のマップ状態：
+&&multiplayer_simbattle_synced もう同期化した
+&&multiplayer_simbattle_unsynced まだ同期化しない
+&&multiplayer_simbattle_synchint 下のボタンをクリックして、マップを同期化します
+&&multiplayer_simbattle_syncmap マップを同期化します
+&&multiplayer_simbattle_readytitle 今の準備できた人数（&1／&2）
+&&multiplayer_simbattle_readyhint 全てのプレーヤーが準備できたら、戦闘がスタートできます
+&&multiplayer_simbattle_readyhint1 下のボタンをクリックして準備します
+&&multiplayer_simbattle_ready 准备できた
+&&multiplayer_simbattle_unready 准备します
+&&multiplayer_simbattle_syncfirst まずマップを同期化してください
