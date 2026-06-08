@@ -151,7 +151,7 @@ namespace WeNeedMoreNoels.Patch
                 {
                     TxCol = ColorDefault,
                     size = 20,
-                    text = "默认出生点"
+                    text = TX.Get("multiplayer_simbattle_defaultspawn")
                 });
                 BxCmd.Br();
                 BxCmd.alignx = ALIGN.CENTER;
@@ -165,7 +165,7 @@ namespace WeNeedMoreNoels.Patch
                 BxCmd.alignx = ALIGN.CENTER;
                 BxCmd.addButton(new()
                 {
-                    title = "设置默认出生点",
+                    title = TX.Get("multiplayer_simbattle_setdefaultspawn"),
                     fnClick = B =>
                     {
                         WNMNTools.IsSettingSpawnLocation = true;
@@ -192,7 +192,7 @@ namespace WeNeedMoreNoels.Patch
                 {
                     TxCol = ColorDefault,
                     size = 20,
-                    text = "个人出生点"
+                    text = TX.Get("multiplayer_simbattle_playerspawn")
                 });
                 BxCmd.Br();
                 BxCmd.alignx = ALIGN.CENTER;
@@ -207,7 +207,7 @@ namespace WeNeedMoreNoels.Patch
                 var b1 = BxCmd.addButton(new()
                 {
                     name = "checkspawn",
-                    title = "查看当前出生点",
+                    title = TX.Get("multiplayer_simbattle_checkspawn"),
                     fnClick = B =>
                     {
                         UiBoxDesigner BxCmd = UiMenuMul.BxSS;
@@ -219,7 +219,7 @@ namespace WeNeedMoreNoels.Patch
                         {
                             TxCol = ColorDefault,
                             size = 20,
-                            text = "玩家#" + WNMNTools.GetNickname(WNMNTools.LocalID)
+                            text = TX.Get("multiplayer_simbattle_player") + "#" + WNMNTools.GetNickname(WNMNTools.LocalID)
                         });
                         BxCmd.addP(new()
                         {
@@ -242,7 +242,7 @@ namespace WeNeedMoreNoels.Patch
                             {
                                 TxCol = ColorDefault,
                                 size = 20,
-                                text = "未配置，缺省为默认值"
+                                text = TX.Get("multiplayer_simbattle_default")
                             });
                         }
                         BxCmd.Br();
@@ -253,7 +253,7 @@ namespace WeNeedMoreNoels.Patch
                             {
                                 TxCol = ColorDefault,
                                 size = 20,
-                                text = "玩家#" + WNMNTools.GetNickname(id)
+                                text = TX.Get("multiplayer_simbattle_player") + "#" + WNMNTools.GetNickname(id)
                             });
                             BxCmd.addP(new()
                             {
@@ -276,7 +276,7 @@ namespace WeNeedMoreNoels.Patch
                                 {
                                     TxCol = ColorDefault,
                                     size = 20,
-                                    text = "未配置，缺省为默认值"
+                                    text = TX.Get("multiplayer_simbattle_default")
                                 });
                             }
                             BxCmd.Br();
@@ -302,7 +302,7 @@ namespace WeNeedMoreNoels.Patch
                 var b2 = BxCmd.addButton(new()
                 {
                     name = "configspawn",
-                    title = "选择一名角色...",
+                    title = TX.Get("multiplayer_simbattle_chooseplayer"),
                     fnClick = B =>
                     {
                         string[] btns = [WNMNTools.GetNickname(WNMNTools.LocalID), ..WNMNTools.SimBattleSyncList.Select(x => DB.noelIns[x].NickNameStr), TX.Get("Cancel")];
@@ -352,7 +352,7 @@ namespace WeNeedMoreNoels.Patch
                         });
                         con.Get(0).Select(true);
                         Vector3 btnPos = B.transform.position;
-                        float targetX = btnPos.x * 64f + 300f;
+                        float targetX = btnPos.x * 64f + 100f;
                         float targetY = btnPos.y * 64f;
                         BxCmd.posSetDA(targetX, targetY, 0, 20f, true);
                         BxCmd.Focusable(true, true);

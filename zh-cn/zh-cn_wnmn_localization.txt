@@ -142,3 +142,11 @@
 /* ___ Desc_multiplayer_simbattle_invalidspawn ___ */
 多人模式暂不支持直接在这里修改起始点
 请在多人模拟战页面配置出生点
+
+&&multiplayer_simbattle_defaultspawn 默认出生点
+&&multiplayer_simbattle_setdefaultspawn 设置默认出生点
+&&multiplayer_simbattle_playerspawn 玩家出生点
+&&multiplayer_simbattle_checkspawn 查看当前玩家出生点
+&&multiplayer_simbattle_player 玩家
+&&multiplayer_simbattle_default 未配置，缺省为默认值
+&&multiplayer_simbattle_chooseplayer 选择一名角色...

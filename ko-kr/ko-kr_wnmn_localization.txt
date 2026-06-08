@@ -138,3 +138,15 @@ Independent Spawn: Completely independent spawning, go ahead and fight freely!  
 &&multiplayer_simbattle_ready Ready
 &&multiplayer_simbattle_unready Not Ready
 &&multiplayer_simbattle_syncfirst Please synchronize map first
+
+/* ___ Desc_multiplayer_simbattle_invalidspawn ___ */
+Editing spawn point in multiplayer mode is not currently supported
+Configure spawn point in multiplayer panel
+
+&&multiplayer_simbattle_defaultspawn Default spawn point
+&&multiplayer_simbattle_setdefaultspawn Set default spawn point
+&&multiplayer_simbattle_playerspawn Player spawn point
+&&multiplayer_simbattle_checkspawn Check player spawn point
+&&multiplayer_simbattle_player Player
+&&multiplayer_simbattle_default Unconfigured, Use default point instead
+&&multiplayer_simbattle_chooseplayer Choose a character...
