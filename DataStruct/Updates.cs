@@ -1,5 +1,8 @@
 ﻿using nel;
 using ProtoBuf;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace WeNeedMoreNoels.DataStruct
 {
@@ -247,6 +250,26 @@ namespace WeNeedMoreNoels.DataStruct
         public string key;
         [ProtoMember(2)]
         public bool isSim;
+        [ProtoMember(3)]
+        public Dictionary<int, Vector2Int> SpawnPoints;
+    }
+
+    [ProtoContract]
+    public class Vector2Int
+    {
+        [ProtoMember(1)]
+        public int x;
+        [ProtoMember(2)]
+        public int y;
+
+        public static implicit operator Vector2Int(Vector2 v)
+        {
+            return new()
+            {
+                x = (int)v.x,
+                y = (int)v.y
+            };
+        }
     }
 
     [ProtoContract]

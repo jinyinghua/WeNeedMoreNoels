@@ -15,7 +15,18 @@ namespace WeNeedMoreNoels.Networking.ReceiveEvent
         {
             if (message.Battle.isSim)
             {
-                ShadowNoelExtensions.StartSimBattle(message.PeerId);
+                int x, y;
+                if (message.Battle.SpawnPoints.ContainsKey(WNMNTools.LocalID))
+                {
+                    x = message.Battle.SpawnPoints[WNMNTools.LocalID].x;
+                    y = message.Battle.SpawnPoints[WNMNTools.LocalID].y;
+                }
+                else
+                {
+                    x = message.Battle.SpawnPoints[-1].x;
+                    y = message.Battle.SpawnPoints[-1].y;
+                }
+                ShadowNoelExtensions.StartSimBattle(message.PeerId, x, y);
             }
             else
             {

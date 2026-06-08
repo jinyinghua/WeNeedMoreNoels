@@ -138,3 +138,7 @@
 &&multiplayer_simbattle_ready 已准备
 &&multiplayer_simbattle_unready 准备
 &&multiplayer_simbattle_syncfirst 请先同步模拟战地图
+
+/* ___ Desc_multiplayer_simbattle_invalidspawn ___ */
+多人模式暂不支持直接在这里修改起始点
+请在多人模拟战页面配置出生点

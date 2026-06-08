@@ -54,7 +54,16 @@ namespace WeNeedMoreNoels
         public static UiSmnCreator USC;
         public static UiSmncBattleConfirm USBC;
 
+        public static aBtn USBCB;
+
+        public static SmncStageEditor SSE;
+
         public static SmncFile CurSimFile;
+
+        public static bool IsSettingSpawnLocation;
+        public static int CurrentSetID;
+        public static Vector2 SettingResult;
+        public static Dictionary<int, Vector2> SpawnDic = [];
 
         public static string GetNickname(int id)
         {
@@ -62,6 +71,7 @@ namespace WeNeedMoreNoels
         }
 
         static int _unique_id;
+
         public static int Unique_ID
         {
             get
@@ -306,7 +316,8 @@ namespace WeNeedMoreNoels
                 PeerId = id,
                 Battle = new()
                 {
-                    isSim = true
+                    isSim = true,
+                    SpawnPoints = SpawnDic.Select(x => (x.Key, (DataStruct.Vector2Int)x.Value)).ToDictionary(x => x.Key, x => x.Item2)
                 }
             };
             using MemoryStream stream = new();
@@ -879,18 +890,18 @@ namespace WeNeedMoreNoels
             }
         }
 
-        public static void OpenSmncBattle(bool mkFile = false)
+        public static void OpenSmncBattle()
         {
-            if (mkFile)
-            {
-                CurSimFile = USC.CurFile;
-            }
             if (USBC is null)
             {
                 USC.changeState(UiSmnCreator.STATE.BATTLE_CONFIRM);
                 USBC = USC.BattleConfirm;
                 USC.changeState((UiSmnCreator.STATE)9);
             }
+            SmncStageEditorManager.StgObject stg = CurSimFile.Astgo[0];
+            stg.x = SpawnDic.ContainsKey(LocalID) ? (int)SpawnDic[LocalID].x : (int)SpawnDic[-1].x;
+            stg.y = SpawnDic.ContainsKey(LocalID) ? (int)SpawnDic[LocalID].y : (int)SpawnDic[-1].y;
+            CurSimFile.Astgo[0] = stg;
             USBC.CurFile = CurSimFile;
 			USBC.Record();
 			uint num;
@@ -939,10 +950,26 @@ namespace WeNeedMoreNoels
                 }
                 USBC.LpArea.openSummoner(num2, num);
                 DB.CurSummoner = USBC.LpArea;
-                if (USBC.FD_BattleConfirm != null && USBC.FD_BattleConfirm(num2, num))
-                {
-                }
+                USBC?.FD_BattleConfirm(num2, num);
             }
+        }
+
+        public static void ResumeUSBCPage()
+        {
+            SSE.changeState(SmncStageEditor.STATE.OFFLINE);
+            USC.changeState((UiSmnCreator.STATE)9);
+            USBC.Bx.deactivate();
+            UiMenuMul.BxSB.activate();
+            UiMenuMul.BxSB.Focus();
+            if (!SpawnDic.ContainsKey(CurrentSetID))
+            {
+                SpawnDic.Add(CurrentSetID, SettingResult);
+            }
+            else
+            {
+                SpawnDic[CurrentSetID] = SettingResult;
+            }
+            UpdateSimUI?.Invoke();
         }
 
         public static void CleanUp()

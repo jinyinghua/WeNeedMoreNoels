@@ -8,8 +8,10 @@ namespace WeNeedMoreNoels.Patch
     [HarmonyPatch(typeof(UiSmncBattleConfirm), nameof(UiSmncBattleConfirm.fnClickSubmit))]
     public class Patch_UiSmncBattleConfirm_fnClickSubmit
     {
+        [HarmonyPrefix]
         static bool Prefix(UiSmncBattleConfirm __instance, aBtn B)
         {
+            WNMNTools.USBCB = B;
             if (DB.MainPR.Mp.key != "school_in_garage")
             {
                 return true;

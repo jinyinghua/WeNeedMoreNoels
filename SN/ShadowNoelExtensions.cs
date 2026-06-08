@@ -1,5 +1,6 @@
 ﻿using m2d;
 using nel;
+using nel.mgm.smncr;
 using System.Linq;
 using UnityEngine;
 using WeNeedMoreNoels.DataStruct;
@@ -357,10 +358,14 @@ namespace WeNeedMoreNoels.SN
             }
         }
 
-        public static void StartSimBattle(int starterID)
+        public static void StartSimBattle(int starterID, int x, int y)
         {
             if (WNMNTools.SimBattleReady)
             {
+                SmncStageEditorManager.StgObject stg = WNMNTools.CurSimFile.Astgo[0];
+                stg.x = x;
+                stg.y = y;
+                WNMNTools.CurSimFile.Astgo[0] = stg;
                 WNMNTools.BattleStarterID = starterID;
                 DB.CurEnemies.Clear();
                 WNMNTools.OpenSmncBattle();

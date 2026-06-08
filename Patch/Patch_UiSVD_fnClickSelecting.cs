@@ -13,6 +13,7 @@ namespace WeNeedMoreNoels.Patch
             string title = B.title;
             if (DB.IsMultiplayer && (title == "&&SVD_cmd_load" || title == "&&SVD_cmd_load_do"))
             {
+                SND.Ui.play("Locked");
                 return false;
             }
             return true;
