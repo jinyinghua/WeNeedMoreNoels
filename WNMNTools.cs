@@ -67,6 +67,10 @@ namespace WeNeedMoreNoels
 
         public static string GetNickname(int id)
         {
+            if (id != LocalID && !DB.noelIns.ContainsKey(id))
+            {
+                return "";
+            }
             return id == LocalID ? DB.MainPRNickname.GetCurrentText() : DB.noelIns[id].NickNameStr;
         }
 
