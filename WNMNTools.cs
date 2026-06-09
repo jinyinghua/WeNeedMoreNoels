@@ -980,7 +980,13 @@ namespace WeNeedMoreNoels
             LocalID = -1;
             peer = null;
             PeerIngameInited = false;
-        }
+            USC = null;
+            USBC = null;
+            USBCB = null;
+            SSE = null;
+            CurSimFile = null;
+            SpawnDic.Clear();
+    }
 
         public class NetworkConfig
         {

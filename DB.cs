@@ -106,12 +106,19 @@ namespace WeNeedMoreNoels
             partyInfos.Clear();
             peerInfos.Clear();
             peerConfigs.Clear();
+            MNBridge.Clear();
+            BombDic.Clear();
             MainPR = null;
             MainPRMsg = null;
             MainPRNickname = null;
             Nickname = null;
             SyncSaveContentBuffer = null;
             InitConfig = null;
-        }
+            SyncClients.Clear();
+            peerClients.Clear();
+            SyncHosts.Clear();
+            StartedBattleSummonerKeys.Clear();
+            peerDelays.Clear();
+    }
     }
 }

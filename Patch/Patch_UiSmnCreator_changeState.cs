@@ -14,7 +14,7 @@ namespace WeNeedMoreNoels.Patch
     {
         static Patch_UiSmnCreator_changeState()
         {
-            WNMNTools.UpdateSimUI += DrawUI;
+            WNMNTools.UpdateSimUI = DrawUI;
         }
 
         [HarmonyPrefix]
