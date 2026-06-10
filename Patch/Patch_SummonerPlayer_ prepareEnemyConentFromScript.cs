@@ -15,7 +15,6 @@ namespace WeNeedMoreNoels.Patch
             {
                 return;
             }
-            Plugin.Logger.LogInfo("aaa");
             float factor = 1f + 0.25f * (WNMNTools.TotalBattleNoelCount - 1);
             factor /= WNMNTools.TotalBattleNoelCount;
             __instance.max_enemy_appear_whole = X.IntC(__instance.max_enemy_appear_whole * factor);

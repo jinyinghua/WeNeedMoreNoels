@@ -174,6 +174,14 @@ namespace WeNeedMoreNoels
                     return true;
                 }
             }));
+            if (DB.IsInBattle)
+            {
+                btns[2].SetLocked(true);
+            }
+            else
+            {
+                btns[2].SetLocked(false);
+            }
             //BxR.addButton(new()
             //{
             //    title = TX.Get("multiplayer_menu_syncbackpackandmony"),

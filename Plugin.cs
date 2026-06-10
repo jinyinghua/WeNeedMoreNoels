@@ -3,6 +3,7 @@ using BepInEx.Logging;
 using BepInEx.Unity.Mono;
 using HarmonyLib;
 using System;
+using System.Reflection;
 using WeNeedMoreNoels.Networking;
 
 namespace WeNeedMoreNoels
@@ -21,8 +22,9 @@ namespace WeNeedMoreNoels
             _harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
             _harmony.PatchAll();
 
-            Logger.LogMessage(Environment.NewLine + LOGO_PLUGIN);
-            Logger.LogMessage("Created by Alon_, Created at 2026-4-13, Happy birthday to myself");
+            Logger.LogMessage(Environment.NewLine + LOGO_PLUGIN +
+                              Environment.NewLine + $"Version {Assembly.GetExecutingAssembly().GetName().Version}" +
+                              Environment.NewLine + "Created by Alon_, Created at 2026-4-13, Happy birthday to myself");
             MTRExtension.Load();
             ReceiveMessageManager.Init();
 

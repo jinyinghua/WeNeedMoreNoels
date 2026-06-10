@@ -1,4 +1,4 @@
-﻿&&btn_multiplayer 複数プレーヤー
+﻿&&btn_multiplayer 複数プレーヤー遊戯
 
 &&multiplayer_host_title 主人の配置
 &&multiplayer_client_title 客人の配置
@@ -7,8 +7,8 @@
 &&multiplayer_host_kicked 主人に追放された
 &&multiplayer_host_closed ポートが消えた
 
-&&multiplayer_busy_port 端口被占用
-&&multiplayer_connect_timeout 连接超时
+&&multiplayer_busy_port ポートは占用された
+&&multiplayer_connect_timeout 連絡タイムアウト
 
 &&multiplayer_nickname ニックネーム：
 &&multiplayer_select_noel キャラクターを選択：
@@ -36,17 +36,17 @@
 &&multiplayer_menu_title 複数プレーヤーのメニュー
 &&multiplayer_menu_utilities 共通働き
 &&multiplayer_menu_modify_nickname ニックネームを入力
-&&multiplayer_menu_modify_party チームを切り替える
+&&multiplayer_menu_modify_party チームを変更
 &&multiplayer_menu_teleport ファストトラベル
 &&multiplayer_menu_syncbackpackandmony お金やアイテムを同期化
 &&multiplayer_menu_syncbackpackandmony_warn ＊今のアイテム状態を捨てますが、本当にしますか？
 &&multiplayer_menu_sendmsg 短いメッセージを送る
-&&multiplayer_menu_mute ＊黙らせられた...
+&&multiplayer_menu_mute ＊黙らせられた
 &&multiplayer_menu_host_utilities 主人の働き
 &&multiplayer_menu_host_kick 客人を追放する
 &&multiplayer_menu_host_mute 客人を黙らせる
 &&multiplayer_menu_host_teleportallself 全ての客人をここに召喚
-&&multiplayer_menu_host_modifyroomconfig ルームの設定
+&&multiplayer_menu_host_modifyroomconfig ルームの設定を変更
 &&multiplayer_menu_config_title ルームの設定
 
 // ========================================================
@@ -140,13 +140,13 @@
 &&multiplayer_simbattle_syncfirst まずマップを同期化してください
 
 /* ___ Desc_multiplayer_simbattle_invalidspawn ___ */
-多人模式暂不支持直接在这里修改起始点
-请在多人模拟战页面配置出生点
+この界面でプレーヤーの開始位置を変更できません。
+複数プレーヤーの設定界面で変更してください。
 
-&&multiplayer_simbattle_defaultspawn 默认出生点
-&&multiplayer_simbattle_setdefaultspawn 设置默认出生点
-&&multiplayer_simbattle_playerspawn 玩家出生点
-&&multiplayer_simbattle_checkspawn 查看当前玩家出生点
-&&multiplayer_simbattle_player 玩家
-&&multiplayer_simbattle_default 未配置，缺省为默认值
-&&multiplayer_simbattle_chooseplayer 选择一名角色...
+&&multiplayer_simbattle_defaultspawn デフォルト開始位置
+&&multiplayer_simbattle_setdefaultspawn デフォルト開始位置を変更
+&&multiplayer_simbattle_playerspawn プレーヤーの開始位置
+&&multiplayer_simbattle_checkspawn 今の開始位置を確認
+&&multiplayer_simbattle_player プレーヤー
+&&multiplayer_simbattle_default まだ設定しなかったら、デフォルトを採用します
+&&multiplayer_simbattle_chooseplayer 一名のキャラクターを選択...

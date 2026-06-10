@@ -93,7 +93,7 @@ Enjoy multi-"KAWAISOU"!
 &&multiplayer_enemy_independent Client independent
 
 /* ___ Desc_multiplayer_enemy ___ */
-Enemy summon mode is the synchronization methods multiplayer battle
+Enemy summon mode is the synchronization methods in multiplayer battle
 Starter only: Only the battle starter spawns enemies; other players synchronize with their enemies.
 Smart Average: Dynamically adjusts the total number of monsters using an algorithm to create a more relaxed monster-fighting environment.
 Independent Spawn: Completely independent spawning, go ahead and fight freely!  *May cause lag when too many players

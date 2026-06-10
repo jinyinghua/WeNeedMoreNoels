@@ -647,7 +647,10 @@ namespace WeNeedMoreNoels
 
         public static void TransferMainNoel(NotifyNoelTransfer transfer)
         {
-            TransferMainNoel(transfer.Key, transfer.X, transfer.Y);
+            if (!DB.IsInBattle)
+            {
+                TransferMainNoel(transfer.Key, transfer.X, transfer.Y);
+            }
         }
 
         public static void TransferMainNoel(string key, float x, float y)
