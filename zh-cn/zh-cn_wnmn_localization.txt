@@ -143,6 +143,13 @@
 多人模式暂不支持直接在这里修改起始点
 请在多人模拟战页面配置出生点
 
+/* ___ Desc_multiplayer_simbattle_invalidspawndetected ___ */
+发现未配置的个人出生点！
+点击下方右侧按钮进行配置，所有未配置的玩家将为默认出生点
+
+/* ___ Desc_multiplayer_simbattle_noinvalidspawn ___ */
+所有玩家都已配置个人出生点✓
+
 &&multiplayer_simbattle_defaultspawn 默认出生点
 &&multiplayer_simbattle_setdefaultspawn 设置默认出生点
 &&multiplayer_simbattle_playerspawn 玩家出生点

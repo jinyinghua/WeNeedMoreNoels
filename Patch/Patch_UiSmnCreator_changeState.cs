@@ -200,7 +200,7 @@ namespace WeNeedMoreNoels.Patch
                 {
                     TxCol = ColorDefault,
                     size = 15,
-                    text = WNMNTools.SpawnDic.ContainsKey(WNMNTools.LocalID) && WNMNTools.SimBattleSyncList.All(WNMNTools.SpawnDic.ContainsKey) ? "所有玩家都已配置个人出生点✓" : "发现未配置的个人出生点！\n点击下方右侧按钮进行配置，所有未配置的玩家将为默认出生点"
+                    text = TX.Get(WNMNTools.SpawnDic.ContainsKey(WNMNTools.LocalID) && WNMNTools.SimBattleSyncList.All(WNMNTools.SpawnDic.ContainsKey) ? "Desc_multiplayer_simbattle_noinvalidspawn" : "Desc_multiplayer_simbattle_invalidspawndetected")
                 });
                 BxCmd.Br();
                 BxCmd.alignx = ALIGN.CENTER;

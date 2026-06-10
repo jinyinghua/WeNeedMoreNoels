@@ -16,9 +16,33 @@ namespace WeNeedMoreNoels.SN
         public float followLerp = 0.15f;
         public bool immediateFollow = false;
         private string currentText = "";
+        private int currentTextLength
+        {
+            get
+            {
+                bool count = true;
+                int counter = 0;
+                foreach (char c in currentText)
+                {
+                    if (c == '<')
+                    {
+                        count = false;
+                    }
+                    else if (c == '/')
+                    {
+                        count = true;
+                        counter--;
+                    }
+                    if (count)
+                    {
+                        counter++;
+                    }
+                }
+                return counter;
+            }
+        }
         private bool textVisible = true;
         private Color32 txColor = MTRX.ColWhite;
-        private Color32 borderColor = C32.d2c(4278190080U);
         private Color32 bgColor = new(0, 0, 0, 1);
         private float txSize = 18f;
         private ALIGN txAlign = ALIGN.CENTER;
@@ -120,17 +144,6 @@ namespace WeNeedMoreNoels.SN
             this.SetTextColor(C32.d2c(color));
         }
 
-        public void SetBorderColor(Color32 color)
-        {
-            this.borderColor = color;
-            this.Tx?.BorderCol(color);
-        }
-
-        public void SetBorderColor(uint color)
-        {
-            this.SetBorderColor(C32.d2c(color));
-        }
-
         public void SetTextSize(float size)
         {
             this.txSize = size;
@@ -174,21 +187,22 @@ namespace WeNeedMoreNoels.SN
             this.Tx.html_mode = true;
             this.Tx.auto_condense = true;
             this.Tx.Col(this.txColor);
-            this.Tx.BorderCol(this.borderColor);
+            this.Tx.BorderCol(new Color(0, 0, 0, 0));
             this.Tx.Size(this.txSize);
             this.Tx.Align(this.txAlign).AlignY(this.txAlignY);
             IN.setZ(this.GobTx.transform, -1f);
             var bg = IN.CreateGob(gameObject, "bg", false);
             bg.layer = 25;
             this.TxBg = bg.AddComponent<TextRenderer>();
-            this.TxBg.setText(new STB("|"));
+            this.TxBg.setText(new STB("┃"));
             this.TxBg.Col(this.bgColor);
             this.TxBg.BorderCol(new Color(0, 0, 0, 0));
             this.TxBg.Size(40);
             this.TxBg.Alpha(0.4f);
-            this.TxBg.transform.localPosition += new Vector3(currentText.Length * -0.42f, -0.43f);
-            this.TxBg.transform.localScale = new Vector3(currentText.Length * 4, 1.2f, 1);
-            TxBg.setAlpha(0);
+            this.TxBg.Align(ALIGN.CENTER);
+            this.TxBg.transform.localPosition += new Vector3(0, -0.5f);
+            float factor = currentTextLength * 1.3461f + 2.7667f;
+            this.TxBg.transform.localScale = new(factor, 1, 1);
             IN.setZ(this.TxBg.transform, -0.9f);
         }
 
@@ -215,9 +229,14 @@ namespace WeNeedMoreNoels.SN
             }
             if (this.followTarget == null) return;
             Vector3 delta = GameObject.Find("CameraContainer").transform.position;
-            float targetX = this.followTarget.x + this.followOffset.x - delta.x * 1.15f;
-            float targetY = this.followTarget.y + this.followOffset.y + delta.y * 1.15f;
-            Vector2 off = new(3, -1);
+            if (GameObject.Find("CameraFinalRender to GUI") is not GameObject gameObject)
+            {
+                return;
+            }
+            Vector3 delta1 = gameObject.transform.position;
+            float targetX = this.followTarget.x + this.followOffset.x - delta.x * 1.15f + delta1.x * 1.15f;
+            float targetY = this.followTarget.y + this.followOffset.y + delta.y * 1.15f + delta1.y * 1.15f;
+            Vector2 off = new(0, -1);
             targetX += off.x;
             targetY += off.y;
             if (this.immediateFollow)

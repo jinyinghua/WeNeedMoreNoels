@@ -36,7 +36,6 @@ namespace WeNeedMoreNoels.SN
             follower.SetText(nickname);
             follower.SetTextSize(20f);
             follower.SetTextColor(uint.MaxValue);
-            follower.SetBorderColor(4278190080U);
             follower.SetTextOffset(0f, -50f);
             follower.SetAlpha(1);
             DB.MainPR.Mp.assignMover(follower);
@@ -52,7 +51,6 @@ namespace WeNeedMoreNoels.SN
             follower.SetFollowTarget(this, new Vector2(0f, -2f));
             follower.SetTextSize(20f);
             follower.SetTextColor(uint.MaxValue);
-            follower.SetBorderColor(4278190080U);
             follower.SetTextOffset(0f, 0f);
             follower.SetAlpha(1);
             follower.SetBgColor(new(0, 0, 0, 0));

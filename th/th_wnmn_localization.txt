@@ -143,6 +143,13 @@ Independent Spawn: Completely independent spawning, go ahead and fight freely!  
 Editing spawn point in multiplayer mode is not currently supported
 Configure spawn point in multiplayer panel
 
+/* ___ Desc_multiplayer_simbattle_invalidspawndetected ___ */
+Unconfigured spawn point detected！
+Click the right button below to configure. Otherwise will use the default spawn point
+
+/* ___ Desc_multiplayer_simbattle_noinvalidspawn ___ */
+All player's spawn point configured✓
+
 &&multiplayer_simbattle_defaultspawn Default spawn point
 &&multiplayer_simbattle_setdefaultspawn Set default spawn point
 &&multiplayer_simbattle_playerspawn Player spawn point

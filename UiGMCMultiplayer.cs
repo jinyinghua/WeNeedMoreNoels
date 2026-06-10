@@ -163,6 +163,11 @@ namespace WeNeedMoreNoels
                 h = btnH,
                 fnClick = B =>
                 {
+                    if (B.isLocked())
+                    {
+                        SND.Ui.play("Locked");
+                        return true;
+                    }
                     OnPlayerSelect(B, i =>
                     {
                         string targetKey = DB.noelIns[i].MpKey;

@@ -979,7 +979,22 @@ namespace WeNeedMoreNoels
             UpdateSimUI?.Invoke();
         }
 
-        public static void CleanUp()
+        public static Color GetOutlineColor(Color fillColor, float shift = 0.2f)
+        {
+            Color.RGBToHSV(fillColor, out float h, out float s, out float v);
+            if (v > 0.5f)
+            {
+                v -= shift;
+            }
+            else
+            {
+                v += shift;
+            }
+            v = Mathf.Clamp01(v);
+            return Color.HSVToRGB(h, s, v);
+        }
+
+    public static void CleanUp()
         {
             host = null;
             client = null;

@@ -77,13 +77,17 @@ namespace WeNeedMoreNoels.SN
         public static void GenerateMainPRNickname(string nickname)
         {
             Map2d Mp = DB.MainPR.Mp;
+            string key = $"Nickname_{nickname}";
+            if (Mp.getMoverByName(key) is not null)
+            {
+                return;
+            }
             DB.MainPR.getPosition(out float x, out float y);
-            ShadowNoelNickname follower = Mp.createMover<ShadowNoelNickname>($"Nickname_{nickname}", x, y);
+            ShadowNoelNickname follower = Mp.createMover<ShadowNoelNickname>(key, x, y);
             follower.SetFollowTarget(DB.MainPR, new Vector2(0f, -2f));
             follower.SetText(nickname);
             follower.SetTextSize(20f);
             follower.SetTextColor(uint.MaxValue);
-            follower.SetBorderColor(4278190080U);
             follower.SetTextOffset(0f, -50f);
             follower.SetAlpha(1);
             DB.MainPR.Mp.assignMover(follower);
@@ -100,7 +104,6 @@ namespace WeNeedMoreNoels.SN
             follower.SetFollowTarget(DB.MainPR, new Vector2(0f, -2f));
             follower.SetTextSize(20f);
             follower.SetTextColor(uint.MaxValue);
-            follower.SetBorderColor(4278190080U);
             follower.SetTextOffset(0f, 0f);
             follower.SetAlpha(1);
             follower.SetBgColor(new(0, 0, 0, 0));

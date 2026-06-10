@@ -18,7 +18,7 @@ namespace WeNeedMoreNoels.Patch
             BxCmd.Focusable(true, true, null);
             BxCmd.init();
             BxCmd.deactivate();
-            UiMenuMul.BxSSI = __instance.DsFam.Create("BxSSI", 0f, 0f, 640f, 250f, 1, 40f, UiBoxDesignerFamily.MASKTYPE.BOX);
+            UiMenuMul.BxSSI = __instance.DsFam.Create("BxSSI", 0f, 0f, 680f, 250f, 1, 40f, UiBoxDesignerFamily.MASKTYPE.BOX);
             BxCmd = UiMenuMul.BxSSI;
             BxCmd.init();
             BxCmd.alignx = ALIGN.CENTER;
