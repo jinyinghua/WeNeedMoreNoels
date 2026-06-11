@@ -144,11 +144,11 @@
 複数プレーヤーの設定界面で変更してください。
 
 /* ___ Desc_multiplayer_simbattle_invalidspawndetected ___ */
-未設定の個人スポーン地点が見つかりました！
-右下のボタンをクリックして設定してください。設定されていないプレイヤーはデフォルトのスポーン地点から開始されます。
+配置しなかった個人の開始位置がありますが、
+右下のボタンをクリックして配置しましょう。全ての未配置のプレーヤーはデフォルト開始位置で始まります。
 
 /* ___ Desc_multiplayer_simbattle_noinvalidspawn ___ */
-すべてのプレイヤーの個人スポーン地点が設定されました✓
+全てのプレーヤーの個人の開始位置を配置しました✓
 
 &&multiplayer_simbattle_defaultspawn デフォルト開始位置
 &&multiplayer_simbattle_setdefaultspawn デフォルト開始位置を変更
