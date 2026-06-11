@@ -44,6 +44,7 @@ namespace WeNeedMoreNoels.CSNetworking
 
         private void Listener_NetworkReceiveEvent(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
         {
+            Plugin.Logger.LogInfo(peer.EndPoint.Address.ToString());
             string json = reader.GetString();
             WNMNHostMessage message = JsonConvert.DeserializeObject<WNMNHostMessage>(json);
             reader.Recycle();
@@ -76,6 +77,7 @@ namespace WeNeedMoreNoels.CSNetworking
             };
             writer.Put(JsonConvert.SerializeObject(message1));
             peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            Plugin.Logger.LogInfo("client sent message");
             if (DB.InitConfig.InvisibleNickname)
             {
                 ShadowNoelExtensions.GenerateMainPRNickname(TX.Get("multiplayer_noel_nickname") + WNMNTools.LocalID.ToString());

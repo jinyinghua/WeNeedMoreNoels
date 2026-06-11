@@ -106,7 +106,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.Unreliable);
+            WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
         }
 
         void OnDestroy()
@@ -124,7 +124,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.Unreliable);
+            WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
         }
     }
 
@@ -150,7 +150,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.Unreliable);
+            WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
         }
     }
 
@@ -202,7 +202,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.Unreliable);
+            WNMNTools.peer.SendToAll(buffer, LiteNetLib.DeliveryMethod.ReliableOrdered);
         }
     }
 

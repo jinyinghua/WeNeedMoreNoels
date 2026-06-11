@@ -16,8 +16,14 @@ namespace WeNeedMoreNoels.Networking
             EventBasedNetListener listener = new();
             localPeer = new(listener);
             listener.ConnectionRequestEvent += Listener_ConnectionRequestEvent;
+            listener.PeerConnectedEvent += Listener_PeerConnectedEvent;
             listener.NetworkReceiveEvent += Listener_NetworkReceiveEvent;
             listener.PeerDisconnectedEvent += Listener_PeerDisconnectedEvent;
+        }
+
+        private void Listener_PeerConnectedEvent(NetPeer peer)
+        {
+            Plugin.Logger.LogInfo($"peer connected: {peer.EndPoint.ToString()}");
         }
 
         private void Update()
@@ -84,8 +90,8 @@ namespace WeNeedMoreNoels.Networking
 
         public void ConnectPeer(string ip, int port)
         {
-            localPeer.Connect(ip, port, DB.P2P_ACCESS_KEY);
             Plugin.Logger.LogInfo($"peer connect {ip}:{port}");
+            localPeer.Connect(ip, port, DB.P2P_ACCESS_KEY);
             WNMNTools.PeerInited = true;
         }
 

@@ -488,11 +488,11 @@ namespace WeNeedMoreNoels.Patch
                             float normalizedTime = localTime / fadeDuration;
                             alpha = X.Sin(normalizedTime * X.PI);
                         }
-                        blocks[i].alpha = alpha;
+                        blocks[i]?.alpha = alpha;
                     }
                     yield return null;
                 }
-                foreach (var block in blocks) block.alpha = 0;
+                foreach (var block in blocks) block?.alpha = 0;
                 yield return new WaitForSeconds(cycleWait);
             }
         }

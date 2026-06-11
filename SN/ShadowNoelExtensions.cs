@@ -13,6 +13,7 @@ namespace WeNeedMoreNoels.SN
     {
         public static ShadowNoel GenerateShadowNoel(ClientConfig config, int id = -1)
         {
+            Plugin.Logger.LogInfo("generate");
             Map2d map = M2DBase.Instance.curMap;
             map.Pr.getPosition(out float x, out float y);
             ShadowNoel noel;

@@ -125,6 +125,7 @@ namespace WeNeedMoreNoels.CSNetworking
 
         private void Listener_NetworkReceiveEvent(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
         {
+            Plugin.Logger.LogInfo("host got message");
             string json = reader.GetString();
             WNMNClientMessage message = JsonConvert.DeserializeObject<WNMNClientMessage>(json);
             WNMNTools.LocalIP = message.HostIP;

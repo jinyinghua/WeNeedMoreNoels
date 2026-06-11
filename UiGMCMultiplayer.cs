@@ -76,6 +76,9 @@ namespace WeNeedMoreNoels
                         fnClick = B =>
                         {
                             WNMNTools.SendUpdatePeerInfoToAllPeers(WNMNTools.LocalID, nicknameInput.text);
+                            DB.Nickname = nicknameInput.text;
+                            DB.peerConfigs[WNMNTools.LocalID].Nickname = nicknameInput.text;
+                            DB.MainPRNickname.SetText(nicknameInput.text);
                             BxCmd.deactivate();
                             BxR.Focus();
                             return true;

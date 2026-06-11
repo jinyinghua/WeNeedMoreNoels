@@ -135,6 +135,7 @@ namespace WeNeedMoreNoels.SN
 
         public void SetTextColor(Color32 color)
         {
+            return;
             this.txColor = color;
             this.Tx?.Col(color);
         }
@@ -187,7 +188,7 @@ namespace WeNeedMoreNoels.SN
             this.Tx.html_mode = true;
             this.Tx.auto_condense = true;
             this.Tx.Col(this.txColor);
-            this.Tx.BorderCol(new Color(0, 0, 0, 0));
+            this.Tx.BorderCol(new Color(0, 0, 0, 1));
             this.Tx.Size(this.txSize);
             this.Tx.Align(this.txAlign).AlignY(this.txAlignY);
             IN.setZ(this.GobTx.transform, -1f);
@@ -277,7 +278,7 @@ namespace WeNeedMoreNoels.SN
             }
             if (followTarget is ShadowNoel noel && Tx != null)
             {
-                SetTextColor((Color)DB.partyInfos[noel.PartyID].Color);
+                SetBgColor((Color)DB.partyInfos[noel.PartyID].Color);
                 if (CFGMultiplayer.showDelay && DB.peerDelays.ContainsKey(noel.ID))
                 {
                     this.Tx.Txt(this.currentText + " - " + DB.peerDelays[noel.ID] + "ms");
@@ -289,7 +290,7 @@ namespace WeNeedMoreNoels.SN
             }
             else if (followTarget is PRNoel)
             {
-                SetTextColor((Color)DB.partyInfos[DB.LocalNoelParty].Color);
+                SetBgColor((Color)DB.partyInfos[DB.LocalNoelParty].Color);
             }
         }
 

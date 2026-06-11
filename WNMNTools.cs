@@ -250,7 +250,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            peer.SendToAll(buffer, DeliveryMethod.Unreliable);
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
         public static void SendDamageToAllPeers(int id, NotifyNoelDamage dmg)
@@ -596,7 +596,7 @@ namespace WeNeedMoreNoels
             using MemoryStream stream = new();
             Serializer.Serialize(stream, messageSend);
             byte[] buffer = stream.ToArray();
-            peer.SendToAll(buffer, DeliveryMethod.Unreliable);
+            peer.SendToAll(buffer, DeliveryMethod.ReliableOrdered);
         }
 
         public static void UpdateRoomConfig(NotifyRoomUpdate update)
