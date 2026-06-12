@@ -16,6 +16,7 @@ namespace WeNeedMoreNoels.SN
         public float followLerp = 0.15f;
         public bool immediateFollow = false;
         private string currentText = "";
+        private bool IsMsg;
         private int currentTextLength
         {
             get
@@ -279,7 +280,7 @@ namespace WeNeedMoreNoels.SN
             if (followTarget is ShadowNoel noel && Tx != null)
             {
                 SetBgColor((Color)DB.partyInfos[noel.PartyID].Color);
-                if (CFGMultiplayer.showDelay && DB.peerDelays.ContainsKey(noel.ID))
+                if (CFGMultiplayer.showDelay && DB.peerDelays.ContainsKey(noel.ID) && !IsMsg)
                 {
                     this.Tx.Txt(this.currentText + " - " + DB.peerDelays[noel.ID] + "ms");
                 }
@@ -318,6 +319,7 @@ namespace WeNeedMoreNoels.SN
 
         public void ShowMsg(string txtID)
         {
+            IsMsg = true;
             if (Msg != null)
             {
                 StopCoroutine(Msg);

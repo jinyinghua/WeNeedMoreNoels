@@ -8,7 +8,7 @@ namespace WeNeedMoreNoels.Networking.ReceiveEvent
     {
         public override bool CheckMessage(WNMNPeerMessage message)
         {
-            return message.Type == WNMNPeerMessageType.InitNoel && message.PeerId != WNMNTools.LocalID;
+            return message.Type == WNMNPeerMessageType.InitNoel && message.PeerId != WNMNTools.LocalID && !DB.noelIns.ContainsKey(message.PeerId);
         }
 
         public override void ReceiveMessage(WNMNPeerMessage message)

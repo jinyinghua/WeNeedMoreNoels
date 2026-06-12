@@ -290,7 +290,7 @@ namespace WeNeedMoreNoels.SN
                     DB.noelIns[id].Noel.SleepMagic();
                     break;
                 case NotifyMagicTpe.Kill:
-                    if (DB.MNBridge.Count == 0)
+                    if (!DB.MNBridge.Any(x => x.Value == DB.noelIns[id].Noel))
                     {
                         break;
                     }

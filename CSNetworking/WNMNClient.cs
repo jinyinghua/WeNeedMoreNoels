@@ -29,6 +29,7 @@ namespace WeNeedMoreNoels.CSNetworking
         private void Update()
         {
             client?.PollEvents();
+            WNMNTools.SendInitToAllPeers(WNMNTools.LocalID);
         }
 
         private void Listener_PeerConnectedEvent(NetPeer peer)
@@ -63,7 +64,6 @@ namespace WeNeedMoreNoels.CSNetworking
             DB.partyInfos.Add(message.InitID, party);
             WNMNTools.LocalIP = message.ClientIP;
             WNMNTools.ConnectOtherPeer(message.PeerInfos, peer, message.HostPort);
-            WNMNTools.SendInitToAllPeers(message.InitID);
             WNMNTools.GenerateAllNoels(message.PeerConfigs);
             NetDataWriter writer = new();
             WNMNClientMessage message1 = new()
