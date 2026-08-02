@@ -27,6 +27,7 @@
     <PackageReference Include="BepInEx.Unity.Mono" Version="6.0.0-be.*" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
     <PackageReference Include="LiteNetLib" Version="0.9.5.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="protobuf-net" Version="2.4.9" />
     <PackageReference Include="System.Reflection" Version="4.3.0" />
     <PackageReference Include="UnityEngine.Modules" Version="2022.3.62" IncludeAssets="compile" />
@@ -37,37 +38,6 @@
     <Publicize Include="Assembly-CSharp" />
     <Publicize Include="unsafeAssem" />
     <Publicize Include="ttr" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(GameAssembliesPath)\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Fusion.Common">
-      <HintPath>$(GameAssembliesPath)\Fusion.Common.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Fusion.Runtime">
-      <HintPath>$(GameAssembliesPath)\Fusion.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>$(GameAssembliesPath)\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="pixelliner">
-      <HintPath>$(GameAssembliesPath)\pixelliner.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="unsafeAssem">
-      <HintPath>$(GameAssembliesPath)\unsafeAssem.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="better">
-      <HintPath>$(GameAssembliesPath)\better.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -1386,5 +1356,17 @@
 
   <ItemGroup>
     <Folder Include="pxls\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>D:\AliceInCradle Win ver029\AliceInCradle_ver029\AliceInCradle_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="pixelliner">
+      <HintPath>D:\AliceInCradle Win ver029\AliceInCradle_ver029\AliceInCradle_Data\Managed\pixelliner.dll</HintPath>
+    </Reference>
+    <Reference Include="unsafeAssem">
+      <HintPath>D:\AliceInCradle Win ver029\AliceInCradle_ver029\AliceInCradle_Data\Managed\unsafeAssem.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
