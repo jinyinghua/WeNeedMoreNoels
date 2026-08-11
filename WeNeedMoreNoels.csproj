@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -19,7 +19,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-	<GameAssembliesPath>$(GameRootPath)\AliceInCradle_Data\Managed</GameAssembliesPath>
+    <!-- CI uses ./lib; local developers may override with -p:GameAssembliesPath=... -->
+    <GameAssembliesPath Condition="'$(GameAssembliesPath)' == ''">$(MSBuildThisFileDirectory)lib</GameAssembliesPath>
   </PropertyGroup>
     
   <ItemGroup>
@@ -1358,15 +1359,23 @@
     <Folder Include="pxls\" />
   </ItemGroup>
 
+  <!-- Game assemblies are compilation-only references: never distribute them with the mod. -->
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
-      <HintPath>D:\AliceInCradle Win ver029\AliceInCradle_ver029\AliceInCradle_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>$(GameAssembliesPath)/Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="pixelliner">
-      <HintPath>D:\AliceInCradle Win ver029\AliceInCradle_ver029\AliceInCradle_Data\Managed\pixelliner.dll</HintPath>
+      <HintPath>$(GameAssembliesPath)/pixelliner.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="unsafeAssem">
-      <HintPath>D:\AliceInCradle Win ver029\AliceInCradle_ver029\AliceInCradle_Data\Managed\unsafeAssem.dll</HintPath>
+      <HintPath>$(GameAssembliesPath)/unsafeAssem.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="better">
+      <HintPath>$(GameAssembliesPath)/better.dll</HintPath>
+      <Private>false</Private>
     </Reference>
   </ItemGroup>
 </Project>

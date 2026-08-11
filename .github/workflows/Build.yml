@@ -2,104 +2,95 @@ name: Build macOS BepInEx Mod
 
 on:
   push:
-    branches: [ "main", "master" ]
-    tags:
-      - 'v*' # 只有推送 v1.0.0 这样的 tag 时才会触发 Release 自动发布
+    branches: [master, main]
+    tags: ['v*']
   pull_request:
-    branches: [ "main", "master" ]
-  workflow_dispatch: # 允许在网页端手动点击运行
+    branches: [master, main]
+  workflow_dispatch:
+
+# Required for creating a GitHub Release when a v* tag is pushed.
+permissions:
+  contents: write
 
 env:
-  MOD_NAME: "WeNeedMoreNoels"
-  PLUGIN_FOLDER: "WNMN" 
-  # ⚠️ 请确保这里的链接是你刚才复制的真实 Release 下载链接
-  RELEASE_URL: "https://github.com/jinyinghua/WeNeedMoreNoels/releases/download/Dependencies/Dependencies.zip"
+  MOD_NAME: WeNeedMoreNoels
+  PLUGIN_FOLDER: WNMN
+  DEPENDENCY_TAG: Dependencies
+  DEPENDENCY_ASSET: Dependencies.zip
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        # netstandard2.1 兼容 .NET 6.0 环境
-        dotnet-version: '6.0.x' 
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
 
-    - name: Download Game Dependencies from Release (从 Release 自动下载依赖)
-      env:
-        # 使用 GitHub 自动提供的 Token，确保即使你的仓库是私有的也能顺利下载
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        echo "Downloading GameLibs.zip using GitHub Token..."
-        # 使用 Token 鉴权下载 Release 附件
-        curl -L -H "Accept: application/octet-stream" -H "Authorization: Bearer $GITHUB_TOKEN" -o GameLibs.zip "${{ env.RELEASE_URL }}"
-        
-        echo "Extracting to lib folder..."
-        mkdir -p lib
-        unzip -q GameLibs.zip -d lib/
-        
-        echo "Verifying extracted DLLs:"
-        ls -l lib
-        
-        # 清理下载的压缩包
-        rm GameLibs.zip
+      - name: Download and validate game assemblies
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # gh uses the GitHub API and avoids fragile redirect/signed-URL handling.
+          gh release download "$DEPENDENCY_TAG" \
+            --repo "${{ github.repository }}" \
+            --pattern "$DEPENDENCY_ASSET" \
+            --output "$DEPENDENCY_ASSET" \
+            --clobber
 
-    - name: Fix Hardcoded Paths for CI (自动修复本地硬编码路径)
-      shell: bash
-      run: |
-        echo "Fixing hardcoded local paths in WeNeedMoreNoels.csproj..."
-        # 使用正则表达式，将类似 D:\...\Managed\ 的硬编码路径全部替换为 ./lib/
-        sed -i -E 's|<HintPath>.*Managed\\|<HintPath>./lib/|g' WeNeedMoreNoels.csproj
-        
-        echo "Modified HintPaths:"
-        grep "<HintPath>" WeNeedMoreNoels.csproj
+          mkdir -p lib
+          # The archive may contain a parent directory. -j deliberately flattens it.
+          unzip -j -q "$DEPENDENCY_ASSET" '*.dll' -d lib
+          rm "$DEPENDENCY_ASSET"
 
-    - name: Restore dependencies
-      run: dotnet restore
+          required=(Assembly-CSharp.dll pixelliner.dll unsafeAssem.dll better.dll)
+          for file in "${required[@]}"; do
+            test -s "lib/$file" || { echo "Missing required compilation assembly: $file"; exit 1; }
+          done
+          echo 'Compilation assemblies:'
+          ls -lh lib
 
-    - name: Build Mod (Release)
-      # 强制将输出重定向到 ./build_output，避开你 csproj 中 GameRootPath 变量的影响
-      run: dotnet build WeNeedMoreNoels.csproj -c Release -p:OutputPath="./build_output"
+      - name: Restore
+        run: dotnet restore WeNeedMoreNoels.csproj
 
-    - name: Prepare Thunderstore Package
-      run: |
-        mkdir -p package/BepInEx/plugins/${{ env.PLUGIN_FOLDER }}
-        
-        # 复制编译产物（.csproj 已经配置了 CopyToOutputDirectory，多语言、pics、pxls 会自动带过来）
-        cp -r ./build_output/* package/BepInEx/plugins/${{ env.PLUGIN_FOLDER }}/
-        
-        # 复制外层元数据（如果存在）
-        [ -f "manifest.json" ] && cp manifest.json package/
-        [ -f "README.md" ] && cp README.md package/
-        [ -f "icon.png" ] && cp icon.png package/
-        
-        cd package
-        zip -r ../${{ env.MOD_NAME }}-macOS.zip .
+      - name: Build
+        run: dotnet build WeNeedMoreNoels.csproj --configuration Release --no-restore --output "$PWD/build_output" -p:GameAssembliesPath="$PWD/lib"
 
-    - name: Upload Build Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ env.MOD_NAME }}-macOS
-        path: ${{ env.MOD_NAME }}-macOS.zip
-        retention-days: 7
+      - name: Create installable package
+        shell: bash
+        run: |
+          set -euo pipefail
+          install_dir="package/BepInEx/plugins/$PLUGIN_FOLDER"
+          mkdir -p "$install_dir"
+          cp -a build_output/. "$install_dir/"
 
-  # 自动发布 Release (仅在打 Tag 时运行)
+          # Game DLLs are supplied by the player's own installed game, not by this mod.
+          rm -f "$install_dir"/{Assembly-CSharp,pixelliner,unsafeAssem,better}.dll
+
+          # Do not claim Thunderstore compatibility unless its required manifest/icon exist.
+          test -f README.md && cp README.md package/
+          (cd package && zip -r "../${MOD_NAME}-macOS.zip" .)
+          unzip -l "${MOD_NAME}-macOS.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.MOD_NAME }}-macOS
+          path: ${{ env.MOD_NAME }}-macOS.zip
+          if-no-files-found: error
+          retention-days: 14
+
   release:
+    if: startsWith(github.ref, 'refs/tags/v')
     needs: build
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
-    
     steps:
-    - name: Download Artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: ${{ env.MOD_NAME }}-macOS
-
-    - name: Publish Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: ${{ env.MOD_NAME }}-macOS.zip
-        generate_release_notes: true # 自动根据 commits 生成更新日志
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.MOD_NAME }}-macOS
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.MOD_NAME }}-macOS.zip
+          generate_release_notes: true
