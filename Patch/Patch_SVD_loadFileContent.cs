@@ -1,6 +1,8 @@
-﻿using HarmonyLib;
+using HarmonyLib;
 using nel;
 using PixelLiner.PixelLinerLib;
+
+using System.IO;
 
 namespace WeNeedMoreNoels.Patch
 {
@@ -12,7 +14,7 @@ namespace WeNeedMoreNoels.Patch
         {
             if (Sf.index == -2)
             {
-                __result = new ByteArray(NKT.readSpecificFileBinary(SVD.getDir() + "\\" + DB.SYNC_FILE_NAME, 0, 0, false), false, false);
+                __result = new ByteArray(NKT.readSpecificFileBinary(Path.Combine(SVD.getDir(), DB.SYNC_FILE_NAME), 0, 0, false), false, false);
                 return false;
             }
             return true;
