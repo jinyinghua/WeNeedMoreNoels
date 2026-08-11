@@ -172,7 +172,7 @@ namespace WeNeedMoreNoels
             {
                 name = "preview_noel" + index.ToString().PadLeft(2, '0');
             }
-            return MTI.LoadContainerOneImage(localPicPath + name).MI;
+            return MTI.LoadContainerOneImage(Path.Combine(localPicPath, name)).MI;
         }
 
         public static MImage LoadImage(ColorNoelColor color, int index)
@@ -183,7 +183,7 @@ namespace WeNeedMoreNoels
             }
             string name = PreviewPrefix + color.ToString() + index.ToString().PadLeft(2, '0');
             name = name.ToLower();
-            return MTI.LoadContainerOneImage(localPicPath + name).MI;
+            return MTI.LoadContainerOneImage(Path.Combine(localPicPath, name)).MI;
         }
     }
 }
