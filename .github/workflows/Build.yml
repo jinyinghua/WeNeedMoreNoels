@@ -1,0 +1,110 @@
+name: Build macOS BepInEx Mod
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    tags:
+      - 'v*' # 推送 v1.0.0 这样的 tag 时自动发布 Release
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # 允许在网页端手动点击 Run workflow
+
+env:
+  MOD_NAME: "WeNeedMoreNoels"
+  PLUGIN_FOLDER: "WNMN" 
+  # 游戏依赖包下载链接 (如果网盘链接失效，请在这里更新)
+  GAME_DLL_URL: "https://dl.shiro.dev/vanilla/2/0.29/Arimx5qA_AliceInCradle%20Win%20ver029j2.7z?x-oss-credential=LTAI5tHwkbAvLVhGvtdRgi4U%2F20260811%2Fap-northeast-1%2Foss%2Faliyun_v4_request&x-oss-date=20260811T035440Z&x-oss-expires=3600&x-oss-signature=7ce3d62ddda75950dc0de5c78c9ef65328aa94bb45ae20d59812849ef7aa87ce&x-oss-signature-version=OSS4-HMAC-SHA256"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '6.0.x' 
+
+    - name: Download and Extract Game Dependencies (自动下载并提取游戏DLL)
+      run: |
+        echo "Downloading game archive..."
+        # 使用 curl 下载并伪装浏览器 UA 防止网盘防盗链拦截
+        curl -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" -o game.7z "${{ env.GAME_DLL_URL }}"
+        
+        echo "Extracting 7z archive..."
+        # 解压 7z 文件，隐藏繁杂的解压日志
+        7z x game.7z -ogame_extracted -y > /dev/null
+        
+        echo "Moving required DLLs to lib folder..."
+        mkdir -p lib
+        
+        # 自动查找并复制所需的三个核心 DLL，无视解压出来的复杂层级目录
+        find game_extracted -name "Assembly-CSharp.dll" -exec cp {} lib/ \;
+        find game_extracted -name "pixelliner.dll" -exec cp {} lib/ \;
+        find game_extracted -name "unsafeAssem.dll" -exec cp {} lib/ \;
+        
+        echo "Cleaning up huge game files to save CI space..."
+        # 提取完毕后立即删除几百MB的游戏本体，节省 CI 磁盘空间和后续步骤的时间
+        rm -rf game.7z game_extracted
+        
+        echo "Verifying extracted DLLs:"
+        ls -l lib
+
+    - name: Fix Hardcoded Paths for CI (自动修复本地硬编码路径)
+      shell: bash
+      run: |
+        echo "Fixing hardcoded local paths in WeNeedMoreNoels.csproj..."
+        # 使用正则表达式，将类似 D:\...\Managed\ 的硬编码路径全部替换为 ./lib/
+        sed -i -E 's|<HintPath>.*Managed\\|<HintPath>./lib/|g' WeNeedMoreNoels.csproj
+        
+        echo "Modified HintPaths:"
+        grep "<HintPath>" WeNeedMoreNoels.csproj
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build Mod (Release)
+      # 强制将输出重定向到 ./build_output，避开你 csproj 中 GameRootPath 变量的影响
+      run: dotnet build WeNeedMoreNoels.csproj -c Release -p:OutputPath="./build_output"
+
+    - name: Prepare Thunderstore Package
+      run: |
+        mkdir -p package/BepInEx/plugins/${{ env.PLUGIN_FOLDER }}
+        
+        # 复制编译产物（.csproj 已经配置了 CopyToOutputDirectory，多语言、pics、pxls 会自动带过来）
+        cp -r ./build_output/* package/BepInEx/plugins/${{ env.PLUGIN_FOLDER }}/
+        
+        # 复制外层元数据（如果存在）
+        [ -f "manifest.json" ] && cp manifest.json package/
+        [ -f "README.md" ] && cp README.md package/
+        [ -f "icon.png" ] && cp icon.png package/
+        
+        cd package
+        zip -r ../${{ env.MOD_NAME }}-macOS.zip .
+
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.MOD_NAME }}-macOS
+        path: ${{ env.MOD_NAME }}-macOS.zip
+        retention-days: 7
+
+  # 自动发布 Release (仅在打 Tag 时运行)
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Download Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ env.MOD_NAME }}-macOS
+
+    - name: Publish Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ${{ env.MOD_NAME }}-macOS.zip
+        generate_release_notes: true # 自动根据 commits 生成更新日志
