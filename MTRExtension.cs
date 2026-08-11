@@ -1,4 +1,4 @@
-using m2d;
+﻿using m2d;
 using nel;
 using PixelLiner;
 using System;
@@ -48,27 +48,27 @@ namespace WeNeedMoreNoels
         {
             Plugin.Logger.LogInfo("start loading WNMN resources..");
             string assetPath = Path.GetFullPath(Application.streamingAssetsPath);
-            string assetOriginPath = Path.Combine(assetPath, "WNMNResources");
-            string localPxlPath = Path.Combine(assetOriginPath, "pxls");
-            string localPicPath = Path.Combine(assetOriginPath, "pics");
-            string localLocalizationPath = Path.Combine(assetPath, "localization");
-            string L_zhPath = Path.Combine(localLocalizationPath, "zh-cn");
-            string L_zhtcPath = Path.Combine(localLocalizationPath, "zh-tc");
-            string L_enPath = Path.Combine(localLocalizationPath, "en");
-            string L_jpPath = Path.Combine(localLocalizationPath, "_");
-            string L_krPath = Path.Combine(localLocalizationPath, "ko-kr");
-            string L_thPath = Path.Combine(localLocalizationPath, "th");
+            string assetOriginPath = Path.Combine(assetPath, "WNMNResources\\");
+            string localPxlPath = Path.Combine(assetOriginPath, "pxls\\");
+            string localPicPath = Path.Combine(assetOriginPath, "pics\\");
+            string localLocalizationPath = Path.Combine(assetPath, "localization\\");
+            string L_zhPath = Path.Combine(localLocalizationPath, "zh-cn\\");
+            string L_zhtcPath = Path.Combine(localLocalizationPath, "zh-tc\\");
+            string L_enPath = Path.Combine(localLocalizationPath, "en\\");
+            string L_jpPath = Path.Combine(localLocalizationPath, "_\\");
+            string L_krPath = Path.Combine(localLocalizationPath, "ko-kr\\");
+            string L_thPath = Path.Combine(localLocalizationPath, "th\\");
             string pluginFolderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BepInEx", "plugins");
             string pluginPath = Path.Combine(pluginFolderPath, "WNMN");
-            string pluginPxlPath = Path.Combine(pluginPath, "pxls");
-            string pluginPicPath = Path.Combine(pluginPath, "pics");
-            string pluginResPath = Path.Combine(pluginPath, "resources");
-            string zhPath = Path.Combine(pluginPath, "zh-cn");
-            string zhtcPath = Path.Combine(pluginPath, "zh-tc");
-            string enPath = Path.Combine(pluginPath, "en");
-            string jpPath = Path.Combine(pluginPath, "_");
-            string krPath = Path.Combine(pluginPath, "ko-kr");
-            string thPath = Path.Combine(pluginPath, "th");
+            string pluginPxlPath = Path.Combine(pluginPath, "pxls\\");
+            string pluginPicPath = Path.Combine(pluginPath, "pics\\");
+            string pluginResPath = Path.Combine(pluginPath, "resources\\");
+            string zhPath = Path.Combine(pluginPath, "zh-cn\\");
+            string zhtcPath = Path.Combine(pluginPath, "zh-tc\\");
+            string enPath = Path.Combine(pluginPath, "en\\");
+            string jpPath = Path.Combine(pluginPath, "_\\");
+            string krPath = Path.Combine(pluginPath, "ko-kr\\");
+            string thPath = Path.Combine(pluginPath, "th\\");
             DB.Plugin_local_path = pluginPath;
             DB.Game_streaming_asset = assetOriginPath;
             if (!Directory.Exists(assetOriginPath))
@@ -86,25 +86,25 @@ namespace WeNeedMoreNoels
             Plugin.Logger.LogInfo("Directory check success.");
             foreach (FileInfo file in new DirectoryInfo(pluginPxlPath).EnumerateFiles())
             {
-                string targetFile = Path.Combine(localPxlPath, file.Name);
+                string targetFile = localPxlPath + file.Name;
                 File.Copy(file.FullName, targetFile, true);
             }
             foreach (FileInfo file in new DirectoryInfo(pluginPicPath).EnumerateFiles())
             {
-                string targetFile = Path.Combine(localPicPath, file.Name);
+                string targetFile = localPicPath + file.Name;
                 File.Copy(file.FullName, targetFile, true);
             }
             foreach (FileInfo file in new DirectoryInfo(pluginResPath).EnumerateFiles())
             {
-                string targetFile = Path.Combine(assetOriginPath, file.Name);
+                string targetFile = assetOriginPath + file.Name;
                 File.Copy(file.FullName, targetFile, true);
             }
-            File.Copy(Path.Combine(zhPath, $"zh-cn{LOCALIZATION_FILE_NAME}.txt"), Path.Combine(L_zhPath, $"zh-cn{LOCALIZATION_FILE_NAME}.txt"), true);
-            File.Copy(Path.Combine(zhtcPath, $"zh-tc{LOCALIZATION_FILE_NAME}.txt"), Path.Combine(L_zhtcPath, $"zh-tc{LOCALIZATION_FILE_NAME}.txt"), true);
-            File.Copy(Path.Combine(enPath, $"en{LOCALIZATION_FILE_NAME}.txt"), Path.Combine(L_enPath, $"en{LOCALIZATION_FILE_NAME}.txt"), true);
-            File.Copy(Path.Combine(jpPath, $"_{LOCALIZATION_FILE_NAME}.txt"), Path.Combine(L_jpPath, $"_{LOCALIZATION_FILE_NAME}.txt"), true);
-            File.Copy(Path.Combine(krPath, $"ko-kr{LOCALIZATION_FILE_NAME}.txt"), Path.Combine(L_krPath, $"ko-kr{LOCALIZATION_FILE_NAME}.txt"), true);
-            File.Copy(Path.Combine(thPath, $"th{LOCALIZATION_FILE_NAME}.txt"), Path.Combine(L_thPath, $"th{LOCALIZATION_FILE_NAME}.txt"), true);
+            File.Copy(zhPath + $"zh-cn{LOCALIZATION_FILE_NAME}.txt", L_zhPath + $"zh-cn{LOCALIZATION_FILE_NAME}.txt", true);
+            File.Copy(zhtcPath + $"zh-tc{LOCALIZATION_FILE_NAME}.txt", L_zhtcPath + $"zh-tc{LOCALIZATION_FILE_NAME}.txt", true);
+            File.Copy(enPath + $"en{LOCALIZATION_FILE_NAME}.txt", L_enPath + $"en{LOCALIZATION_FILE_NAME}.txt", true);
+            File.Copy(jpPath + $"_{LOCALIZATION_FILE_NAME}.txt", L_jpPath + $"_{LOCALIZATION_FILE_NAME}.txt", true);
+            File.Copy(krPath + $"ko-kr{LOCALIZATION_FILE_NAME}.txt", L_krPath + $"ko-kr{LOCALIZATION_FILE_NAME}.txt", true);
+            File.Copy(thPath + $"th{LOCALIZATION_FILE_NAME}.txt", L_thPath + $"th{LOCALIZATION_FILE_NAME}.txt", true);
             Plugin.Logger.LogInfo("WNMN resources load complete!");
             MTRExtension.localPicPath = localPicPath;
         }

@@ -1,4 +1,4 @@
-using HarmonyLib;
+﻿using HarmonyLib;
 using LiteNetLib;
 using nel;
 using nel.title;
@@ -255,7 +255,7 @@ namespace WeNeedMoreNoels.Patch
                             Plugin.Logger.LogInfo("Client received sync save data.");
                             byte[] receivedData = new byte[reader.UserDataSize];
                             reader.GetBytes(receivedData, reader.UserDataSize);
-                            File.WriteAllBytes(Path.Combine(SVD.getDir(), DB.SYNC_FILE_NAME), receivedData);
+                            File.WriteAllBytes(SVD.getDir() + "\\" + DB.SYNC_FILE_NAME, receivedData);
                             SVD.sFile file = new(-2, true);//-2为同步存档
                             BxCC.deactivate();
                             BxCC = null;
