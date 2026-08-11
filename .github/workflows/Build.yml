@@ -4,16 +4,16 @@ on:
   push:
     branches: [ "main", "master" ]
     tags:
-      - 'v*' # 推送 v1.0.0 这样的 tag 时自动发布 Release
+      - 'v*' # 只有推送 v1.0.0 这样的 tag 时才会触发 Release 自动发布
   pull_request:
     branches: [ "main", "master" ]
-  workflow_dispatch: # 允许在网页端手动点击 Run workflow
+  workflow_dispatch: # 允许在网页端手动点击运行
 
 env:
   MOD_NAME: "WeNeedMoreNoels"
   PLUGIN_FOLDER: "WNMN" 
-  # 游戏依赖包下载链接 (如果网盘链接失效，请在这里更新)
-  GAME_DLL_URL: "https://dl.shiro.dev/vanilla/2/0.29/Arimx5qA_AliceInCradle%20Win%20ver029j2.7z?x-oss-credential=LTAI5tHwkbAvLVhGvtdRgi4U%2F20260811%2Fap-northeast-1%2Foss%2Faliyun_v4_request&x-oss-date=20260811T035440Z&x-oss-expires=3600&x-oss-signature=7ce3d62ddda75950dc0de5c78c9ef65328aa94bb45ae20d59812849ef7aa87ce&x-oss-signature-version=OSS4-HMAC-SHA256"
+  # ⚠️ 请确保这里的链接是你刚才复制的真实 Release 下载链接
+  RELEASE_URL: "https://github.com/jinyinghua/WeNeedMoreNoels/releases/download/Dependencies/Dependencies.zip"
 
 jobs:
   build:
@@ -25,32 +25,27 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
+        # netstandard2.1 兼容 .NET 6.0 环境
         dotnet-version: '6.0.x' 
 
-    - name: Download and Extract Game Dependencies (自动下载并提取游戏DLL)
+    - name: Download Game Dependencies from Release (从 Release 自动下载依赖)
+      env:
+        # 使用 GitHub 自动提供的 Token，确保即使你的仓库是私有的也能顺利下载
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo "Downloading game archive..."
-        # 使用 curl 下载并伪装浏览器 UA 防止网盘防盗链拦截
-        curl -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" -o "Arimx5qA_AliceInCradle Win ver029j2.7z" "${{ env.GAME_DLL_URL }}"
+        echo "Downloading GameLibs.zip using GitHub Token..."
+        # 使用 Token 鉴权下载 Release 附件
+        curl -L -H "Accept: application/octet-stream" -H "Authorization: Bearer $GITHUB_TOKEN" -o GameLibs.zip "${{ env.RELEASE_URL }}"
         
-        echo "Extracting 7z archive..."
-        # 解压 7z 文件，隐藏繁杂的解压日志
-        7z x "Arimx5qA_AliceInCradle Win ver029j2.7z" -ogame_extracted -y > /dev/null
-        
-        echo "Moving required DLLs to lib folder..."
+        echo "Extracting to lib folder..."
         mkdir -p lib
-        
-        # 自动查找并复制所需的三个核心 DLL，无视解压出来的复杂层级目录
-        find game_extracted -name "Assembly-CSharp.dll" -exec cp {} lib/ \;
-        find game_extracted -name "pixelliner.dll" -exec cp {} lib/ \;
-        find game_extracted -name "unsafeAssem.dll" -exec cp {} lib/ \;
-        
-        echo "Cleaning up huge game files to save CI space..."
-        # 提取完毕后立即删除几百MB的游戏本体，节省 CI 磁盘空间和后续步骤的时间
-        rm -rf game.7z game_extracted
+        unzip -q GameLibs.zip -d lib/
         
         echo "Verifying extracted DLLs:"
         ls -l lib
+        
+        # 清理下载的压缩包
+        rm GameLibs.zip
 
     - name: Fix Hardcoded Paths for CI (自动修复本地硬编码路径)
       shell: bash
